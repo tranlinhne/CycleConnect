@@ -5,7 +5,7 @@ $dbname = 'greenride';
 $username = 'root';
 $password = '';
 
-define('BASE_URL', '/CycleMarket/admin/');
+define('BASE_URL', '/CycleMarket/AdminPage/');
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
