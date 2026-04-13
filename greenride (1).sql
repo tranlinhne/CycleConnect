@@ -232,3 +232,169 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+CREATE TABLE users (
+    id int(11) AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(150) NOT NULL,
+    last_name VARCHAR(150) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    phone VARCHAR(20),
+    avatar VARCHAR(255),
+    role ENUM('user', 'admin') DEFAULT 'user',
+    warning_count INT DEFAULT 0,
+   	active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+
+CREATE TABLE favorites (
+    id int(11) AUTO_INCREMENT PRIMARY KEY,
+    user_id int(11) NOT NULL,
+    bike_id int(11) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (bike_id) REFERENCES bikes(id)
+        ON DELETE CASCADE,
+
+    UNIQUE (user_id, bike_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE conversations (
+    id int(11) AUTO_INCREMENT PRIMARY KEY,
+    buyer_id int(11) NOT NULL,
+    seller_id int(11) NOT NULL,
+    bike_id int(11) NOT NULL,
+
+    status ENUM('active','blocked','closed') DEFAULT 'active',
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (buyer_id) REFERENCES users(id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (seller_id) REFERENCES users(id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (bike_id) REFERENCES bikes(id)
+        ON DELETE CASCADE,
+
+    UNIQUE (buyer_id, seller_id, bike_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE messages (
+    id int(11) AUTO_INCREMENT PRIMARY KEY,
+    conversation_id int(11) NOT NULL,
+    sender_id int(11) NOT NULL,
+
+    content TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    is_deleted BOOLEAN DEFAULT FALSE,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (conversation_id) REFERENCES conversations(id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (sender_id) REFERENCES users(id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+
+CREATE TABLE reviews (
+    id int(11) AUTO_INCREMENT PRIMARY KEY,
+    reviewer_id int(11) NOT NULL,
+    reviewed_user_id int(11) NOT NULL,
+    bike_id int(11) NOT NULL,
+
+    rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    comment TEXT,
+
+    status ENUM('visible','hidden','flagged') DEFAULT 'visible',
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (reviewer_id) REFERENCES users(id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (reviewed_user_id) REFERENCES users(id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (bike_id) REFERENCES bikes(id)
+        ON DELETE CASCADE,
+
+    UNIQUE (reviewer_id, bike_id)
+) ENGINE=InnoDB;
+
+
+CREATE TABLE reports (
+    id int(11) AUTO_INCREMENT PRIMARY KEY,
+
+    reporter_id int(11) NOT NULL,   -- Người báo cáo
+    bike_id int(11) NOT NULL,       -- Tin đăng bị báo cáo
+
+    reason VARCHAR(255) NOT NULL,
+    description TEXT,
+
+    status ENUM('pending','reviewed','rejected') DEFAULT 'pending',
+
+    handled_by int(11) NULL,        -- Admin xử lý
+    handled_at TIMESTAMP NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (reporter_id) REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (bike_id) REFERENCES bikes(id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (handled_by) REFERENCES users(id)
+        ON DELETE SET NULL,
+
+    UNIQUE (reporter_id, bike_id)
+) ENGINE=InnoDB;
+
+
+-- Bảng đơn hàng (Orders)
+CREATE TABLE orders (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    bike_id INT(11) NOT NULL,
+    buyer_id INT(11) NOT NULL,
+    seller_id INT(11) NOT NULL,
+    total_price DECIMAL(15,2) NOT NULL,
+    status ENUM('pending', 'confirmed', 'shipped', 'delivered', 'cancelled') DEFAULT 'pending',
+    payment_method VARCHAR(50),
+    payment_status ENUM('unpaid', 'paid') DEFAULT 'unpaid',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (bike_id) REFERENCES bikes(id) ON DELETE CASCADE,
+    FOREIGN KEY (buyer_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (seller_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- Bảng liên hệ khách hàng (Contact messages)
+CREATE TABLE contact_messages (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    fullname VARCHAR(150) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    phone VARCHAR(20),
+    subject VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    reply TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- Chèn một admin mẫu (mật khẩu: admin123, đã hash)
+INSERT INTO users (first_name, last_name, email, username, password, phone, role, active)
+VALUES ('Admin', 'GreenRide', 'admin@greenride.com', 'admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '0123456789', 'admin', 1);
+-- Lưu ý: password 'admin123' được hash bằng password_hash()
+
+
+CREATE INDEX idx_messages_conversation ON messages(conversation_id);
+CREATE INDEX idx_reviews_user ON reviews(reviewed_user_id);
+CREATE INDEX idx_reports_status ON reports(status);
+CREATE INDEX idx_reports_bike ON reports(bike_id);
