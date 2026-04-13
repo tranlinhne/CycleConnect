@@ -17,7 +17,7 @@
 
     body {
         font-family: 'Segoe UI', Arial, sans-serif;
-        background: #f8f9fa;
+        background: #ffffff;
         color: #333;
     }
 
@@ -88,11 +88,7 @@
     .header-right i:hover {
         color: #f4a261;
     }
-    /* HERO WRAPPER (tạo khoảng trắng bên trái) */
-    .hero{
-        background:#f8f9fa;
-        padding:0 0 80px 0;   /* bỏ padding-top */
-    }
+   
 
     /* KHỐI NỀN XANH */
     .hero-inner{
@@ -114,7 +110,7 @@
         left:0;
         width:100%;
         height:220px;
-        background:#f8f9fa;
+        background:#ffffff;
         clip-path: polygon(0 100%, 100% 0, 100% 100%, 0% 100%);
     }
 
@@ -244,18 +240,26 @@
 
     /* ===== SECTION ===== */
 .cycle{
-    padding:120px 80px;
-    background:#f3f3f3;
+    padding:120px 0px;
+    background:#ffffff;
+}
+
+.cycle-container{
+    width:1200px;
+    margin:auto;
 }
 
     .cycle h2 {
-        font-size: 32px;
-        margin-bottom: 10px;
+        font-size: 62px;
+        margin-bottom: -20px;
+        text-align: center;
     }
 
     .cycle .sub {
         color: #777;
-        margin-bottom: 60px;
+        font-size: 22px;
+        margin-bottom: 100px;
+        text-align: center;
     }
 
     /* ===== ITEM ===== */
@@ -264,7 +268,16 @@
     grid-template-columns: 520px 1fr;
     align-items:center;
     gap:120px;
-    margin-bottom:140px;
+    margin-bottom:240px;
+}
+
+/* ĐẢO NGƯỢC */
+.cycle-item.reverse .cycle-img{
+    order:2;
+}
+
+.cycle-item.reverse .cycle-info{
+    order:1;
 }
 
     /* đảo layout */
@@ -294,23 +307,24 @@
 .cycle-img::before{
     content:"";
     position:absolute;
-    left:-60px;
+    left:-40px;
     top:-60px;
-    width:380px;
+    width:260px;
     height:520px;
     background:#f4a261;
-    clip-path: polygon(0 0, 100% 8%, 100% 92%, 0 100%);
+    clip-path: polygon(0 0, 100% 8%, 100% 75%, 0 100%);
     z-index:1;
 }
 
 .number{
     position:absolute;
-    right:30px;
-    top:-20px;
+    right:300px;
+    top:-40px; 
+    width:55px;
+    height:55px;
+    font-size:14px;
     background:#2f5d62;
     color:white;
-    width:60px;
-    height:60px;
     border-radius:50%;
     display:flex;
     align-items:center;
@@ -321,39 +335,73 @@
     /* INFO */
 .cycle-info{
     display:grid;
-    grid-template-columns: 1fr 200px;
+    display:block; 
     align-items:start;
     gap:40px;
 }
 
+.title-row{
+    display:flex;
+    align-items:center;
+    gap:60px;
+    margin-bottom:20px;
+}
+
+.line{
+    width:80px;
+    height:2px;
+    background:#2f5d62;
+}
 /* cột trái */
 .cycle-text h3{
     font-size:42px;
-    margin-bottom:20px;
+    margin:0;
+    margin-left:180px; 
 }
 
 .cycle-text p{
     color:#555;
     line-height:1.8;
     margin-bottom:30px;
-    max-width:480px;
+    max-width:780px;
 }
 
-/* thanh line nhỏ phía trên */
-.cycle-text::before{
-    content:"";
-    display:block;
-    width:80px;
-    height:2px;
-    background:#2f5d62;
-    margin-bottom:25px;
+.cycle-item .cycle-text{
+    transform: translateX(-20px);
 }
 
-/* cột phải = giá */
+.cycle-item.reverse .cycle-text{
+    transform: translateX(20px);
+}
+/* ===== DỊCH XE + NỀN CAM ===== */
+.cycle-item .cycle-img{
+    transform: translateX(100px);   /* item 1,3 → qua phải */
+}
+
+.cycle-item.reverse .cycle-img{
+    transform: translateX(100px);  /* item 2 → qua trái */
+}
 .cycle-price{
+    display:flex;
+    align-items:flex-start;
+    gap:6px;
+    font-weight:bold;
     font-size:22px;
-    font-weight:600;
-    margin-top:100px;
+}
+
+/* dấu $ */
+.cycle-price .currency{
+    font-size:22px;
+    color:#f4a261;
+}
+
+
+.bottom-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:20px;
+    max-width:700px;
 }
 
     /* ===== RESPONSIVE ===== */
@@ -385,6 +433,8 @@
         .cycle-info {
             text-align: center;
         }
+
+        
     }
 
     .search-box {
@@ -449,36 +499,35 @@
 
     <body>
 
-    <section class="hero">
-    <div class="hero-inner">
-        <div class="hero-container">
+<section class="hero">
+<div class="hero-inner">
+    <div class="hero-container">
 
-            <div class="hero-left">
-                <span class="badge">BEST</span>
-                <?php if ($first) { ?>
-                    <img src="assets/images/<?php echo $first['image']; ?>" alt="">
-                <?php } ?>
-            </div>
-
-            <div class="hero-right">
-                <h1>Mẫu<br>Xe<br>2026</h1>
-                <p>
-                    Mang đến trải nghiệm đạp xe hoàn hảo với thiết kế hiện đại và hiệu suất vượt trội.
-                </p>
-                <a href="#" class="btn">Mua Ngay</a>
-            </div>
-
-            <div class="hero-nav">
-                <button class="prev"><i class="fas fa-chevron-left"></i></button>
-                <button class="next"><i class="fas fa-chevron-right"></i></button>
-            </div>
-
+        <div class="hero-left">
+            <span class="badge">BEST</span>
+            <img src="assets/images/hero-bike.png" alt="Bike">
         </div>
+
+        <div class="hero-right">
+            <h1>Mẫu<br>Xe<br>2026</h1>
+            <p>
+                Mang đến trải nghiệm đạp xe hoàn hảo với thiết kế hiện đại và hiệu suất vượt trội.
+            </p>
+            <a href="#" class="btn">Mua Ngay</a>
+        </div>
+
+        <div class="hero-nav">
+            <button class="prev"><i class="fas fa-chevron-left"></i></button>
+            <button class="next"><i class="fas fa-chevron-right"></i></button>
+        </div>
+
     </div>
-    </section>
+</div>
+</section>
 
     <!-- OUR CYCLE -->
     <section class="cycle">
+        <div class="cycle-container">
         <h2>Our Cycle</h2>
         <p class="sub">Sản phẩm nổi bật của chúng tôi</p>
 
@@ -503,14 +552,21 @@
             <div class="cycle-info">
 
     <div class="cycle-text">
+    <div class="title-row">
+        <span class="line"></span>
         <h3><?php echo $row['name']; ?></h3>
-        <p><?php echo nl2br($row['description']); ?></p>
-        <a href="#" class="btn dark">Buy Now</a>
     </div>
 
-    <div class="cycle-price">
-        Price $ <?php echo number_format($row['price']); ?>
+    <p><?php echo nl2br($row['description']); ?></p>
+
+    <div class="bottom-row">
+        <a href="#" class="btn dark">Mua ngay</a>
+        <div class="cycle-price">
+    <span class="currency">$</span>
+    <span class="amount"><?php echo number_format($row['price']); ?></span>
+</div>
     </div>
+</div>
 
 </div>
 
@@ -522,7 +578,8 @@
         }
         ?>
 
-    </section>
+        </div>
 
+    </section>
+<?php include "includes/footer.php"; ?>
     </body>
-    </html>
