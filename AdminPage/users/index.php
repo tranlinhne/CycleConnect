@@ -1,7 +1,6 @@
 <?php
 require_once '../inc/auth.php';
 require_once '../inc/header.php';
-
 // Phân trang
 $page = $_GET['page'] ?? 1;
 $limit = 10;

@@ -1,6 +1,9 @@
 <?php
 require_once '../inc/auth.php';
-require_once '../inc/header.php';
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if (!$id) {
@@ -88,8 +91,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         // Xử lý upload ảnh mới (từ file input)
         if (isset($_FILES['new_images']) && !empty($_FILES['new_images']['name'][0])) {
-            $uploadDir = '../uploads/';
-            if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+            $uploadDir = __DIR__ . '/../uploads/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
             
             $files = $_FILES['new_images'];
             $totalFiles = count($files['name']);
@@ -100,7 +105,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $newName = time() . '_' . uniqid() . '.' . $ext;
                     $destination = $uploadDir . $newName;
                     if (move_uploaded_file($files['tmp_name'][$i], $destination)) {
-                        $isPrimary = (count($bikeImages) == 0 && $uploadedCount == 0) ? 1 : 0;
+                        $checkPrimary = $pdo->prepare("SELECT COUNT(*) FROM bike_images WHERE bike_id = ?");
+                        $checkPrimary->execute([$id]);
+                        $hasImages = $checkPrimary->fetchColumn();
+
+                        $isPrimary = ($hasImages == 0 && $uploadedCount == 0) ? 1 : 0;
                         $insImg = $pdo->prepare("INSERT INTO bike_images (bike_id, image_url, is_primary) VALUES (?, ?, ?)");
                         $insImg->execute([$id, 'uploads/' . $newName, $isPrimary]);
                         $uploadedCount++;
@@ -127,6 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Vui lòng điền đầy đủ thông tin bắt buộc (Tiêu đề, Giá >0, Danh mục, Thương hiệu, Người bán).";
     }
 }
+require_once '../inc/header.php';
 ?>
 
 <style>
