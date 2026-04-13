@@ -393,8 +393,77 @@ INSERT INTO users (first_name, last_name, email, username, password, phone, role
 VALUES ('Admin', 'GreenRide', 'admin@greenride.com', 'admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '0123456789', 'admin', 1);
 -- Lưu ý: password 'admin123' được hash bằng password_hash()
 
-
 CREATE INDEX idx_messages_conversation ON messages(conversation_id);
 CREATE INDEX idx_reviews_user ON reviews(reviewed_user_id);
 CREATE INDEX idx_reports_status ON reports(status);
 CREATE INDEX idx_reports_bike ON reports(bike_id);
+
+
+-- chèn dữ liệu để test 
+INSERT INTO users (first_name, last_name, email, password, username, phone, role)
+VALUES
+('Nguyễn', 'Văn An', 'an@gmail.com', '123456', 'nguyenvanan', '0901111111', 'user'),
+('Trần', 'Minh Quân', 'quan@gmail.com', '123456', 'tranminhquan', '0902222222', 'user'),
+('Lê', 'Thảo Vy', 'vy@gmail.com', '123456', 'lethaovy', '0903333333', 'user'),
+('Admin', 'System', 'admin@gmail.com', '123456', 'admin', '0909999999', 'admin');
+
+
+INSERT INTO bikes (user_id, category_id, brand_id, title, price, description, location, condition_bike, color, warranty, material)
+VALUES
+(2, 2, 2, 'Trek Marlin 7 2025', 12500000, 'Xe đạp địa hình cao cấp, đi cực êm.', 'Quận 7, TP.HCM', 'Như mới', 'Đỏ Đen', '6 tháng', 'Hợp kim nhôm'),
+(3, 3, 3, 'Asama City 2024', 4200000, 'Xe đi học, đi làm rất tiện.', 'Thủ Đức, TP.HCM', 'Đã sử dụng', 'Trắng', 'Không còn', 'Thép'),
+(2, 1, 1, 'Giant ATX 830', 7800000, 'Xe leo núi mạnh mẽ.', 'Bình Thạnh, TP.HCM', 'Như mới', 'Xanh Đen', '3 tháng', 'ALUXX');
+
+
+INSERT INTO bike_images (bike_id, image_url, is_primary)
+VALUES
+(3, 'uploads/trek1.jpg', 1),
+(3, 'uploads/trek2.jpg', 0),
+
+(4, 'uploads/asama1.jpg', 1),
+
+(5, 'uploads/giant1.jpg', 1),
+(5, 'uploads/giant2.jpg', 0);
+
+
+INSERT INTO favorites (user_id, bike_id)
+VALUES
+(1, 3),
+(1, 4),
+(3, 1);
+
+INSERT INTO conversations (buyer_id, seller_id, bike_id)
+VALUES
+(1, 2, 3),
+(3, 1, 1);
+
+
+INSERT INTO messages (conversation_id, sender_id, content)
+VALUES
+(1, 1, 'Xe này còn không anh?'),
+(1, 2, 'Còn em nhé, em cần xem xe không?'),
+(2, 3, 'Anh có bớt giá được không?'),
+(2, 1, 'Anh bớt cho em 200k.');
+
+
+INSERT INTO reviews (reviewer_id, reviewed_user_id, bike_id, rating, comment)
+VALUES
+(1, 2, 3, 5, 'Người bán nhiệt tình, xe đúng mô tả.'),
+(3, 1, 1, 4, 'Xe tốt, giao dịch nhanh.');
+
+INSERT INTO reports (reporter_id, bike_id, reason, description)
+VALUES
+(3, 4, 'Tin trùng lặp', 'Người bán đăng nhiều tin giống nhau.'),
+(1, 5, 'Nghi ngờ lừa đảo', 'Giá quá rẻ so với thị trường.');
+
+
+INSERT INTO orders (bike_id, buyer_id, seller_id, total_price, status, payment_method, payment_status)
+VALUES
+(3, 1, 2, 12500000, 'confirmed', 'COD', 'unpaid'),
+(1, 3, 1, 8500000, 'delivered', 'Bank Transfer', 'paid');
+
+
+INSERT INTO contact_messages (fullname, email, phone, subject, message)
+VALUES
+('Phạm Hoàng Nam', 'nam@gmail.com', '0908888888', 'Hỗ trợ thanh toán', 'Tôi không thanh toán được qua VNPAY.'),
+('Ngô Mai Anh', 'maianh@gmail.com', '0907777777', 'Báo lỗi website', 'Trang chi tiết sản phẩm bị lỗi hình ảnh.');
