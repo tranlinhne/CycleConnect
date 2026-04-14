@@ -170,6 +170,13 @@
                             <i class="fas fa-envelope"></i> Liên hệ khách hàng
                         </a>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom <?= strpos($_SERVER['PHP_SELF'], 'reports/index.php') !== false ? 'active' : '' ?>" href="<?= BASE_URL ?>reports/index.php">
+                            <i class="fas fa-envelope"></i> Quản lý báo cáo
+                        </a>
+                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link nav-link-custom <?= strpos($_SERVER['PHP_SELF'], 'revenue/index.php') !== false ? 'active' : '' ?>" href="<?= BASE_URL ?>revenue/index.php">
                             <i class="fas fa-chart-line"></i> Doanh thu

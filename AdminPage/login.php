@@ -65,9 +65,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Admin Login | Hệ thống quản trị</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome 6 (miễn phí) để thêm icon sinh động -->
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Google Fonts: Poppins và Inter cho hiện đại -->
+    <!-- Google Fonts: Inter & Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -78,16 +78,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #2E7D32 0%, #E8F5E9 100%);
+            /* Mountain bike background image (high-res, free to use) */
+            background-image: url('../AdminPage/uploads/1776181193_69de5fc95dbfe.png');
+            background-size: cover;
+            background-position: center 30%;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            overflow-x: hidden;
         }
 
-        /* Hiệu ứng nền động (sinh động) */
+        /* Dark overlay to improve text contrast */
         body::before {
             content: '';
             position: absolute;
@@ -95,16 +99,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.05)" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
-            background-size: cover;
-            opacity: 0.4;
+            background: linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 100%);
             pointer-events: none;
+            z-index: 0;
         }
 
-        /* Container chính với animation fadeInUp */
         .login-wrapper {
             width: 100%;
             padding: 1rem;
+            position: relative;
+            z-index: 2;
             animation: fadeInUp 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
         }
 
@@ -119,23 +123,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        /* Card chính - hiệu ứng nổi, border radius mềm mại */
+        /* Card with slight transparency but still solid enough */
         .login-card {
             border: none;
             border-radius: 32px;
-            background: rgba(255, 255, 255, 0.98);
+            background: rgba(255, 255, 255, 0.97);
             backdrop-filter: blur(0px);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             overflow: hidden;
         }
 
         .login-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.4);
         }
 
-        /* Header card với gradient và icon */
         .card-header-custom {
             background: linear-gradient(120deg, #F57C00, #7C3AED);
             padding: 1.8rem 2rem;
@@ -158,7 +161,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-bottom: 0;
         }
 
-        /* Avatar icon */
         .avatar-icon {
             background: rgba(255,255,255,0.2);
             width: 70px;
@@ -174,12 +176,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
-        /* Body card */
         .card-body-custom {
             padding: 2rem 2rem 2.2rem;
         }
 
-        /* Input group với icon và hiệu ứng focus */
         .input-group-custom {
             position: relative;
             margin-bottom: 1.5rem;
@@ -208,19 +208,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .form-control-custom:focus {
-            border-color:#F57C00;
-            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.15);
+            border-color: #F57C00;
+            box-shadow: 0 0 0 4px rgba(245,124,0,0.15);
             background-color: #ffffff;
             outline: none;
         }
 
         .form-control-custom:focus + .input-icon {
-            color:#F57C00;
+            color: #F57C00;
         }
 
-        /* Nút đăng nhập gradient */
         .btn-gradient {
-            background: linear-gradient(95deg,#F57C00, #7C3AED);
+            background: linear-gradient(95deg, #F57C00, #7C3AED);
             border: none;
             padding: 12px 20px;
             font-weight: 600;
@@ -243,7 +242,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             transform: scale(0.98);
         }
 
-        /* Alert tùy chỉnh */
         .alert-custom {
             border-radius: 60px;
             background-color: #fee2e2;
@@ -254,7 +252,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-weight: 500;
         }
 
-        /* Footer nhỏ */
         .footer-note {
             text-align: center;
             font-size: 0.75rem;
@@ -264,7 +261,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding-top: 1.2rem;
         }
 
-        /* Responsive */
         @media (max-width: 576px) {
             .card-header-custom {
                 padding: 1.2rem 1rem;
@@ -282,7 +278,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        /* Hiệu ứng loading nhẹ cho nút (tùy chọn) */
         .btn-gradient i {
             transition: transform 0.2s;
         }
@@ -336,7 +331,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </div>
 
-<!-- Optional: Bootstrap JS bundle (nếu cần cho tương tác nhỏ, không bắt buộc) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
