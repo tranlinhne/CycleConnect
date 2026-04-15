@@ -1,230 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
-   <head>
-      <!-- basic -->
-      <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <!-- mobile metas -->
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-      <!-- site metas -->
-      <title>Contact</title>
-      <meta name="keywords" content="">
-      <meta name="description" content="">
-      <meta name="author" content="">
-      <!-- bootstrap css -->
-      <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-      <!-- style css -->
-      <link rel="stylesheet" type="text/css" href="css/style.css">
-      <!-- Responsive-->
-      <link rel="stylesheet" href="css/responsive.css">
-      <!-- fevicon -->
-      <link rel="icon" href="images/fevicon.png" type="image/gif" />
-      <!-- Scrollbar Custom CSS -->
-      <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
-      <!-- Tweaks for older IEs-->
-      <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-      <!-- owl stylesheets --> 
-      <link href="https://fonts.googleapis.com/css?family=Poppins:400,700|Raleway:400,700,800&display=swap" rel="stylesheet">
-      <link rel="stylesheet" href="css/owl.carousel.min.css">
-      <link rel="stylesoeet" href="css/owl.theme.default.min.css">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
-   </head>
-   <body>
-      <!-- header section start -->
-      <div class="header_section header_bg">
-         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a href="index.html" class="logo"><img src="images/logo.png"></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-               <ul class="navbar-nav mr-auto">
-                  <li class="nav-item active">
-                     <a class="nav-link" href="index.html">Home</a>
-                  </li>
-                  <li class="nav-item">
-                     <a class="nav-link" href="about.html">About</a>
-                  </li>
-                  <li class="nav-item">
-                     <a class="nav-link" href="cycle.html">Our Cycle</a>
-                  </li>
-                  <li class="nav-item">
-                     <a class="nav-link" href="shop.html">Shop</a>
-                  </li>
-                  <li class="nav-item">
-                     <a class="nav-link" href="news.html">News</a>
-                  </li>
-                  <li class="nav-item active">
-                     <a class="nav-link" href="contact.html">Contact Us</a>
-                  </li>
-               </ul>
-               <form class="form-inline my-2 my-lg-0">
-                  <div class="login_menu">
-                     <ul>
-                        <li><a href="#">Login</a></li>
-                        <li><a href="#"><img src="images/trolly-icon.png"></a></li>
-                        <li><a href="#"><img src="images/search-icon.png"></a></li>
-                     </ul>
-                  </div>
-                  <div></div>
-               </form>
-            </div>
-            <div id="main">
-               <span style="font-size:36px;cursor:pointer; color: #fff" onclick="openNav()"><img src="images/toggle-icon.png" style="height: 30px;"></span>
-            </div>
-         </nav>
-         <!-- banner section start -->
-         <div class="banner_section layout_padding">
-            <div id="main_slider" class="carousel slide" data-ride="carousel">
-               <div class="carousel-inner">
-                  <div class="carousel-item active">
-                     <div class="container">
-                        <div class="row">
-                           <div class="col-md-7">
-                              <div class="best_text">Best</div>
-                              <div class="image_1"><img src="images/img-1.png"></div>
-                           </div>
-                           <div class="col-md-5">
-                              <h1 class="banner_taital">New Model Cycle</h1>
-                              <p class="banner_text">It is a long established fact that a reader will be distracted by the readable content </p>
-                              <div class="contact_bt"><a href="contact.html">Shop Now</a></div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="carousel-item">
-                     <div class="container">
-                        <div class="row">
-                           <div class="col-md-7">
-                              <div class="best_text">Best</div>
-                              <div class="image_1"><img src="images/img-1.png"></div>
-                           </div>
-                           <div class="col-md-5">
-                              <h1 class="banner_taital">New Model Cycle</h1>
-                              <p class="banner_text">It is a long established fact that a reader will be distracted by the readable content </p>
-                              <div class="contact_bt"><a href="contact.html">Shop Now</a></div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="carousel-item">
-                     <div class="container">
-                        <div class="row">
-                           <div class="col-md-7">
-                              <div class="best_text">Best</div>
-                              <div class="image_1"><img src="images/img-1.png"></div>
-                           </div>
-                           <div class="col-md-5">
-                              <h1 class="banner_taital">New Model Cycle</h1>
-                              <p class="banner_text">It is a long established fact that a reader will be distracted by the readable content </p>
-                              <div class="contact_bt"><a href="contact.html">Shop Now</a></div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <a class="carousel-control-prev" href="#main_slider" role="button" data-slide="prev">
-               <i class="fa fa-angle-left"></i>
-               </a>
-               <a class="carousel-control-next" href="#main_slider" role="button" data-slide="next">
-               <i class="fa fa-angle-right"></i>
-               </a>
-            </div>
-         </div>
-         <!-- banner section end -->
-      </div>
-      <!-- header section end -->
-      <!-- contact section start -->
-      <div class="contact_section layout_padding">
-         <div class="container">
-            <div class="contact_main">
-               <h1 class="request_text">A Call Back</h1>
-               <form action="/action_page.php">
-                  <div class="form-group">
-                     <input type="text" class="email-bt" placeholder="Name" name="Name">
-                  </div>
-                  <div class="form-group">
-                     <input type="text" class="email-bt" placeholder="Email" name="Name">
-                  </div>
-                  <div class="form-group">
-                     <input type="text" class="email-bt" placeholder="Phone Numbar" name="Email">
-                  </div>
-                  <div class="form-group">
-                     <textarea class="massage-bt" placeholder="Massage" rows="5" id="comment" name="Massage"></textarea>
-                  </div>
-               </form>
-               <div class="send_btn"><a href="#">SEND</a></div>
-            </div>
-         </div>
-      </div>
-      <!-- contact section end -->
-      <!-- footer section start -->
-      <div class="footer_section layout_padding">
-         <div class="container-fluid">
-            <div class="row">
-               <div class="col-lg-8 col-sm-12 padding_0">
-                  <div class="map_main">
-                     <div class="map-responsive">
-                       <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA0s1a7phLN0iaD6-UE7m4qP-z21pH0eSc&amp;q=Eiffel+Tower+Paris+France" width="600" height="400" frameborder="0" style="border:0; width: 100%;" allowfullscreen=""></iframe>
-                     </div>
-                  </div>
-               </div>
-               <div class="col-lg-4 col-sm-12">
-                  <div class="call_text"><a href="#"><img src="images/map-icon.png"><span class="padding_left_0">Page when looking at its layou</span></a></div>
-                  <div class="call_text"><a href="#"><img src="images/call-icon.png"><span class="padding_left_0">Call Now  +01 123467890</span></a></div>
-                  <div class="call_text"><a href="#"><img src="images/mail-icon.png"><span class="padding_left_0">demo@gmail.com</span></a></div>
-                  <div class="social_icon">
-                     <ul>
-                        <li><a href="#"><img src="images/fb-icon1.png"></a></li>
-                        <li><a href="#"><img src="images/twitter-icon.png"></a></li>
-                        <li><a href="#"><img src="images/linkedin-icon.png"></a></li>
-                        <li><a href="#"><img src="images/instagram-icon.png"></a></li>
-                     </ul>
-                  </div>
-                  <input type="text" class="email_text" placeholder="Enter Your Email" name="Enter Your Email">
-                  <div class="subscribe_bt"><a href="#">Subscribe</a></div>
-               </div>
-            </div>
-         </div>
-      </div>
-      <!-- footer section end -->
-      <!-- copyright section start -->
-      <div class="copyright_section">
-         <div class="container">
-            <p class="copyright_text">Copyright 2019 All Right Reserved By.<a href="https://html.design"> Free  html Templates</p>
-               <p class="copyright_text">Disrtributed By. <a href="https://themewagon.com">ThemeWagon </a></p>
-         </div>
-      </div>
-      <!-- copyright section end -->    
-      <!-- Javascript files-->
-      <script src="js/jquery.min.js"></script>
-      <script src="js/popper.min.js"></script>
-      <script src="js/bootstrap.bundle.min.js"></script>
-      <script src="js/jquery-3.0.0.min.js"></script>
-      <script src="js/plugin.js"></script>
-      <!-- sidebar -->
-      <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
-      <script src="js/custom.js"></script>
-      <!-- javascript --> 
-      <script src="js/owl.carousel.js"></script>
-      <script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
-      <script>
-         function openNav() {
-           document.getElementById("mySidenav").style.width = "250px";
-           document.getElementById("main").style.marginLeft = "250px";
-         }
-         
-         function closeNav() {
-           document.getElementById("mySidenav").style.width = "0";
-           document.getElementById("main").style.marginLeft= "0";
-          
-         }
+﻿<?php
+session_start();
+include_once __DIR__ . '/config.php';
+include_once __DIR__ . '/includes/auth-handler.php';
 
-         $("#main").click(function(){
-             $("#navbarSupportedContent").toggleClass("nav-normal")
-         })
-      </script>
-   </body>
+$error = '';
+$success = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $userId = isLoggedIn() ? (int)$_SESSION['user_id'] : null;
+    $result = saveContactMessage(
+        $_POST['name'] ?? '',
+        $_POST['email'] ?? '',
+        $_POST['phone'] ?? '',
+        $_POST['subject'] ?? '',
+        $_POST['message'] ?? '',
+        $userId
+    );
+
+    if ($result['success']) {
+        $success = $result['message'];
+        $_POST = array();
+    } else {
+        $error = $result['message'];
+    }
+}
+
+$prefillName = $_POST['name'] ?? ($_SESSION['full_name'] ?? '');
+$prefillEmail = $_POST['email'] ?? ($_SESSION['email'] ?? '');
+?>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liên hệ - GreenRide</title>
+    <style>
+        body { margin: 0; background: #f5f7fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .wrap { max-width: 980px; margin: 30px auto; padding: 0 16px 30px; }
+        .grid { display: grid; grid-template-columns: 300px 1fr; gap: 20px; }
+        .card { background: #fff; border-radius: 12px; box-shadow: 0 6px 24px rgba(0,0,0,.08); padding: 22px; }
+        h1 { margin: 0 0 10px; color: #2f5d62; }
+        .muted { color: #666; margin-bottom: 12px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 700; color: #1f3540; }
+        .form-group input, .form-group textarea { width: 100%; border: 1px solid #d7d7d7; border-radius: 8px; padding: 10px 12px; font-size: 14px; }
+        .form-group textarea { min-height: 140px; resize: vertical; }
+        .full { grid-column: 1 / -1; }
+        .btn { border: 0; border-radius: 8px; background: #2f5d62; color: #fff; font-weight: 700; padding: 11px 14px; cursor: pointer; }
+        .btn:hover { background: #23444a; }
+        .alert { border-radius: 8px; padding: 10px 12px; margin-bottom: 14px; font-size: 14px; }
+        .alert-danger { background: #f8d7da; color: #721c24; }
+        .alert-success { background: #d4edda; color: #155724; }
+        .info-row { margin-bottom: 10px; color: #334; }
+        @media (max-width: 900px) {
+            .grid { grid-template-columns: 1fr; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<?php include __DIR__ . '/includes/header.php'; ?>
+
+<div class="wrap">
+    <div class="grid">
+        <div class="card">
+            <h1>Liên hệ</h1>
+            <p class="muted">Nếu bạn cần hỗ trợ, hãy gửi thông tin cho GreenRide.</p>
+            <div class="info-row"><strong>Email:</strong> support@greenride.local</div>
+            <div class="info-row"><strong>Hotline:</strong> 0901 234 567</div>
+            <div class="info-row"><strong>Địa chỉ:</strong> Bình Thạnh, TP.HCM</div>
+            <div class="info-row"><strong>Thời gian:</strong> 8:00 - 21:00</div>
+        </div>
+
+        <div class="card">
+            <?php if ($error): ?>
+                <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+            <?php endif; ?>
+            <?php if ($success): ?>
+                <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
+            <?php endif; ?>
+
+            <form method="POST" action="">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">Họ tên</label>
+                        <input id="name" type="text" name="name" required value="<?= htmlspecialchars($prefillName) ?>">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input id="email" type="email" name="email" required value="<?= htmlspecialchars($prefillEmail) ?>">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Số điện thoại</label>
+                        <input id="phone" type="text" name="phone" value="<?= htmlspecialchars($_POST['phone'] ?? '') ?>">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Tiêu đề</label>
+                        <input id="subject" type="text" name="subject" required value="<?= htmlspecialchars($_POST['subject'] ?? '') ?>">
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="message">Nội dung</label>
+                        <textarea id="message" name="message" required><?= htmlspecialchars($_POST['message'] ?? '') ?></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Gửi liên hệ</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
 </html>
