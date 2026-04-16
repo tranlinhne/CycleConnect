@@ -1,7 +1,7 @@
 .footer {
     position: relative;
-    background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
-    color: #ccc;
+    background: linear-gradient(120deg, #c9d12f 0%, #8fd67e 48%, #45c9d9 100%);
+    color: #eef8ee;
     padding: 80px 80px 40px;
     overflow: hidden;
     font-family: Arial, sans-serif;
@@ -14,11 +14,7 @@
     bottom: -100px;
     width: 500px;
     height: 500px;
-    background: linear-gradient(
-        135deg,
-        rgba(255,255,255,0.08),
-        rgba(255,255,255,0.02)
-    );
+    background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04));
     transform: rotate(45deg);
     z-index: 0;
 }
@@ -32,16 +28,12 @@
     width: 400px;
     height: 400px;
 
-    background: linear-gradient(
-        135deg,
-        rgba(255,255,255,0.15),  /*  tăng độ sáng */
-        rgba(255,255,255,0.05)
-    );
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.06));
 
     clip-path: polygon(0 100%, 100% 100%, 0 0);
 
-    filter: blur(8px);   /* 👈 giảm blur */
-    opacity: 0.8;        /* 👈 tăng opacity */
+    filter: blur(8px);
+    opacity: 0.8;
 
     z-index: 0;
 }
@@ -54,11 +46,7 @@
     bottom: 100px;
     width: 300px;
     height: 300px;
-    background: radial-gradient(
-        circle,
-        rgba(255,255,255,0.15),
-        transparent 70%
-    );
+    background: radial-gradient(circle, rgba(255,255,255,0.22), transparent 72%);
     filter: blur(60px);
     z-index: 0;
 }
@@ -74,15 +62,8 @@
     font-weight: 900;
     letter-spacing: 20px;
 
-    /* fallback */
-    color: rgba(255,255,255,0.05);
-
-    /* gradient text */
-    background: linear-gradient(
-        120deg,
-        rgba(255,255,255,0.1),
-        rgba(255,255,255,0.02)
-    );
+    color: rgba(255,255,255,0.08);
+    background: linear-gradient(120deg, rgba(255,255,255,0.14), rgba(255,255,255,0.03));
 
     background-clip: text;
     -webkit-background-clip: text;
@@ -108,7 +89,12 @@
 }
 
 .footer-col h3 {
-    color: #fff;
+    color: #f7fff5;
+    margin-bottom: 12px;
+}
+
+.footer-column h4 {
+    color: #f7fff5;
     margin-bottom: 12px;
 }
 
@@ -131,20 +117,20 @@
 }
 
 .footer-brand h2 {
-    color: #fff;
+    color: #f7fff5;
     margin: 0;
     font-size: 26px;
 }
 
 .footer-brand .check {
-    color: #ff4d4d;
+    color: #f4a261;
 }
 
 /* ===== BOTTOM ===== */
 .footer-bottom {
     display: flex;
     justify-content: space-between;
-    border-top: 1px solid #333;
+    border-top: 1px solid rgba(47, 93, 98, 0.45);
     padding-top: 15px;
     font-size: 14px;
     position: relative;

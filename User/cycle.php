@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -93,10 +93,9 @@
                            <div class="image_1"><img src="images/img-1.png"></div>
                         </div>
                         <div class="col-md-5">
-                           <h1 class="banner_taital">New Model Cycle</h1>
-                           <p class="banner_text">It is a long established fact that a reader will be distracted by the
-                              readable content </p>
-                           <div class="contact_bt"><a href="contact.html">Shop Now</a></div>
+                           <h1 class="banner_taital">Mẫu<br>Xe<br>2026</h1>
+                           <p class="banner_text">Mang đến trải nghiệm đạp xe hoàn hảo với thiết kế hiện đại và hiệu suất vượt trội.</p>
+                           <div class="contact_bt"><a href="contact.html">Mua Ngay</a></div>
                         </div>
                      </div>
                   </div>
@@ -109,10 +108,9 @@
                            <div class="image_1"><img src="images/img-1.png"></div>
                         </div>
                         <div class="col-md-5">
-                           <h1 class="banner_taital">New Model Cycle</h1>
-                           <p class="banner_text">It is a long established fact that a reader will be distracted by the
-                              readable content </p>
-                           <div class="contact_bt"><a href="contact.html">Shop Now</a></div>
+                           <h1 class="banner_taital">Mẫu<br>Xe<br>2026</h1>
+                           <p class="banner_text">Mang đến trải nghiệm đạp xe hoàn hảo với thiết kế hiện đại và hiệu suất vượt trội.</p>
+                           <div class="contact_bt"><a href="contact.html">Mua Ngay</a></div>
                         </div>
                      </div>
                   </div>
@@ -125,10 +123,9 @@
                            <div class="image_1"><img src="images/img-1.png"></div>
                         </div>
                         <div class="col-md-5">
-                           <h1 class="banner_taital">New Model Cycle</h1>
-                           <p class="banner_text">It is a long established fact that a reader will be distracted by the
-                              readable content </p>
-                           <div class="contact_bt"><a href="contact.html">Shop Now</a></div>
+                           <h1 class="banner_taital">Mẫu<br>Xe<br>2026</h1>
+                           <p class="banner_text">Mang đến trải nghiệm đạp xe hoàn hảo với thiết kế hiện đại và hiệu suất vượt trội.</p>
+                           <div class="contact_bt"><a href="contact.html">Mua Ngay</a></div>
                         </div>
                      </div>
                   </div>
@@ -159,14 +156,14 @@
                   </div>
                </div>
                <div class="col-md-6">
-                  <h1 class="cycles_text">Cycles</h1>
+                  <h1 class="cycles_text">Kukirin X1</h1>
                   <p class="lorem_text">It is a long established fact that a reader will be distracted by the readable
                      content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a
                      more-or-less normal distribution of letters</p>
                   <div class="btn_main">
-                     <div class="buy_bt"><a href="#">Buy Now</a></div>
-                     <h4 class="price_text">Price <span style=" color: #f7c17b">$</span> <span
-                           style=" color: #325662">200</span></h4>
+                       <div class="buy_bt"><a href="#">Mua ngay</a></div>
+                       <h4 class="price_text"><span style="color: #fca311;">$</span> <span
+                             style="color: #333; font-weight: 500;">15,000,000</span></h4>
                   </div>
                </div>
             </div>
@@ -174,14 +171,14 @@
          <div class="cycle_section_3 layout_padding">
             <div class="row">
                <div class="col-md-6">
-                  <h1 class="cycles_text">Stylis Cycle</h1>
+                  <h1 class="cycles_text">City Lite</h1>
                   <p class="lorem_text">It is a long established fact that a reader will be distracted by the readable
                      content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a
                      more-or-less normal distribution of letters</p>
                   <div class="btn_main">
-                     <div class="buy_bt"><a href="#">Buy Now</a></div>
-                     <h4 class="price_text">Price <span style=" color: #f7c17b">$</span> <span
-                           style=" color: #325662">200</span></h4>
+                       <div class="buy_bt"><a href="#">Mua ngay</a></div>
+                       <h4 class="price_text"><span style="color: #fca311;">$</span> <span
+                             style="color: #333; font-weight: 500;">6,500,000</span></h4>
                   </div>
                </div>
                <div class="col-md-6">
@@ -201,14 +198,14 @@
                   </div>
                </div>
                <div class="col-md-6">
-                  <h1 class="cycles_text">Mordern <br>Cycle</h1>
+                  <h1 class="cycles_text">Racing<br>Speed R9</h1>
                   <p class="lorem_text">It is a long established fact that a reader will be distracted by the readable
                      content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a
                      more-or-less normal distribution of letters</p>
                   <div class="btn_main">
-                     <div class="buy_bt"><a href="#">Buy Now</a></div>
-                     <h4 class="price_text">Price <span style=" color: #f7c17b">$</span> <span
-                           style=" color: #325662">200</span></h4>
+                       <div class="buy_bt"><a href="#">Mua ngay</a></div>
+                       <h4 class="price_text"><span style="color: #fca311;">$</span> <span
+                             style="color: #333; font-weight: 500;">22,000,000</span></h4>
                   </div>
                </div>
             </div>

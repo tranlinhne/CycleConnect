@@ -5,23 +5,23 @@ include 'includes/header.php';
 $bikes = array(
     array(
         'id' => 1,
-        'name' => 'Cycles',
-        'description' => 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters',
-        'price' => 200,
+        'name' => 'Kukirin X1',
+        'description' => 'Chiếc xe đạp điện leo núi cao cấp được thiết kế dành cho những người yêu thích khám phá và chinh phục địa hình khó. Xe được trang bị động cơ mạnh mẽ, pin dung lượng lớn giúp di chuyển quãng đường dài mà không lo hết pin. Phù hợp cho đi phượt, leo núi, hoặc di chuyển hằng ngày trong thành phố.',
+        'price' => 15000000,
         'image' => 'xe-dap-dien-leo-nui-pro-x1.png'
     ),
     array(
         'id' => 2,
-        'name' => 'Stylis Cycle',
-        'description' => 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters',
-        'price' => 200,
+        'name' => 'City Lite',
+        'description' => 'Xe đạp thành phố thời trang, nhẹ và linh hoạt, rất phù hợp cho việc đi học, đi làm và dạo phố. Thiết kế tối giản hiện đại giúp việc điều khiển trở nên dễ dàng ngay cả với người mới sử dụng. Đây là lựa chọn hoàn hảo cho sinh viên và dân văn phòng.',
+        'price' => 6500000,
         'image' => 'xe-dap-thanh-pho-city-lite.png'
     ),
     array(
         'id' => 3,
-        'name' => 'Speed Cycle',
-        'description' => 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters',
-        'price' => 200,
+        'name' => 'Racing Speed R9',
+        'description' => 'Chiếc xe đạp đua hiệu suất cao dành cho những người đam mê tốc độ và thể thao. Khung carbon siêu nhẹ kết hợp thiết kế khí động học giúp giảm lực cản gió tối đa. Phù hợp cho luyện tập thể thao, thi đấu hoặc chinh phục những cung đường dài.',
+        'price' => 22000000,
         'image' => 'xe-dap-dua-racing-speed-r9.png'
     )
 );
@@ -40,7 +40,7 @@ $bikes = array(
         .hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; align-items: center; gap: 40px; position: relative; z-index: 2; }
         .hero-bike { position: relative; }
         .hero-bike img { width: 100%; max-width: 640px; filter: drop-shadow(0 26px 30px rgba(0,0,0,.35)); }
-        .best-badge { position: absolute; top: -10px; left: 46%; width: 84px; height: 84px; border-radius: 50%; background: #f0be6f; color: #234e5a; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+        .best-badge { position: absolute; top: 0; left: 16%; width: 90px; height: 90px; border-radius: 50%; background: #f0be6f; color: #234e5a; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 18px; z-index: 10; text-transform: uppercase; }
         .hero-text h1 { font-size: 68px; line-height: 1.05; margin: 0 0 20px; }
         .hero-text p { color: #d8e1e4; max-width: 500px; margin: 0 0 24px; font-size: 18px; line-height: 1.6; }
         .btn-hero { display: inline-block; background: #f0be6f; color: #234e5a; font-weight: 700; text-decoration: none; padding: 12px 26px; border-radius: 4px; }
@@ -87,9 +87,9 @@ $bikes = array(
                 <img src="assets/images/hero-bike.png" alt="Bike">
             </div>
             <div class="hero-text">
-                <h1>New Model Cycle</h1>
-                <p>It is a long established fact that a reader will be distracted by the readable content</p>
-                <a href="#" class="btn-hero">Shop Now</a>
+                <h1>Mẫu<br>Xe<br>2026</h1>
+                <p>Mang đến trải nghiệm đạp xe hoàn hảo với thiết kế hiện đại và hiệu suất vượt trội.</p>
+                <a href="#" class="btn-hero">Mua Ngay</a>
             </div>
         </div>
     </div>
@@ -113,8 +113,8 @@ $bikes = array(
                     <h3><?= htmlspecialchars($bike['name']) ?></h3>
                     <p><?= htmlspecialchars($bike['description']) ?></p>
                     <div class="row-bottom">
-                        <a href="#" class="btn-buy">Buy Now</a>
-                        <div class="price">Price <small>$ <?= number_format((float)$bike['price'], 0) ?></small></div>
+                        <a href="#" class="btn-buy">Mua ngay</a>
+                        <div class="price"><span style="color: #fca311; font-size: 20px; font-weight: 700; margin-right: 5px;">$</span><?= number_format((float)$bike['price'], 0, '.', ',') ?></div>
                     </div>
                 </div>
             </article>

@@ -2,120 +2,178 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+// Xác định trang hiện tại
 $current = basename($_SERVER['PHP_SELF']);
 ?>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
-    .site-header {
-        position: sticky;
-        top: 0;
-        z-index: 1000;
+    .header {
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: space-between;
         background: #2f5d62;
-        padding: 12px 40px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 12px 24px;
     }
 
-    .site-logo {
+    .logo a {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
+        background: #f1f1f1;
+        padding: 6px 14px;
         text-decoration: none;
-        font-weight: 800;
-        font-size: 30px;
-        color: #f0be6f;
     }
 
-    .site-nav {
+    .logo-icon {
+        font-size: 16px;
+    }
+
+    .logo-text {
+        font-weight: 700;
+        font-size: 16px;
+        color: #2f5d62;
+    }
+
+    .nav {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
         display: flex;
         align-items: center;
-        gap: 26px;
-        margin-left: 40px;
+        justify-content: center;
+        gap: 2px;
     }
 
-    .site-nav a {
+    .nav a {
         color: #fff;
         text-decoration: none;
+        margin: 0 14px;
+        font-size: 13px;
         font-weight: 600;
-        font-size: 15px;
-        opacity: 0.92;
     }
 
-    .site-nav a.active,
-    .site-nav a:hover {
-        color: #f0be6f;
+    .nav a:hover,
+    .nav a.active {
+        color: #f4a261;
     }
 
-    .site-right {
+    .header-right {
         margin-left: auto;
         display: flex;
         align-items: center;
-        gap: 18px;
+        gap: 14px;
     }
 
-    .site-right .icon-link {
+    .header-right a,
+    .header-right i {
         color: #fff;
-        font-size: 18px;
         text-decoration: none;
+        cursor: pointer;
     }
 
-    .site-right .icon-link:hover {
-        color: #f0be6f;
+    .header-right a:hover,
+    .header-right i:hover {
+        color: #f4a261;
     }
 
-    .btn-auth-link {
-        background: #f0be6f;
-        color: #234e5a;
-        text-decoration: none;
-        font-weight: 700;
-        padding: 9px 16px;
-        border-radius: 6px;
-        font-size: 14px;
+    .search-box {
+        display: none;
+        align-items: center;
+        background: #fff;
+        border-radius: 5px;
+        padding: 4px;
     }
 
-    .btn-auth-link:hover {
-        background: #e7a64d;
+    .search-box input,
+    .search-box select,
+    .search-box button {
+        border: none;
+        outline: none;
+        padding: 6px 8px;
+    }
+
+    .search-box button {
+        background: #f4a261;
+        color: #fff;
+    }
+
+    .search-box.active {
+        display: flex;
     }
 
     @media (max-width: 900px) {
-        .site-header {
-            padding: 12px 16px;
+        .header {
             flex-wrap: wrap;
             row-gap: 10px;
         }
 
-        .site-nav {
+        .nav {
+            position: static;
+            transform: none;
             order: 3;
             width: 100%;
-            margin-left: 0;
-            gap: 16px;
+            justify-content: flex-start;
             overflow-x: auto;
             white-space: nowrap;
-            padding-bottom: 4px;
         }
     }
 </style>
 
-<header class="site-header">
-    <a href="index.php" class="site-logo"><i class="fas fa-bicycle"></i><span>CYCLE</span></a>
+<header class="header">
 
-    <nav class="site-nav">
-        <a href="index.php" class="<?= $current === 'index.php' ? 'active' : '' ?>">Trang chủ</a>
-        <a href="about.php" class="<?= $current === 'about.php' ? 'active' : '' ?>">Về chúng tôi</a>
-        <a href="cycle.php" class="<?= $current === 'cycle.php' ? 'active' : '' ?>">Sản phẩm</a>
-        <a href="contact.php" class="<?= $current === 'contact.php' ? 'active' : '' ?>">Liên hệ</a>
+    <!-- LOGO -->
+    <div class="logo">
+        <a href="index.php">
+            <span class="logo-icon">🚲</span>
+            <span class="logo-text">CYCLE</span>
+        </a>
+    </div>
+
+    <!-- MENU -->
+    <nav class="nav">
+        <a href="index.php" class="<?= ($current == 'index.php') ? 'active' : '' ?>">Trang chủ</a>
+        <a href="about.php" class="<?= ($current == 'about.php') ? 'active' : '' ?>">Giới thiệu</a>
+        <a href="cycle.php" class="<?= ($current == 'cycle.php') ? 'active' : '' ?>">Sản phẩm</a>
+        <a href="news.php" class="<?= ($current == 'news.php') ? 'active' : '' ?>">Đăng tin</a>
+        <a href="contact.php" class="<?= ($current == 'contact.php') ? 'active' : '' ?>">Liên hệ</a>
     </nav>
 
-    <div class="site-right">
-        <a class="icon-link" href="#" aria-label="Giỏ hàng"><i class="fas fa-shopping-cart"></i></a>
-        <?php if (!empty($_SESSION['logged_in'])): ?>
-            <a class="btn-auth-link" href="profile.php">Tài khoản</a>
-            <a class="btn-auth-link" href="logout.php">Đăng xuất</a>
-        <?php else: ?>
-            <a class="btn-auth-link" href="login.php">Đăng nhập</a>
-        <?php endif; ?>
+    <!-- RIGHT -->
+    <div class="header-right">
+
+        <!-- LOGIN -->
+        <a href="login.php" class="login">Đăng nhập</a>
+
+        <!-- SEARCH BOX -->
+        <div class="search-box" id="searchBox">
+            <input type="text" placeholder="Tìm xe đạp...">
+
+            <!-- FILTER -->
+            <select>
+                <option value="">Tất cả</option>
+                <option value="dien">Xe điện</option>
+                <option value="duongpho">Xe đường phố</option>
+                <option value="thethao">Xe thể thao</option>
+            </select>
+
+            <button><i class="fa fa-search"></i></button>
+        </div>
+
+        <!-- ICON -->
+        <i class="fa fa-search search-toggle" onclick="toggleSearch()"></i>
+        <a href="cart.php"><i class="fa fa-shopping-cart"></i></a>
+        <i class="fa fa-bars menu-toggle"></i>
+
     </div>
+
 </header>
+
+<!-- SCRIPT -->
+<script>
+function toggleSearch() {
+    const box = document.getElementById("searchBox");
+    box.classList.toggle("active");
+}
+</script>
