@@ -3,6 +3,9 @@ require_once "config.php";
 
 $current_page = basename($_SERVER['PHP_SELF']);
 
+$isUserPage = strpos($_SERVER['REQUEST_URI'], 'user_management') !== false;
+
+// ✅ PHẢI ĐỂ TRONG PHP
 $total_users = mysqli_fetch_assoc(
     mysqli_query($conn, "SELECT COUNT(*) total FROM users")
 )['total'] ?? 0;
@@ -151,6 +154,26 @@ body {
     border-radius: 10px;
     margin-top: 15px;
 }
+
+.submenu {
+    display: none;
+    margin-left: 15px;
+}
+
+.submenu a {
+    display: block;
+    padding: 10px;
+    font-size: 13px;
+    color: #777;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.submenu a:hover {
+    background: #f1f2ff;
+    color: #5b5ce2;
+}
+
 </style>
 </head>
 
@@ -172,10 +195,23 @@ body {
         <i class="fa fa-chart-line"></i> Dashboard
     </a>
 
-    <a href="user_management.php"
-    class="<?= ($current_page == 'user_management.php') ? 'active' : '' ?>">
+    <div class="menu-item">
+
+    <a href="#" onclick="toggleMenu()">
         <i class="fa fa-users"></i> Quản lý người dùng
+        <i class="fa fa-angle-down" style="float:right;"></i>
     </a>
+
+    <div id="user-submenu" class="submenu"
+         style="<?= $isUserPage ? 'display:block;' : '' ?>">
+
+        <a href="user_management/all_users.php">All Users</a>
+        <a href="user_management/add_user.php">Add New</a>
+        <a href="user_management/profile.php">Profile</a>
+
+    </div>
+
+</div>
 
     <a href="bicycle_management.php"
     class="<?= ($current_page == 'bicycle_management.php') ? 'active' : '' ?>">
@@ -260,6 +296,18 @@ body {
     </div>
 
 </div>
+
+<script>
+function toggleMenu() {
+    let menu = document.getElementById("user-submenu");
+
+    if (menu.style.display === "block") {
+        menu.style.display = "none";
+    } else {
+        menu.style.display = "block";
+    }
+}
+</script>
 
 </body>
 </html>
