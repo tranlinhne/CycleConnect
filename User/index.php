@@ -1,127 +1,585 @@
-﻿<?php
-include 'config.php';
-include 'includes/header.php';
+﻿    <?php
+    include 'config.php';
+    include 'includes/header.php';
 
-$bikes = array(
-    array(
-        'id' => 1,
-        'name' => 'Kukirin X1',
-        'description' => 'Chiếc xe đạp điện leo núi cao cấp được thiết kế dành cho những người yêu thích khám phá và chinh phục địa hình khó. Xe được trang bị động cơ mạnh mẽ, pin dung lượng lớn giúp di chuyển quãng đường dài mà không lo hết pin. Phù hợp cho đi phượt, leo núi, hoặc di chuyển hằng ngày trong thành phố.',
-        'price' => 15000000,
-        'image' => 'xe-dap-dien-leo-nui-pro-x1.png'
-    ),
-    array(
-        'id' => 2,
-        'name' => 'City Lite',
-        'description' => 'Xe đạp thành phố thời trang, nhẹ và linh hoạt, rất phù hợp cho việc đi học, đi làm và dạo phố. Thiết kế tối giản hiện đại giúp việc điều khiển trở nên dễ dàng ngay cả với người mới sử dụng. Đây là lựa chọn hoàn hảo cho sinh viên và dân văn phòng.',
-        'price' => 6500000,
-        'image' => 'xe-dap-thanh-pho-city-lite.png'
-    ),
-    array(
-        'id' => 3,
-        'name' => 'Racing Speed R9',
-        'description' => 'Chiếc xe đạp đua hiệu suất cao dành cho những người đam mê tốc độ và thể thao. Khung carbon siêu nhẹ kết hợp thiết kế khí động học giúp giảm lực cản gió tối đa. Phù hợp cho luyện tập thể thao, thi đấu hoặc chinh phục những cung đường dài.',
-        'price' => 22000000,
-        'image' => 'xe-dap-dua-racing-speed-r9.png'
-    )
-);
-?>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GreenRide - Trang chủ</title>
+    // Lấy dữ liệu
+    $sql = "SELECT * FROM featured_bikes ORDER BY display_order ASC";
+    $result = $conn->query($sql);
+
+    // Lấy sản phẩm đầu tiên cho banner
+    $first = null;
+    if ($result && $result->num_rows > 0) {
+        $first = $result->fetch_assoc();
+    }
+    ?>
     <style>
-        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #fff; color: #222; }
-        .hero { width: 100%; overflow: hidden; }
-        .hero-inner { width: 100%; max-width: 1400px; margin: 0 auto; background: #2f5d62; color: #fff; position: relative; padding: 80px 60px 120px; }
-        .hero-inner::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 160px; background: #f3f3f3; clip-path: polygon(0 100%, 100% 25%, 100% 100%); }
-        .hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; align-items: center; gap: 40px; position: relative; z-index: 2; }
-        .hero-bike { position: relative; }
-        .hero-bike img { width: 100%; max-width: 640px; filter: drop-shadow(0 26px 30px rgba(0,0,0,.35)); }
-        .best-badge { position: absolute; top: 0; left: 16%; width: 90px; height: 90px; border-radius: 50%; background: #f0be6f; color: #234e5a; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 18px; z-index: 10; text-transform: uppercase; }
-        .hero-text h1 { font-size: 68px; line-height: 1.05; margin: 0 0 20px; }
-        .hero-text p { color: #d8e1e4; max-width: 500px; margin: 0 0 24px; font-size: 18px; line-height: 1.6; }
-        .btn-hero { display: inline-block; background: #f0be6f; color: #234e5a; font-weight: 700; text-decoration: none; padding: 12px 26px; border-radius: 4px; }
 
-        .cycle-section { background: #f3f3f3; padding: 80px 0 40px; }
-        .container { width: 100%; max-width: 1240px; margin: 0 auto; padding: 0 18px; }
-        .section-title { text-align: center; font-size: 58px; margin: 0; font-weight: 800; }
-        .section-sub { text-align: center; color: #555; margin: 12px 0 70px; font-size: 20px; }
 
-        .cycle-item { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 70px; margin-bottom: 90px; }
-        .cycle-item.reverse { direction: rtl; }
-        .cycle-item.reverse > * { direction: ltr; }
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background: #ffffff;
+        color: #333;
+    }
 
-        .cycle-image-wrap { position: relative; min-height: 400px; display: flex; align-items: center; justify-content: center; }
-        .shape { position: absolute; inset: 0 16% 0 0; background: #f0be6f; clip-path: polygon(0 7%, 100% 18%, 100% 85%, 0 100%); }
-        .cycle-item.reverse .shape { inset: 0 0 0 16%; }
-        .cycle-image-wrap img { position: relative; z-index: 2; max-width: 360px; width: 100%; }
-        .number-dot { position: absolute; top: 20px; right: 18%; z-index: 3; width: 52px; height: 52px; border-radius: 50%; background: #2f5d62; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; }
-        .cycle-item.reverse .number-dot { right: auto; left: 18%; }
+    /* ===== HEADER ===== */
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #2f5d62;
+        padding: 15px 60px;
+    }
 
-        .line { width: 140px; height: 2px; background: #4d6670; margin-bottom: 22px; }
-        .cycle-info h3 { font-size: 56px; margin: 0 0 20px; }
-        .cycle-info p { color: #444; font-size: 19px; line-height: 1.7; margin: 0 0 26px; }
-        .row-bottom { display: flex; justify-content: space-between; align-items: center; }
-        .btn-buy { background: #2f5d62; color: #fff; text-decoration: none; font-weight: 700; padding: 12px 24px; border-radius: 2px; }
-        .price { font-size: 36px; font-weight: 800; }
-        .price small { font-size: 20px; color: #f0be6f; margin-left: 6px; }
+    /* LOGO */
+    .logo a {
+        display: flex;
+        align-items: center;
+        background: #f1f1f1;
+        padding: 8px 18px;
+        text-decoration: none;
+    }
 
-        @media (max-width: 980px) {
-            .hero-grid, .cycle-item { grid-template-columns: 1fr; }
-            .hero-text h1 { font-size: 46px; }
-            .section-title { font-size: 42px; }
-            .cycle-info h3 { font-size: 40px; }
-            .cycle-item.reverse { direction: ltr; }
+    .logo-icon {
+        font-size: 22px;
+        margin-right: 6px;
+    }
+
+    .logo-text {
+        font-weight: bold;
+        font-size: 20px;
+        color: #2f5d62;
+    }
+
+    /* MENU */
+    .nav {
+        display: flex;
+        align-items: center;
+    }
+
+    .nav a {
+        color: white;
+        text-decoration: none;
+        margin: 0 18px;
+        font-size: 15px;
+        position: relative;
+        transition: 0.3s;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+        color: #f4a261;
+    }
+
+    /* RIGHT */
+    .header-right {
+        display: flex;
+        align-items: center;
+    }
+
+    .header-right a,
+    .header-right i {
+        color: white;
+        margin-left: 18px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .header-right a:hover,
+    .header-right i:hover {
+        color: #f4a261;
+    }
+   
+
+    /* KHỐI NỀN XANH */
+    .hero-inner{
+        width:70%;              /* 👈 QUAN TRỌNG: tạo khoảng trắng bên trái */
+        margin-left:auto;       /* đẩy khối sang phải */
+        background:#2f5d62;
+        position:relative;
+        color:white;
+        padding:100px 80px 0px;
+        overflow:visible;
+        margin-top:-1px; 
+    }
+
+    /* CẮT HÌNH THANG */
+    .hero-inner::after{
+        content:"";
+        position:absolute;
+        bottom:0;
+        left:0;
+        width:100%;
+        height:220px;
+        background:#ffffff;
+        clip-path: polygon(0 100%, 100% 0, 100% 100%, 0% 100%);
+    }
+
+
+    .hero-container {
+        display: flex;
+        align-items:flex-start; 
+        justify-content: space-between;
+        gap: 40px;
+    }
+
+    /* ===== LEFT (BIKE) ===== */
+    .hero-left {
+        flex: 1.1;
+        position: relative;
+        text-align: center;
+        margin-left: -340px;
+        z-index: 5;     
+    }
+
+    .hero-left img {
+        width: 650px;          /* XE TO GIỐNG MOCKUP */
+        max-width: 100%;
+        filter: drop-shadow(0 40px 40px rgba(0,0,0,0.45));
+    }
+
+    /* BADGE BEST (MÀU CAM) */
+    .badge {
+        position: absolute;
+        top: -50px;
+        left: 470px;
+        background: #f4a261;
+        width: 95px;
+        height: 95px;
+        border-radius: 50%;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #2f5d62;
+        font-size: 18px;
+    }
+
+    /* ===== RIGHT TEXT ===== */
+    .hero-right{
+    flex:1;
+    max-width:520px;
+    margin-top:-70px;
+    transform: translateX(-240px);    /* chỉnh số này để canh */
+}
+
+    .hero-right h1 {
+        font-size: 64px;
+        font-weight: 800;
+        margin-bottom: 25px;
+        line-height: 1.15;
+    }
+
+    .hero-right p {
+        font-size: 17px;
+        margin-bottom: 30px;
+        line-height: 1.7;
+        color: #d6d6d6;
+    }
+
+    /* BUTTON */
+    .btn {
+        display: inline-block;
+        background: #f4a261;
+        padding: 15px 34px;
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        letter-spacing: .5px;
+        transition: 0.3s;
+    }
+
+    .btn:hover {
+        background: #e76f51;
+    }
+
+    /* ===== ARROW NAV ===== */
+    .hero-nav {
+        position: absolute;
+        right: 90px;
+        bottom: 60px;
+        display: flex;
+        gap: 18px;
+    }
+
+    .hero-nav button {
+        width: 58px;
+        height: 58px;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    .hero-nav .prev {
+        background: #f4a261;
+        color: white;
+    }
+
+    .hero-nav .next {
+        background: #264653;
+        color: white;
+    }
+    /* BUTTON */
+    .btn {
+        display: inline-block;
+        background: #f4a261;
+        padding: 14px 30px;
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        transition: 0.3s;
+    }
+
+    .btn:hover {
+        background: #e76f51;
+    }
+
+    .btn.dark {
+        background: #264653;
+    }
+
+
+    /* ===== SECTION ===== */
+.cycle{
+    padding:120px 0px;
+    background:#ffffff;
+}
+
+.cycle-container{
+    width:1200px;
+    margin:auto;
+}
+
+    .cycle h2 {
+        font-size: 62px;
+        margin-bottom: -20px;
+        text-align: center;
+    }
+
+    .cycle .sub {
+        color: #777;
+        font-size: 22px;
+        margin-bottom: 100px;
+        text-align: center;
+    }
+
+    /* ===== ITEM ===== */
+.cycle-item{
+    display:grid;
+    grid-template-columns: 520px 1fr;
+    align-items:center;
+    gap:120px;
+    margin-bottom:240px;
+}
+
+/* ĐẢO NGƯỢC */
+.cycle-item.reverse .cycle-img{
+    order:2;
+}
+
+.cycle-item.reverse .cycle-info{
+    order:1;
+}
+
+    /* đảo layout */
+    .cycle-item.reverse {
+        flex-direction: row-reverse;
+    }
+
+    /* IMAGE */
+    .cycle-img {
+        position: relative;
+        width: 40%;
+    }
+
+.cycle-img img{
+    width:420px;
+    position:relative;
+    z-index:3;
+    filter: drop-shadow(0 30px 30px rgba(0,0,0,0.25));
+}
+
+.cycle-img{
+    position:relative;
+    width:100%;
+}
+
+/* NỀN CAM DỰNG ĐỨNG */
+.cycle-img::before{
+    content:"";
+    position:absolute;
+    left:-40px;
+    top:-60px;
+    width:260px;
+    height:520px;
+    background:#f4a261;
+    clip-path: polygon(0 0, 100% 8%, 100% 75%, 0 100%);
+    z-index:1;
+}
+
+.number{
+    position:absolute;
+    right:300px;
+    top:-40px; 
+    width:55px;
+    height:55px;
+    font-size:14px;
+    background:#2f5d62;
+    color:white;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+    z-index:5;
+}
+    /* INFO */
+.cycle-info{
+    display:grid;
+    display:block; 
+    align-items:start;
+    gap:40px;
+}
+
+.title-row{
+    display:flex;
+    align-items:center;
+    gap:60px;
+    margin-bottom:20px;
+}
+
+.line{
+    width:80px;
+    height:2px;
+    background:#2f5d62;
+}
+/* cột trái */
+.cycle-text h3{
+    font-size:42px;
+    margin:0;
+    margin-left:180px; 
+}
+
+.cycle-text p{
+    color:#555;
+    line-height:1.8;
+    margin-bottom:30px;
+    max-width:780px;
+}
+
+.cycle-item .cycle-text{
+    transform: translateX(-20px);
+}
+
+.cycle-item.reverse .cycle-text{
+    transform: translateX(20px);
+}
+/* ===== DỊCH XE + NỀN CAM ===== */
+.cycle-item .cycle-img{
+    transform: translateX(100px);   /* item 1,3 → qua phải */
+}
+
+.cycle-item.reverse .cycle-img{
+    transform: translateX(100px);  /* item 2 → qua trái */
+}
+.cycle-price{
+    display:flex;
+    align-items:flex-start;
+    gap:6px;
+    font-weight:bold;
+    font-size:22px;
+}
+
+/* dấu $ */
+.cycle-price .currency{
+    font-size:22px;
+    color:#f4a261;
+}
+
+
+.bottom-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:20px;
+    max-width:700px;
+}
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 992px) {
+
+        .hero-container {
+            flex-direction: column;
+            text-align: center;
         }
+
+        .hero-left img {
+            width: 300px;
+        }
+
+        .cycle-item {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .cycle-item.reverse {
+            flex-direction: column;
+        }
+
+        .cycle-img,
+        .cycle-info {
+            width: 100%;
+        }
+
+        .cycle-info {
+            text-align: center;
+        }
+
+        
+    }
+
+    .search-box {
+        display: none;
+        align-items: center;
+        background: white;
+        padding: 5px;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+
+    .search-box input {
+        border: none;
+        outline: none;
+        padding: 8px;
+        width: 200px;
+    }
+
+    .search-box select {
+        border: none;
+        padding: 8px;
+        margin-left: 5px;
+        background: #f1f1f1;
+    }
+
+    .search-box button {
+        border: none;
+        background: #f4a261;
+        color: white;
+        padding: 8px 12px;
+        margin-left: 5px;
+        cursor: pointer;
+    }
+
+    .search-box.active {
+        display: flex;
+    }
+
+    html, body{
+        max-width:100%;
+        overflow-x:hidden;
+    }
+    /* ẨN SCROLLBAR DỌC HOÀN TOÀN */
+
+    /* Chrome, Edge, Safari */
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar{
+        width:0;
+        height:0;
+    }
+
+    /* Firefox */
+    html, body{
+        scrollbar-width:none;
+    }
+
+    /* IE cũ */
+    html, body{
+        -ms-overflow-style:none;
+    }
     </style>
-</head>
-<body>
+
+    <body>
+
 <section class="hero">
-    <div class="hero-inner">
-        <div class="hero-grid">
-            <div class="hero-bike">
-                <span class="best-badge">BEST</span>
-                <img src="assets/images/hero-bike.png" alt="Bike">
-            </div>
-            <div class="hero-text">
-                <h1>Mẫu<br>Xe<br>2026</h1>
-                <p>Mang đến trải nghiệm đạp xe hoàn hảo với thiết kế hiện đại và hiệu suất vượt trội.</p>
-                <a href="#" class="btn-hero">Mua Ngay</a>
-            </div>
+<div class="hero-inner">
+    <div class="hero-container">
+
+        <div class="hero-left">
+            <span class="badge">BEST</span>
+            <img src="assets/images/hero-bike.png" alt="Bike">
         </div>
+
+        <div class="hero-right">
+            <h1>Mẫu<br>Xe<br>2026</h1>
+            <p>
+                Mang đến trải nghiệm đạp xe hoàn hảo với thiết kế hiện đại và hiệu suất vượt trội.
+            </p>
+            <a href="#" class="btn">Mua Ngay</a>
+        </div>
+
+        <div class="hero-nav">
+            <button class="prev"><i class="fas fa-chevron-left"></i></button>
+            <button class="next"><i class="fas fa-chevron-right"></i></button>
+        </div>
+
     </div>
+</div>
 </section>
 
-<section class="cycle-section">
-    <div class="container">
-        <h2 class="section-title">Our Cycle</h2>
-        <p class="section-sub">It is a long established fact that a reader will be distracted by the</p>
+    <!-- OUR CYCLE -->
+    <section class="cycle">
+        <div class="cycle-container">
+        <h2>Our Cycle</h2>
+        <p class="sub">Sản phẩm nổi bật của chúng tôi</p>
 
-        <?php $i = 1; foreach ($bikes as $bike): ?>
-            <article class="cycle-item <?= ($i % 2 === 0) ? 'reverse' : '' ?>">
-                <div class="cycle-image-wrap">
-                    <div class="shape"></div>
-                    <span class="number-dot"><?= str_pad((string)$i, 2, '0', STR_PAD_LEFT) ?></span>
-                    <img src="assets/images/<?= htmlspecialchars($bike['image']) ?>" alt="<?= htmlspecialchars($bike['name']) ?>">
-                </div>
+        <?php
+        if ($result && $result->num_rows > 0) {
 
-                <div class="cycle-info">
-                    <div class="line"></div>
-                    <h3><?= htmlspecialchars($bike['name']) ?></h3>
-                    <p><?= htmlspecialchars($bike['description']) ?></p>
-                    <div class="row-bottom">
-                        <a href="#" class="btn-buy">Mua ngay</a>
-                        <div class="price"><span style="color: #fca311; font-size: 20px; font-weight: 700; margin-right: 5px;">$</span><?= number_format((float)$bike['price'], 0, '.', ',') ?></div>
-                    </div>
-                </div>
-            </article>
-        <?php $i++; endforeach; ?>
+            // quay lại từ đầu
+            $result->data_seek(0);
+            $i = 1;
+
+            while ($row = $result->fetch_assoc()) {
+        ?>
+
+        <div class="cycle-item <?php echo ($i % 2 == 0) ? 'reverse' : ''; ?>">
+
+            <div class="cycle-img">
+                <div class="bg-box"></div>
+                <img src="assets/images/<?php echo $row['image']; ?>" alt="">
+                <span class="number"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT); ?></span>
+            </div>
+
+            <div class="cycle-info">
+
+    <div class="cycle-text">
+    <div class="title-row">
+        <span class="line"></span>
+        <h3><?php echo $row['name']; ?></h3>
     </div>
-</section>
 
-<?php include 'includes/footer.php'; ?>
-</body>
-</html>
+    <p><?php echo nl2br($row['description']); ?></p>
+
+    <div class="bottom-row">
+        <a href="#" class="btn dark">Mua ngay</a>
+        <div class="cycle-price">
+    <span class="currency">$</span>
+    <span class="amount"><?php echo number_format($row['price']); ?></span>
+</div>
+    </div>
+</div>
+
+</div>
+
+        </div>
+
+        <?php 
+            $i++;
+            }
+        }
+        ?>
+
+        </div>
+
+    </section>
+<?php include "includes/footer.php"; ?>
+    </body>

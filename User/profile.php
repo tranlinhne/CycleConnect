@@ -77,30 +77,149 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hồ sơ cá nhân - GreenRide</title>
     <style>
-        body { margin: 0; background: #f3f6fb; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .wrap { max-width: 900px; margin: 30px auto; padding: 0 16px 30px; }
-        .card { background: #fff; border-radius: 12px; box-shadow: 0 6px 24px rgba(0,0,0,.08); padding: 24px; }
-        .title { margin: 0 0 18px; color: #2f5d62; font-size: 28px; }
-        .alert { border-radius: 8px; padding: 10px 12px; margin-bottom: 14px; font-size: 14px; }
-        .alert-danger { background: #f8d7da; color: #721c24; }
-        .alert-success { background: #d4edda; color: #155724; }
-        .profile-grid { display: grid; grid-template-columns: 260px 1fr; gap: 24px; }
-        .avatar-box { text-align: center; border: 1px solid #eee; border-radius: 10px; padding: 14px; }
-        .avatar-box img { width: 180px; height: 180px; border-radius: 50%; object-fit: cover; border: 4px solid #f0be6f; }
-        .avatar-box form { margin-top: 12px; }
-        .avatar-box input[type=file] { width: 100%; font-size: 12px; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 700; color: #1f3540; }
-        .form-group input, .form-group textarea { width: 100%; border: 1px solid #d7d7d7; border-radius: 8px; padding: 10px 12px; font-size: 14px; }
-        .form-group textarea { min-height: 110px; resize: vertical; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        .wrap { max-width: 1100px; margin: 40px auto; padding: 0 16px 40px; }
+        .card { background: #fff; border-radius: 16px; box-shadow: 0 12px 48px rgba(0,0,0,0.15); padding: 40px; }
+        .card-header { text-align: center; margin-bottom: 30px; }
+        .card-header h1 { margin: 0; color: #2f5d62; font-size: 32px; }
+        
+        .alert { border-radius: 8px; padding: 12px 16px; margin-bottom: 18px; font-size: 14px; }
+        .alert-danger { background: #f8d7da; color: #721c24; border-left: 4px solid #f5c6cb; }
+        .alert-success { background: #d4edda; color: #155724; border-left: 4px solid #c3e6cb; }
+        
+        .profile-grid { display: grid; grid-template-columns: 280px 1fr; gap: 32px; }
+        
+        .avatar-box { 
+            text-align: center; 
+            border: 3px solid #f0be6f; 
+            border-radius: 20px; 
+            padding: 20px; 
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        .avatar-box img { 
+            width: 200px; 
+            height: 200px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 5px solid #fff;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            margin-bottom: 14px;
+        }
+        .avatar-label { 
+            font-weight: 700; 
+            color: #2f5d62; 
+            margin: 16px 0 12px; 
+            font-size: 15px;
+        }
+        .avatar-box form { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+        .avatar-box input[type=file] { 
+            font-size: 12px; 
+            padding: 8px;
+            border: 2px dashed #2f5d62;
+            border-radius: 8px;
+        }
+        
+        .form-section label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 700; 
+            color: #1f3540;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group input, 
+        .form-group textarea { 
+            border: 1px solid #d7d7d7; 
+            border-radius: 8px; 
+            padding: 12px 14px; 
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .form-group input:focus, 
+        .form-group textarea:focus { 
+            outline: none;
+            border-color: #2f5d62;
+            box-shadow: 0 0 0 3px rgba(47, 93, 98, 0.1);
+        }
+        .form-group textarea { 
+            min-height: 120px; 
+            resize: vertical; 
+        }
         .full { grid-column: 1 / -1; }
-        .btn { border: 0; border-radius: 8px; background: #2f5d62; color: #fff; font-weight: 700; padding: 11px 14px; cursor: pointer; }
-        .btn:hover { background: #23444a; }
-        .muted { color: #666; font-size: 13px; }
+        
+        .button-group { 
+            display: flex; 
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #eee;
+        }
+        
+        .btn { 
+            border: 0; 
+            border-radius: 8px; 
+            color: #fff; 
+            font-weight: 700; 
+            padding: 12px 24px; 
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: #2f5d62;
+        }
+        .btn-primary:hover { 
+            background: #23444a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(47, 93, 98, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #666;
+        }
+        .btn-secondary:hover { 
+            background: #555;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 102, 102, 0.3);
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+        }
+        .btn-danger:hover { 
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3);
+        }
+        
+        .info-section { 
+            background: #f9fafb; 
+            border-radius: 8px; 
+            padding: 16px; 
+            margin-bottom: 20px;
+        }
+        .info-section h3 {
+            color: #2f5d62;
+            font-size: 16px;
+            margin: 0 0 12px;
+        }
+        
         @media (max-width: 800px) {
             .profile-grid { grid-template-columns: 1fr; }
             .form-grid { grid-template-columns: 1fr; }
+            .card { padding: 20px; }
+            .button-group { flex-direction: column; }
+            .btn { width: 100%; justify-content: center; }
         }
     </style>
 </head>
@@ -109,61 +228,92 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="wrap">
     <div class="card">
-        <h1 class="title">Hồ sơ cá nhân</h1>
+        <div class="card-header">
+            <h1>👤 Hồ sơ cá nhân</h1>
+        </div>
 
         <?php if ($error): ?>
-            <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+            <div class="alert alert-danger">
+                <strong>⚠️ Lỗi:</strong> <?= htmlspecialchars($error) ?>
+            </div>
         <?php endif; ?>
         <?php if ($success): ?>
-            <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
+            <div class="alert alert-success">
+                <strong>✓ Thành công:</strong> <?= htmlspecialchars($success) ?>
+            </div>
         <?php endif; ?>
 
         <div class="profile-grid">
+            <!-- AVATAR SECTION -->
             <div class="avatar-box">
                 <?php
-                $avatarSrc = !empty($user['avatar']) ? $user['avatar'] : 'assets/images/about1.jpg';
+                $avatarSrc = !empty($user['avatar']) ? $user['avatar'] : 'https://via.placeholder.com/200';
                 ?>
                 <img src="<?= htmlspecialchars($avatarSrc) ?>" alt="Avatar">
-                <p class="muted" style="margin: 10px 0 8px;">Cập nhật ảnh đại diện</p>
+                <p class="avatar-label">Cập nhật ảnh đại diện</p>
                 <form method="POST" enctype="multipart/form-data">
                     <input type="file" name="avatar" accept=".jpg,.jpeg,.png,.gif" required>
-                    <button type="submit" name="update_avatar" class="btn" style="margin-top: 8px; width: 100%;">Tải ảnh lên</button>
+                    <button type="submit" name="update_avatar" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                        <i class="fas fa-upload"></i> Tải ảnh lên
+                    </button>
                 </form>
             </div>
 
+            <!-- PROFILE INFO SECTION -->
             <div>
+                <!-- Information Display -->
+                <div class="info-section">
+                    <h3>📋 Thông tin</h3>
+                    <div class="form-grid">
+                        <div>
+                            <label>TÊN ĐĂNG NHẬP</label>
+                            <div style="padding: 12px; background: #f5f5f5; border-radius: 8px; color: #666; font-size: 14px;">
+                                <?= htmlspecialchars($user['username']) ?>
+                            </div>
+                        </div>
+                        <div>
+                            <label>EMAIL</label>
+                            <div style="padding: 12px; background: #f5f5f5; border-radius: 8px; color: #666; font-size: 14px;">
+                                <?= htmlspecialchars($user['email']) ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Editable Form -->
                 <form method="POST">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>Tên đăng nhập</label>
-                            <input type="text" value="<?= htmlspecialchars($user['username']) ?>" readonly>
+                            <label>HỌ VÀ TÊN</label>
+                            <input type="text" name="full_name" value="<?= htmlspecialchars($user['full_name'] ?? '') ?>" placeholder="Nhập họ và tên">
                         </div>
                         <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" value="<?= htmlspecialchars($user['email']) ?>" readonly>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Họ và tên</label>
-                            <input type="text" name="full_name" value="<?= htmlspecialchars($user['full_name'] ?? '') ?>">
-                        </div>
-                        <div class="form-group">
-                            <label>Số điện thoại</label>
-                            <input type="text" name="phone" value="<?= htmlspecialchars($user['phone'] ?? '') ?>">
+                            <label>ĐIỆN THOẠI</label>
+                            <input type="text" name="phone" value="<?= htmlspecialchars($user['phone'] ?? '') ?>" placeholder="Nhập số điện thoại">
                         </div>
 
                         <div class="form-group full">
-                            <label>Địa chỉ</label>
-                            <input type="text" name="address" value="<?= htmlspecialchars($user['address'] ?? '') ?>">
+                            <label>ĐỊA CHỈ</label>
+                            <input type="text" name="address" value="<?= htmlspecialchars($user['address'] ?? '') ?>" placeholder="Nhập địa chỉ">
                         </div>
 
                         <div class="form-group full">
-                            <label>Giới thiệu</label>
-                            <textarea name="bio"><?= htmlspecialchars($user['bio'] ?? '') ?></textarea>
+                            <label>GIỚI THIỆU</label>
+                            <textarea name="bio" placeholder="Nhập thông tin giới thiệu về bạn..."><?= htmlspecialchars($user['bio'] ?? '') ?></textarea>
                         </div>
                     </div>
 
-                    <button type="submit" name="update_profile" class="btn">Lưu thay đổi</button>
+                    <div class="button-group">
+                        <a href="change-password.php" class="btn btn-secondary">
+                            <i class="fas fa-lock"></i> Đổi mật khẩu
+                        </a>
+                        <button type="submit" name="update_profile" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Lưu
+                        </button>
+                        <a href="index.php" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Quay lại
+                        </a>
+                    </div>
                 </form>
             </div>
         </div>

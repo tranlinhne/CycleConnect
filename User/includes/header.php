@@ -103,6 +103,74 @@ $current = basename($_SERVER['PHP_SELF']);
         display: flex;
     }
 
+    /* DROPDOWN MENU */
+    .user-dropdown {
+        position: relative;
+    }
+
+    .user-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: transparent;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 0;
+        transition: 0.3s;
+    }
+
+    .user-btn:hover {
+        color: #f4a261;
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        min-width: 180px;
+        z-index: 1000;
+        overflow: hidden;
+        display: none;
+        margin-top: 8px;
+    }
+
+    .dropdown-menu.active {
+        display: block;
+    }
+
+    .dropdown-menu a,
+    .dropdown-menu button {
+        display: block;
+        width: 100%;
+        padding: 12px 16px;
+        text-align: left;
+        text-decoration: none;
+        color: #333;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        transition: 0.2s;
+    }
+
+    .dropdown-menu a:hover,
+    .dropdown-menu button:hover {
+        background: #f5f5f5;
+        color: #2f5d62;
+    }
+
+    .dropdown-divider {
+        height: 1px;
+        background: #eee;
+        margin: 4px 0;
+    }
+
     @media (max-width: 900px) {
         .header {
             flex-wrap: wrap;
@@ -143,8 +211,24 @@ $current = basename($_SERVER['PHP_SELF']);
     <!-- RIGHT -->
     <div class="header-right">
 
-        <!-- LOGIN -->
-        <a href="login.php" class="login">Đăng nhập</a>
+        <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
+            <!-- USER DROPDOWN (Khi đăng nhập) -->
+            <div class="user-dropdown">
+                <button class="user-btn" id="userBtn">
+                    <i class="fas fa-user"></i>
+                    <span><?= htmlspecialchars($_SESSION['username'] ?? 'User') ?></span>
+                </button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="profile.php"><i class="fas fa-user-circle" style="margin-right: 8px;"></i>Tài khoản</a>
+                    <a href="news.php"><i class="fas fa-newspaper" style="margin-right: 8px;"></i>Lịnh</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="logout.php"><i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i>Đăng xuất</a>
+                </div>
+            </div>
+        <?php else: ?>
+            <!-- LOGIN -->
+            <a href="login.php" class="login">Đăng nhập</a>
+        <?php endif; ?>
 
         <!-- SEARCH BOX -->
         <div class="search-box" id="searchBox">
@@ -175,5 +259,25 @@ $current = basename($_SERVER['PHP_SELF']);
 function toggleSearch() {
     const box = document.getElementById("searchBox");
     box.classList.toggle("active");
+}
+
+// Dropdown menu
+const userBtn = document.getElementById("userBtn");
+const dropdownMenu = document.getElementById("dropdownMenu");
+
+if (userBtn && dropdownMenu) {
+    userBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        dropdownMenu.classList.toggle("active");
+    });
+
+    // Đóng dropdown khi click ra ngoài
+    document.addEventListener("click", function() {
+        dropdownMenu.classList.remove("active");
+    });
+
+    dropdownMenu.addEventListener("click", function(e) {
+        e.stopPropagation();
+    });
 }
 </script>

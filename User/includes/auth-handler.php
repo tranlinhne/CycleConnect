@@ -333,4 +333,57 @@ function saveContactMessage($name, $email, $phone, $subject, $message, $user_id 
     return ['success' => true, 'message' => 'Tin nhắn của bạn đã được gửi. Chúng tôi sẽ liên hệ sớm'];
 }
 
+// Change password
+function changePassword($user_id, $old_password, $new_password, $confirm_password) {
+    global $conn;
+    
+    $old_password = trim($old_password);
+    $new_password = trim($new_password);
+    $confirm_password = trim($confirm_password);
+    
+    if (empty($old_password) || empty($new_password) || empty($confirm_password)) {
+        return ['success' => false, 'message' => 'Vui lòng điền đầy đủ thông tin'];
+    }
+    
+    if (strlen($new_password) < 6) {
+        return ['success' => false, 'message' => 'Mật khẩu mới phải ít nhất 6 ký tự'];
+    }
+    
+    if ($new_password !== $confirm_password) {
+        return ['success' => false, 'message' => 'Mật khẩu không khớp'];
+    }
+    
+    // Get current password
+    $stmt = $conn->prepare("SELECT password FROM users WHERE id = ?");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows === 0) {
+        $stmt->close();
+        return ['success' => false, 'message' => 'Người dùng không tồn tại'];
+    }
+    
+    $user = $result->fetch_assoc();
+    $stmt->close();
+    
+    // Verify old password
+    if (!password_verify($old_password, $user['password'])) {
+        return ['success' => false, 'message' => 'Mật khẩu hiện tại không chính xác'];
+    }
+    
+    // Hash new password and update
+    $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+    $update_stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+    $update_stmt->bind_param("si", $hashed_password, $user_id);
+    
+    if (!$update_stmt->execute()) {
+        $update_stmt->close();
+        return ['success' => false, 'message' => 'Lỗi cập nhật mật khẩu'];
+    }
+    
+    $update_stmt->close();
+    return ['success' => true, 'message' => 'Đổi mật khẩu thành công'];
+}
+
 ?>
