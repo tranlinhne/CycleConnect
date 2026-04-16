@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -10,7 +10,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
    <!-- site metas -->
-   <title>Cycle</title>
+   <title>News</title>
    <meta name="keywords" content="">
    <meta name="description" content="">
    <meta name="author" content="">
@@ -52,13 +52,13 @@
                <li class="nav-item">
                   <a class="nav-link" href="about.html">About</a>
                </li>
-               <li class="nav-item active">
+               <li class="nav-item">
                   <a class="nav-link" href="cycle.html">Our Cycle</a>
                </li>
                <li class="nav-item">
                   <a class="nav-link" href="shop.html">Shop</a>
                </li>
-               <li class="nav-item">
+               <li class="nav-item active">
                   <a class="nav-link" href="news.html">News</a>
                </li>
                <li class="nav-item">
@@ -93,9 +93,10 @@
                            <div class="image_1"><img src="images/img-1.png"></div>
                         </div>
                         <div class="col-md-5">
-                           <h1 class="banner_taital">Mẫu<br>Xe<br>2026</h1>
-                           <p class="banner_text">Mang đến trải nghiệm đạp xe hoàn hảo với thiết kế hiện đại và hiệu suất vượt trội.</p>
-                           <div class="contact_bt"><a href="contact.html">Mua Ngay</a></div>
+                           <h1 class="banner_taital">New Model Cycle</h1>
+                           <p class="banner_text">It is a long established fact that a reader will be distracted by the
+                              readable content </p>
+                           <div class="contact_bt"><a href="contact.html">Shop Now</a></div>
                         </div>
                      </div>
                   </div>
@@ -108,9 +109,10 @@
                            <div class="image_1"><img src="images/img-1.png"></div>
                         </div>
                         <div class="col-md-5">
-                           <h1 class="banner_taital">Mẫu<br>Xe<br>2026</h1>
-                           <p class="banner_text">Mang đến trải nghiệm đạp xe hoàn hảo với thiết kế hiện đại và hiệu suất vượt trội.</p>
-                           <div class="contact_bt"><a href="contact.html">Mua Ngay</a></div>
+                           <h1 class="banner_taital">New Model Cycle</h1>
+                           <p class="banner_text">It is a long established fact that a reader will be distracted by the
+                              readable content </p>
+                           <div class="contact_bt"><a href="contact.html">Shop Now</a></div>
                         </div>
                      </div>
                   </div>
@@ -123,9 +125,10 @@
                            <div class="image_1"><img src="images/img-1.png"></div>
                         </div>
                         <div class="col-md-5">
-                           <h1 class="banner_taital">Mẫu<br>Xe<br>2026</h1>
-                           <p class="banner_text">Mang đến trải nghiệm đạp xe hoàn hảo với thiết kế hiện đại và hiệu suất vượt trội.</p>
-                           <div class="contact_bt"><a href="contact.html">Mua Ngay</a></div>
+                           <h1 class="banner_taital">New Model Cycle</h1>
+                           <p class="banner_text">It is a long established fact that a reader will be distracted by the
+                              readable content </p>
+                           <div class="contact_bt"><a href="contact.html">Shop Now</a></div>
                         </div>
                      </div>
                   </div>
@@ -142,80 +145,52 @@
       <!-- banner section end -->
    </div>
    <!-- header section end -->
-   <!-- cycle section start -->
-   <div class="cycle_section layout_padding">
+   <!-- news section start -->
+   <div class="news_section layout_padding">
       <div class="container">
-         <h1 class="cycle_taital">Our cycle</h1>
-         <p class="cycle_text">It is a long established fact that a reader will be distracted by the </p>
-         <div class="cycle_section_2 layout_padding">
+         <h1 class="news_taital">News</h1>
+         <p class="news_text">It is a long established fact that a reader will be distracted by the readable content of
+            a page when looking at its layout. The point of using </p>
+         <div class="news_section_2 layout_padding">
             <div class="row">
-               <div class="col-md-6">
-                  <div class="box_main">
-                     <h6 class="number_text">01</h6>
-                     <div class="image_2"><img src="images/img-2.png"></div>
+               <div class="col-sm-4">
+                  <div class="box_main_1">
+                     <div class="zoomout frame"><img src="images/img-6.png"></div>
+                     <div class="padding_15">
+                        <h2 class="speed_text">Speed cycle</h2>
+                        <div class="post_text">Post by : Den <span style="float: right;">20-12-2019</span></div>
+                        <p class="long_text">It is a long established fact that a reader will be distracted by the
+                           readable content of a page when looking at its layout. The point of using </p>
+                     </div>
                   </div>
                </div>
-               <div class="col-md-6">
-                  <h1 class="cycles_text">Kukirin X1</h1>
-                  <p class="lorem_text">It is a long established fact that a reader will be distracted by the readable
-                     content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a
-                     more-or-less normal distribution of letters</p>
-                  <div class="btn_main">
-                       <div class="buy_bt"><a href="#">Mua ngay</a></div>
-                       <h4 class="price_text"><span style="color: #fca311;">$</span> <span
-                             style="color: #333; font-weight: 500;">15,000,000</span></h4>
+               <div class="col-sm-4">
+                  <div class="box_main_1">
+                     <div class="zoomout frame"><img src="images/img-7.png"></div>
+                     <div class="padding_15">
+                        <h2 class="speed_text">Speed cycle</h2>
+                        <div class="post_text">Post by : Den <span style="float: right;">20-12-2019</span></div>
+                        <p class="long_text">It is a long established fact that a reader will be distracted by the
+                           readable content of a page when looking at its layout. The point of using </p>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-sm-4">
+                  <div class="box_main_1">
+                     <div class="zoomout frame"><img src="images/img-8.png"></div>
+                     <div class="padding_15">
+                        <h2 class="speed_text">Jaump cycle</h2>
+                        <div class="post_text">Post by : Den <span style="float: right;">20-12-2019</span></div>
+                        <p class="long_text">It is a long established fact that a reader will be distracted by the
+                           readable content of a page when looking at its layout. The point of using </p>
+                     </div>
                   </div>
                </div>
             </div>
-         </div>
-         <div class="cycle_section_3 layout_padding">
-            <div class="row">
-               <div class="col-md-6">
-                  <h1 class="cycles_text">City Lite</h1>
-                  <p class="lorem_text">It is a long established fact that a reader will be distracted by the readable
-                     content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a
-                     more-or-less normal distribution of letters</p>
-                  <div class="btn_main">
-                       <div class="buy_bt"><a href="#">Mua ngay</a></div>
-                       <h4 class="price_text"><span style="color: #fca311;">$</span> <span
-                             style="color: #333; font-weight: 500;">6,500,000</span></h4>
-                  </div>
-               </div>
-               <div class="col-md-6">
-                  <div class="box_main_3">
-                     <h6 class="number_text_2">02</h6>
-                     <div class="image_2"><img src="images/img-3.png"></div>
-                  </div>
-               </div>
-            </div>
-         </div>
-         <div class="cycle_section_2 layout_padding">
-            <div class="row">
-               <div class="col-md-6">
-                  <div class="box_main_3">
-                     <h6 class="number_text_2">03</h6>
-                     <div class="image_2"><img src="images/img-4.png"></div>
-                  </div>
-               </div>
-               <div class="col-md-6">
-                  <h1 class="cycles_text">Racing<br>Speed R9</h1>
-                  <p class="lorem_text">It is a long established fact that a reader will be distracted by the readable
-                     content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a
-                     more-or-less normal distribution of letters</p>
-                  <div class="btn_main">
-                       <div class="buy_bt"><a href="#">Mua ngay</a></div>
-                       <h4 class="price_text"><span style="color: #fca311;">$</span> <span
-                             style="color: #333; font-weight: 500;">22,000,000</span></h4>
-                  </div>
-               </div>
-            </div>
-         </div>
-         <div class="read_btn_main">
-            <div class="read_bt"><a href="#">Read More</a></div>
          </div>
       </div>
    </div>
-   <!-- cycle section end -->
+   <!-- news section end -->
    <!-- footer section start -->
    <div class="footer_section layout_padding">
       <div class="container-fluid">

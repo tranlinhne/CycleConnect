@@ -1,6 +1,7 @@
-<?php
+﻿<?php
 session_start();
-session_destroy();
-header("Location: login.php");
-exit;
+include_once __DIR__ . '/includes/auth-handler.php';
+logoutUser();
+header('Location: login.php');
+exit();
 ?>

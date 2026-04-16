@@ -22,11 +22,11 @@
             <h3>Thành viên (Gmail)</h3>
             <p>
         <span style="display: inline-block; width: 24px;">📧</span>Email: huehtb3441@ut.edu.vn<br>
-        <span style="display: inline-block; width: 70px;"></span>huehtb3441@ut.edu.vn<br>
-        <span style="display: inline-block; width: 70px;"></span>huehtb3441@ut.edu.vn<br>
-        <span style="display: inline-block; width: 70px;"></span>huehtb3441@ut.edu.vn<br>
-        <span style="display: inline-block; width: 70px;"></span>huehtb3441@ut.edu.vn<br>
-        <span style="display: inline-block; width: 70px;"></span>huehtb3441@ut.edu.vn<br>
+        <span style="display: inline-block; width: 70px;"></span>hsontn8573@ut.edu.vn<br>
+        <span style="display: inline-block; width: 70px;"></span>linht8157@ut.edu.vn<br>
+        <span style="display: inline-block; width: 70px;"></span>2251150054@ut.edu.vn<br>
+        <span style="display: inline-block; width: 70px;"></span>tamvn9214@ut.edu.vn<br>
+        <span style="display: inline-block; width: 70px;"></span>duyendtm3342@ut.edu.vn<br>
     </p>
         </div>
 
