@@ -5,20 +5,20 @@ if (session_status() === PHP_SESSION_NONE) {
 include_once __DIR__ . '/../config.php';
 
 // Hàm đăng nhập
-function loginUser($email, $password) {
+function loginUser($login, $password) {
     global $conn;
     
     // Validate input
-    $email = trim($email);
+    $login = trim($login);
     $password = trim($password);
     
-    if (empty($email) || empty($password)) {
-        return ['success' => false, 'message' => 'Email và mật khẩu không được để trống'];
+    if (empty($login) || empty($password)) {
+        return ['success' => false, 'message' => 'Tên đăng nhập/Email và mật khẩu không được để trống'];
     }
     
-    // Kiểm tra email tồn tại
-    $stmt = $conn->prepare("SELECT id, username, email, password, full_name, avatar FROM users WHERE email = ? AND status = 'active'");
-    $stmt->bind_param("s", $email);
+    // Kiểm tra tài khoản tồn tại (đăng nhập bằng username hoặc email)
+    $stmt = $conn->prepare("SELECT id, username, email, password, full_name, avatar FROM users WHERE (email = ? OR username = ?) AND status = 'active'");
+    $stmt->bind_param("ss", $login, $login);
     $stmt->execute();
     $result = $stmt->get_result();
     

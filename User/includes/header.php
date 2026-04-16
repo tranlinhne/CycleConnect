@@ -78,30 +78,7 @@ $current = basename($_SERVER['PHP_SELF']);
         color: #f4a261;
     }
 
-    .search-box {
-        display: none;
-        align-items: center;
-        background: #fff;
-        border-radius: 5px;
-        padding: 4px;
-    }
 
-    .search-box input,
-    .search-box select,
-    .search-box button {
-        border: none;
-        outline: none;
-        padding: 6px 8px;
-    }
-
-    .search-box button {
-        background: #f4a261;
-        color: #fff;
-    }
-
-    .search-box.active {
-        display: flex;
-    }
 
     /* DROPDOWN MENU */
     .user-dropdown {
@@ -112,18 +89,19 @@ $current = basename($_SERVER['PHP_SELF']);
         display: flex;
         align-items: center;
         gap: 8px;
-        background: transparent;
-        border: none;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        border-radius: 4px;
         color: #fff;
         cursor: pointer;
         font-size: 13px;
         font-weight: 600;
-        padding: 0;
-        transition: 0.3s;
+        padding: 4px 10px;
+        transition: 0.2s;
     }
 
     .user-btn:hover {
-        color: #f4a261;
+        background: rgba(255, 255, 255, 0.12);
     }
 
     .dropdown-menu {
@@ -133,42 +111,82 @@ $current = basename($_SERVER['PHP_SELF']);
         background: #fff;
         border-radius: 8px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        min-width: 180px;
+        min-width: 170px;
         z-index: 1000;
         overflow: hidden;
         display: none;
-        margin-top: 8px;
+        margin-top: 10px;
+        border: 1px solid #ececec;
     }
 
     .dropdown-menu.active {
         display: block;
     }
 
-    .dropdown-menu a,
-    .dropdown-menu button {
+    .dropdown-head-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 14px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #1f2937;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .dropdown-menu a.dropdown-head-item {
+        text-decoration: none;
+        color: #1f2937;
+        background: #fff;
+    }
+
+    .dropdown-menu a.dropdown-head-item:hover {
+        background: #f6f6f6;
+        color: #1f2937;
+    }
+
+    .dropdown-menu a.dropdown-head-item i {
+        color: #f4a261;
+    }
+
+    .dropdown-menu a {
         display: block;
         width: 100%;
-        padding: 12px 16px;
-        text-align: left;
         text-decoration: none;
-        color: #333;
-        background: none;
-        border: none;
-        cursor: pointer;
+        color: #3b3b3b;
+        padding: 11px 14px;
         font-size: 14px;
         transition: 0.2s;
     }
 
-    .dropdown-menu a:hover,
-    .dropdown-menu button:hover {
-        background: #f5f5f5;
+    .dropdown-menu a:hover {
+        background: #f6f6f6;
         color: #2f5d62;
     }
 
     .dropdown-divider {
         height: 1px;
-        background: #eee;
-        margin: 4px 0;
+        background: #efefef;
+    }
+
+    .dropdown-menu a.logout-item,
+    .dropdown-menu a.logout-item i {
+        color: #d93025;
+    }
+
+    .dropdown-menu a.logout-item:hover,
+    .dropdown-menu a.logout-item:hover i {
+        color: #b42318;
+    }
+
+    .dropdown-menu a.account-item,
+    .dropdown-menu a.account-item i {
+        color: #000;
+    }
+
+    .dropdown-menu a.account-item:hover,
+    .dropdown-menu a.account-item:hover i {
+        color: #000;
     }
 
     @media (max-width: 900px) {
@@ -190,7 +208,6 @@ $current = basename($_SERVER['PHP_SELF']);
 </style>
 
 <header class="header">
-
     <!-- LOGO -->
     <div class="logo">
         <a href="index.php">
@@ -210,74 +227,45 @@ $current = basename($_SERVER['PHP_SELF']);
 
     <!-- RIGHT -->
     <div class="header-right">
-
         <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
-            <!-- USER DROPDOWN (Khi đăng nhập) -->
+            <?php $displayName = trim($_SESSION['full_name'] ?? '') !== '' ? $_SESSION['full_name'] : ($_SESSION['username'] ?? 'User'); ?>
+            <!-- USER DROPDOWN -->
             <div class="user-dropdown">
                 <button class="user-btn" id="userBtn">
                     <i class="fas fa-user"></i>
-                    <span><?= htmlspecialchars($_SESSION['username'] ?? 'User') ?></span>
+                    <span><?= htmlspecialchars($displayName) ?></span>
                 </button>
                 <div class="dropdown-menu" id="dropdownMenu">
-                    <a href="profile.php"><i class="fas fa-user-circle" style="margin-right: 8px;"></i>Tài khoản</a>
-                    <a href="news.php"><i class="fas fa-newspaper" style="margin-right: 8px;"></i>Lịnh</a>
+                    <a class="dropdown-head-item" href="profile.php"><i class="fas fa-user-circle"></i><?= htmlspecialchars($displayName) ?></a>
+                    <a class="account-item" href="profile.php"><i class="fas fa-id-card" style="margin-right: 8px;"></i>Tài khoản</a>
                     <div class="dropdown-divider"></div>
-                    <a href="logout.php"><i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i>Đăng xuất</a>
+                    <a class="logout-item" href="logout.php"><i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i>Đăng xuất</a>
                 </div>
             </div>
         <?php else: ?>
             <!-- LOGIN -->
-            <a href="login.php" class="login">Đăng nhập</a>
+            <a href="login.php">Đăng nhập</a>
         <?php endif; ?>
-
-        <!-- SEARCH BOX -->
-        <div class="search-box" id="searchBox">
-            <input type="text" placeholder="Tìm xe đạp...">
-
-            <!-- FILTER -->
-            <select>
-                <option value="">Tất cả</option>
-                <option value="dien">Xe điện</option>
-                <option value="duongpho">Xe đường phố</option>
-                <option value="thethao">Xe thể thao</option>
-            </select>
-
-            <button><i class="fa fa-search"></i></button>
-        </div>
-
-        <!-- ICON -->
-        <i class="fa fa-search search-toggle" onclick="toggleSearch()"></i>
-        <a href="cart.php"><i class="fa fa-shopping-cart"></i></a>
-        <i class="fa fa-bars menu-toggle"></i>
-
     </div>
-
 </header>
 
 <!-- SCRIPT -->
 <script>
-function toggleSearch() {
-    const box = document.getElementById("searchBox");
-    box.classList.toggle("active");
-}
+    const userBtn = document.getElementById("userBtn");
+    const dropdownMenu = document.getElementById("dropdownMenu");
 
-// Dropdown menu
-const userBtn = document.getElementById("userBtn");
-const dropdownMenu = document.getElementById("dropdownMenu");
+    if (userBtn && dropdownMenu) {
+        userBtn.addEventListener("click", function(e) {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle("active");
+        });
 
-if (userBtn && dropdownMenu) {
-    userBtn.addEventListener("click", function(e) {
-        e.stopPropagation();
-        dropdownMenu.classList.toggle("active");
-    });
+        document.addEventListener("click", function() {
+            dropdownMenu.classList.remove("active");
+        });
 
-    // Đóng dropdown khi click ra ngoài
-    document.addEventListener("click", function() {
-        dropdownMenu.classList.remove("active");
-    });
-
-    dropdownMenu.addEventListener("click", function(e) {
-        e.stopPropagation();
-    });
-}
+        dropdownMenu.addEventListener("click", function(e) {
+            e.stopPropagation();
+        });
+    }
 </script>

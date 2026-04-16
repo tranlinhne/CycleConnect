@@ -76,161 +76,224 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hồ sơ cá nhân - GreenRide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        
-        .wrap { max-width: 1100px; margin: 40px auto; padding: 0 16px 40px; }
-        .card { background: #fff; border-radius: 16px; box-shadow: 0 12px 48px rgba(0,0,0,0.15); padding: 40px; }
-        .card-header { text-align: center; margin-bottom: 30px; }
-        .card-header h1 { margin: 0; color: #2f5d62; font-size: 32px; }
-        
-        .alert { border-radius: 8px; padding: 12px 16px; margin-bottom: 18px; font-size: 14px; }
-        .alert-danger { background: #f8d7da; color: #721c24; border-left: 4px solid #f5c6cb; }
-        .alert-success { background: #d4edda; color: #155724; border-left: 4px solid #c3e6cb; }
-        
-        .profile-grid { display: grid; grid-template-columns: 280px 1fr; gap: 32px; }
-        
-        .avatar-box { 
-            text-align: center; 
-            border: 3px solid #f0be6f; 
-            border-radius: 20px; 
-            padding: 20px; 
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        body {
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #5f78dc 0%, #6d4fb4 100%);
         }
-        .avatar-box img { 
-            width: 200px; 
-            height: 200px; 
-            border-radius: 50%; 
-            object-fit: cover; 
-            border: 5px solid #fff;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-            margin-bottom: 14px;
+
+        .wrap {
+            max-width: 980px;
+            margin: 70px auto;
+            padding: 0 16px 30px;
         }
-        .avatar-label { 
-            font-weight: 700; 
-            color: #2f5d62; 
-            margin: 16px 0 12px; 
-            font-size: 15px;
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 22px 56px rgba(32, 25, 73, 0.35);
+            overflow: hidden;
         }
-        .avatar-box form { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
-        .avatar-box input[type=file] { 
-            font-size: 12px; 
-            padding: 8px;
-            border: 2px dashed #2f5d62;
+
+        .card-header {
+            background: linear-gradient(90deg, #5d81df 0%, #7648ab 100%);
+            color: #fff;
+            text-align: center;
+            font-size: 40px;
+            font-weight: 700;
+            padding: 18px 20px;
+        }
+
+        .card-body {
+            padding: 34px 34px 24px;
+        }
+
+        .alert {
             border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 18px;
+            font-size: 14px;
         }
-        
-        .form-section label { 
-            display: block; 
-            margin-bottom: 8px; 
-            font-weight: 700; 
-            color: #1f3540;
+
+        .alert-danger { background: #fde2e5; color: #8b1c2a; border-left: 4px solid #f5a9b2; }
+        .alert-success { background: #dcf6e5; color: #115c30; border-left: 4px solid #8cdeb0; }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 230px 1fr;
+            gap: 28px;
+            align-items: start;
+        }
+
+        .avatar-box {
+            text-align: center;
+        }
+
+        .avatar-box img {
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #5f78dc;
+            box-shadow: 0 10px 24px rgba(95, 120, 220, 0.2);
+            margin-bottom: 14px;
+            background: #f0f0f0;
+        }
+
+        .avatar-label {
             font-size: 13px;
+            font-weight: 700;
+            color: #5a5a5a;
+            margin: 8px 0 10px;
             text-transform: uppercase;
         }
-        
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-        .form-group { display: flex; flex-direction: column; }
-        .form-group input, 
-        .form-group textarea { 
-            border: 1px solid #d7d7d7; 
-            border-radius: 8px; 
-            padding: 12px 14px; 
-            font-size: 14px;
-            transition: 0.3s;
-        }
-        .form-group input:focus, 
-        .form-group textarea:focus { 
-            outline: none;
-            border-color: #2f5d62;
-            box-shadow: 0 0 0 3px rgba(47, 93, 98, 0.1);
-        }
-        .form-group textarea { 
-            min-height: 120px; 
-            resize: vertical; 
-        }
-        .full { grid-column: 1 / -1; }
-        
-        .button-group { 
-            display: flex; 
-            gap: 12px;
-            justify-content: flex-end;
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 1px solid #eee;
-        }
-        
-        .btn { 
-            border: 0; 
-            border-radius: 8px; 
-            color: #fff; 
-            font-weight: 700; 
-            padding: 12px 24px; 
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
+
+        .avatar-box form {
+            display: flex;
+            flex-direction: column;
             gap: 8px;
         }
-        
-        .btn-primary {
-            background: #2f5d62;
+
+        .avatar-box input[type=file] {
+            font-size: 12px;
+            border: 1px dashed #9bb1ef;
+            border-radius: 6px;
+            padding: 6px;
+            background: #fafcff;
         }
-        .btn-primary:hover { 
-            background: #23444a;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(47, 93, 98, 0.3);
+
+        .section-title {
+            color: #2c5a69;
+            font-size: 33px;
+            font-weight: 700;
+            margin-bottom: 14px;
         }
-        
-        .btn-secondary {
-            background: #666;
+
+        .info-section {
+            background: #f7f7f7;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
         }
-        .btn-secondary:hover { 
-            background: #555;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 102, 102, 0.3);
-        }
-        
-        .btn-danger {
-            background: #e74c3c;
-        }
-        .btn-danger:hover { 
-            background: #c0392b;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3);
-        }
-        
-        .info-section { 
-            background: #f9fafb; 
-            border-radius: 8px; 
-            padding: 16px; 
-            margin-bottom: 20px;
-        }
+
         .info-section h3 {
             color: #2f5d62;
-            font-size: 16px;
-            margin: 0 0 12px;
+            font-size: 28px;
+            margin-bottom: 12px;
+            font-weight: 700;
         }
-        
-        @media (max-width: 800px) {
+
+        .info-box {
+            padding: 10px;
+            background: #efefef;
+            border-radius: 6px;
+            color: #33585f;
+            min-height: 40px;
+            font-size: 15px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #245466;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            border: 1px solid #dadada;
+            border-radius: 6px;
+            padding: 10px 11px;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            min-height: 86px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #5f78dc;
+            box-shadow: 0 0 0 3px rgba(95, 120, 220, 0.15);
+        }
+
+        .full { grid-column: 1 / -1; }
+
+        .button-group {
+            margin-top: 14px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 6px;
+            padding: 11px 12px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            background: #2f2f33;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            background: #1f2024;
+        }
+
+        .btn-upload {
+            background: linear-gradient(90deg, #6179de 0%, #7549aa 100%);
+        }
+
+        .btn-upload:hover {
+            background: linear-gradient(90deg, #5169cd 0%, #653999 100%);
+        }
+
+        @media (max-width: 860px) {
+            .wrap { margin: 30px auto; }
+            .card-body { padding: 20px; }
             .profile-grid { grid-template-columns: 1fr; }
+            .avatar-box { max-width: 280px; margin: 0 auto; }
             .form-grid { grid-template-columns: 1fr; }
-            .card { padding: 20px; }
-            .button-group { flex-direction: column; }
-            .btn { width: 100%; justify-content: center; }
+            .button-group { grid-template-columns: 1fr; }
+            .section-title { font-size: 30px; }
         }
     </style>
 </head>
 <body>
-<?php include __DIR__ . '/includes/header.php'; ?>
-
 <div class="wrap">
     <div class="card">
         <div class="card-header">
-            <h1>👤 Hồ sơ cá nhân</h1>
+            <i class="fas fa-user-circle"></i> Hồ sơ
         </div>
+
+        <div class="card-body">
 
         <?php if ($error): ?>
             <div class="alert alert-danger">
@@ -253,7 +316,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p class="avatar-label">Cập nhật ảnh đại diện</p>
                 <form method="POST" enctype="multipart/form-data">
                     <input type="file" name="avatar" accept=".jpg,.jpeg,.png,.gif" required>
-                    <button type="submit" name="update_avatar" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                    <button type="submit" name="update_avatar" class="btn btn-upload" style="width: 100%;">
                         <i class="fas fa-upload"></i> Tải ảnh lên
                     </button>
                 </form>
@@ -261,19 +324,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <!-- PROFILE INFO SECTION -->
             <div>
+                <h2 class="section-title"><i class="fas fa-user" style="font-size: 30px;"></i> Thông tin</h2>
                 <!-- Information Display -->
                 <div class="info-section">
-                    <h3>📋 Thông tin</h3>
                     <div class="form-grid">
                         <div>
                             <label>TÊN ĐĂNG NHẬP</label>
-                            <div style="padding: 12px; background: #f5f5f5; border-radius: 8px; color: #666; font-size: 14px;">
+                            <div class="info-box">
                                 <?= htmlspecialchars($user['username']) ?>
                             </div>
                         </div>
                         <div>
                             <label>EMAIL</label>
-                            <div style="padding: 12px; background: #f5f5f5; border-radius: 8px; color: #666; font-size: 14px;">
+                            <div class="info-box">
                                 <?= htmlspecialchars($user['email']) ?>
                             </div>
                         </div>
@@ -304,18 +367,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <div class="button-group">
-                        <a href="change-password.php" class="btn btn-secondary">
-                            <i class="fas fa-lock"></i> Đổi mật khẩu
-                        </a>
-                        <button type="submit" name="update_profile" class="btn btn-primary">
+                        <button type="submit" name="update_profile" class="btn">
                             <i class="fas fa-save"></i> Lưu
                         </button>
-                        <a href="index.php" class="btn btn-secondary">
+                        <a href="change-password.php" class="btn">
+                            <i class="fas fa-lock"></i> Đổi mật khẩu
+                        </a>
+                        <a href="index.php" class="btn">
                             <i class="fas fa-arrow-left"></i> Quay lại
                         </a>
                     </div>
                 </form>
             </div>
+        </div>
         </div>
     </div>
 </div>

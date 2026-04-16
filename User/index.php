@@ -92,14 +92,14 @@
 
     /* KHỐI NỀN XANH */
     .hero-inner{
-        width:70%;              /* 👈 QUAN TRỌNG: tạo khoảng trắng bên trái */
-        margin-left:auto;       /* đẩy khối sang phải */
+        width:min(1280px, calc(100% - 8px));
+        margin:0 auto;
         background:#2f5d62;
         position:relative;
         color:white;
-        padding:100px 80px 0px;
-        overflow:visible;
-        margin-top:-1px; 
+        padding:clamp(40px, 6vw, 88px) clamp(22px, 4vw, 70px) 56px;
+        overflow:hidden;
+        margin-top:-1px;
     }
 
     /* CẮT HÌNH THANG */
@@ -109,69 +109,68 @@
         bottom:0;
         left:0;
         width:100%;
-        height:220px;
+        height:clamp(120px, 16vw, 220px);
         background:#ffffff;
         clip-path: polygon(0 100%, 100% 0, 100% 100%, 0% 100%);
     }
 
 
     .hero-container {
-        display: flex;
-        align-items:flex-start; 
-        justify-content: space-between;
-        gap: 40px;
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        align-items: center;
+        gap: clamp(18px, 3.2vw, 36px);
+        position: relative;
+        z-index: 2;
     }
 
     /* ===== LEFT (BIKE) ===== */
     .hero-left {
-        flex: 1.1;
         position: relative;
-        text-align: center;
-        margin-left: -340px;
-        z-index: 5;     
+        text-align: left;
+        z-index: 5;
     }
 
     .hero-left img {
-        width: 650px;          /* XE TO GIỐNG MOCKUP */
-        max-width: 100%;
+        width:min(760px, 100%);
         filter: drop-shadow(0 40px 40px rgba(0,0,0,0.45));
+        transform: translateX(-6%);
     }
 
     /* BADGE BEST (MÀU CAM) */
     .badge {
         position: absolute;
-        top: -50px;
-        left: 470px;
+        top: 2%;
+        left: 12%;
         background: #f4a261;
-        width: 95px;
-        height: 95px;
+        width: clamp(72px, 8vw, 95px);
+        height: clamp(72px, 8vw, 95px);
         border-radius: 50%;
         font-weight: bold;
         display: flex;
         align-items: center;
         justify-content: center;
         color: #2f5d62;
-        font-size: 18px;
+        font-size: clamp(14px, 1.6vw, 18px);
     }
 
     /* ===== RIGHT TEXT ===== */
     .hero-right{
-    flex:1;
-    max-width:520px;
-    margin-top:-70px;
-    transform: translateX(-240px);    /* chỉnh số này để canh */
-}
+        max-width: 480px;
+        margin-left: auto;
+        transform: none;
+    }
 
     .hero-right h1 {
-        font-size: 64px;
+        font-size: clamp(42px, 6.2vw, 64px);
         font-weight: 800;
-        margin-bottom: 25px;
+        margin-bottom: 18px;
         line-height: 1.15;
     }
 
     .hero-right p {
-        font-size: 17px;
-        margin-bottom: 30px;
+        font-size: clamp(14px, 1.35vw, 17px);
+        margin-bottom: 22px;
         line-height: 1.7;
         color: #d6d6d6;
     }
@@ -195,18 +194,19 @@
     /* ===== ARROW NAV ===== */
     .hero-nav {
         position: absolute;
-        right: 90px;
-        bottom: 60px;
+        right: 24px;
+        bottom: 18px;
         display: flex;
-        gap: 18px;
+        gap: 10px;
+        z-index: 3;
     }
 
     .hero-nav button {
-        width: 58px;
-        height: 58px;
+        width: 42px;
+        height: 42px;
         border: none;
         cursor: pointer;
-        font-size: 18px;
+        font-size: 14px;
     }
 
     .hero-nav .prev {
@@ -407,13 +407,38 @@
     /* ===== RESPONSIVE ===== */
     @media (max-width: 992px) {
 
+        .hero-inner {
+            width: 100%;
+            padding: 34px 16px 44px;
+        }
+
         .hero-container {
-            flex-direction: column;
+            grid-template-columns: 1fr;
+            text-align: center;
+            gap: 8px;
+        }
+
+        .hero-left {
             text-align: center;
         }
 
         .hero-left img {
-            width: 300px;
+            width: min(560px, 100%);
+            transform: none;
+        }
+
+        .badge {
+            top: 6px;
+            left: 12px;
+        }
+
+        .hero-right {
+            margin: 0 auto;
+            max-width: 560px;
+        }
+
+        .hero-nav {
+            display: none;
         }
 
         .cycle-item {

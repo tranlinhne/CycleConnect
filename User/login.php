@@ -12,10 +12,10 @@ $error = '';
 $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'] ?? '';
+    $login = $_POST['login'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    $result = loginUser($email, $password);
+    $result = loginUser($login, $password);
     if ($result['success']) {
         $success = $result['message'];
         header('Refresh: 1; url=index.php');
@@ -171,10 +171,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <form method="POST" action="">
             <div class="form-group">
-                <label for="email">
-                    <i class="fas fa-envelope" style="margin-right: 6px;"></i> Email
+                <label for="login">
+                    <i class="fas fa-user" style="margin-right: 6px;"></i> Tên đăng nhập hoặc Email
                 </label>
-                <input id="email" type="email" name="email" required placeholder="your@gmail.com" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+                <input id="login" type="text" name="login" required placeholder="Nhập tên đăng nhập hoặc email" value="<?= htmlspecialchars($_POST['login'] ?? '') ?>">
             </div>
 
             <div class="form-group">

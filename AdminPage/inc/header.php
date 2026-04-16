@@ -1,63 +1,211 @@
-<?php
-// Xác định trang hiện tại
-$current = basename($_SERVER['PHP_SELF']);
-?>
+<?php if (!isset($hideHeader)): ?>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - GreenRide</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f5f5f5;
+            color: #263238;
+            font-family: 'Segoe UI', system-ui, -apple-system, 'Inter', sans-serif;
+        }
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        .admin-header {
+            background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+            border-bottom: 2px solid rgba(245, 124, 0, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            padding: 0.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+        }
 
-<header class="header">
+        .navbar-brand-custom {
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: #263238 !important;
+            letter-spacing: -0.3px;
+            transition: all 0.2s;
+        }
 
-    <!-- LOGO -->
-    <div class="logo">
-        <a href="index.php">
-            <span class="logo-icon">🚲</span>
-            <span class="logo-text">CYCLE</span>
-        </a>
-    </div>
+        .navbar-brand-custom i {
+            color: #f57c00;
+            font-size: 1.8rem;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
 
-    <!-- MENU -->
-    <nav class="nav">
-        <a href="index.php" class="<?= ($current == 'index.php') ? 'active' : '' ?>">Trang chủ</a>
-        <a href="about.php" class="<?= ($current == 'about.php') ? 'active' : '' ?>">Giới thiệu</a>
-        <a href="products.php" class="<?= ($current == 'products.php') ? 'active' : '' ?>">Sản phẩm</a>
-        <a href="post.php" class="<?= ($current == 'post.php') ? 'active' : '' ?>">Đăng tin</a>
-        <a href="contact.php" class="<?= ($current == 'contact.php') ? 'active' : '' ?>">Liên hệ</a>
-    </nav>
+        .navbar-brand-custom:hover {
+            color: #f57c00 !important;
+            transform: scale(1.02);
+        }
 
-    <!-- RIGHT -->
-    <div class="header-right">
+        .nav-link-custom {
+            font-weight: 500;
+            color: #263238 !important;
+            margin: 0 4px;
+            padding: 8px 16px;
+            border-radius: 40px;
+            transition: all 0.25s ease;
+        }
 
-        <!-- LOGIN -->
-        <a href="login.php" class="login">Login</a>
+        .nav-link-custom i {
+            margin-right: 8px;
+            font-size: 1rem;
+            color: #5a626e;
+            transition: color 0.2s;
+        }
 
-        <!-- SEARCH BOX -->
-        <div class="search-box" id="searchBox">
-            <input type="text" placeholder="Tìm xe đạp...">
+        .nav-link-custom:hover {
+            background-color: rgba(245, 124, 0, 0.12);
+            color: #f57c00 !important;
+            transform: translateY(-2px);
+        }
 
-            <!-- FILTER -->
-            <select>
-                <option value="">Tất cả</option>
-                <option value="dien">Xe điện</option>
-                <option value="duongpho">Xe đường phố</option>
-                <option value="thethao">Xe thể thao</option>
-            </select>
+        .nav-link-custom:hover i {
+            color: #f57c00;
+        }
 
-            <button><i class="fa fa-search"></i></button>
+        .nav-link-custom.active {
+            background-color: #f57c00;
+            color: white !important;
+            box-shadow: 0 4px 8px rgba(245, 124, 0, 0.3);
+        }
+
+        .nav-link-custom.active i {
+            color: white;
+        }
+
+        .admin-welcome {
+            font-weight: 500;
+            background: rgba(38, 50, 56, 0.05);
+            padding: 6px 14px;
+            border-radius: 40px;
+            color: #263238;
+        }
+
+        .admin-welcome i {
+            color: #f57c00;
+            margin-right: 6px;
+        }
+
+        .btn-logout {
+            background-color: transparent;
+            border: 1.5px solid #f57c00;
+            color: #f57c00;
+            border-radius: 40px;
+            padding: 5px 16px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-logout:hover {
+            background-color: #f57c00;
+            color: white;
+            border-color: #f57c00;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(245, 124, 0, 0.3);
+        }
+
+        .navbar-toggler-custom {
+            border: none;
+            background: transparent;
+            font-size: 1.6rem;
+            color: #263238;
+            display: none;
+        }
+
+        .navbar-toggler-custom:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        @media (max-width: 992px) {
+            .navbar-brand-custom {
+                font-size: 1.3rem;
+            }
+
+            .nav-link-custom {
+                margin: 4px 0;
+            }
+
+            .admin-welcome {
+                margin: 8px 0;
+                display: inline-block;
+            }
+
+            .navbar-toggler-custom {
+                display: flex !important;
+            }
+        }
+    </style>
+</head>
+<body>
+<header class="admin-header">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand navbar-brand-custom" href="<?= BASE_URL ?>dashboard.php">
+                <i class="fas fa-leaf"></i> GreenRide Admin
+            </a>
+
+            <button class="navbar-toggler-custom" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav" aria-controls="adminNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="adminNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom <?= strpos($_SERVER['PHP_SELF'], 'dashboard.php') !== false ? 'active' : '' ?>" href="<?= BASE_URL ?>dashboard.php">
+                            <i class="fas fa-house"></i> Tổng quan
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom <?= strpos($_SERVER['PHP_SELF'], 'products/index.php') !== false ? 'active' : '' ?>" href="<?= BASE_URL ?>products/index.php">
+                            <i class="fas fa-bicycle"></i> Quản lý sản phẩm
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom <?= strpos($_SERVER['PHP_SELF'], 'users/index.php') !== false ? 'active' : '' ?>" href="<?= BASE_URL ?>users/index.php">
+                            <i class="fas fa-users"></i> Quản lý người dùng
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom <?= strpos($_SERVER['PHP_SELF'], 'contacts/index.php') !== false ? 'active' : '' ?>" href="<?= BASE_URL ?>contacts/index.php">
+                            <i class="fas fa-envelope"></i> Liên hệ khách hàng
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom <?= strpos($_SERVER['PHP_SELF'], 'reports/index.php') !== false ? 'active' : '' ?>" href="<?= BASE_URL ?>reports/index.php">
+                            <i class="fas fa-flag"></i> Quản lý báo cáo
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom <?= strpos($_SERVER['PHP_SELF'], 'revenue/index.php') !== false ? 'active' : '' ?>" href="<?= BASE_URL ?>revenue/index.php">
+                            <i class="fas fa-chart-line"></i> Doanh thu
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom <?= strpos($_SERVER['PHP_SELF'], 'orders/index.php') !== false ? 'active' : '' ?>" href="<?= BASE_URL ?>orders/index.php">
+                            <i class="fas fa-shopping-cart"></i> Đơn hàng
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="d-flex align-items-center gap-3">
+                    <span class="admin-welcome">
+                        <i class="fas fa-user-circle"></i> Xin chào, <?= htmlspecialchars($_SESSION['fullname'] ?? 'Admin') ?>
+                    </span>
+                    <a href="<?= BASE_URL ?>logout.php" class="btn btn-logout">
+                        <i class="fas fa-sign-out-alt me-1"></i> Đăng xuất
+                    </a>
+                </div>
+            </div>
         </div>
-
-        <!-- ICON -->
-        <i class="fa fa-search search-toggle" onclick="toggleSearch()"></i>
-        <a href="cart.php"><i class="fa fa-shopping-cart"></i></a>
-        <i class="fa fa-bars menu-toggle"></i>
-
-    </div>
-
+    </nav>
 </header>
-
-<!-- SCRIPT -->
-<script>
-function toggleSearch() {
-    const box = document.getElementById("searchBox");
-    box.classList.toggle("active");
-}
-</script>
+<div class="container mt-4">
+<?php endif; ?>
