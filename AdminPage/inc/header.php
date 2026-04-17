@@ -8,204 +8,280 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body {
-            background-color: #f5f5f5;
-            color: #263238;
-            font-family: 'Segoe UI', system-ui, -apple-system, 'Inter', sans-serif;
-        }
 
-        .admin-header {
-            background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
-            border-bottom: 2px solid rgba(245, 124, 0, 0.2);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-            padding: 0.5rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1030;
-        }
+body {
+    background-color: #f5f6fa;
+    color: #263238;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+}
 
-        .navbar-brand-custom {
-            font-weight: 700;
-            font-size: 1.6rem;
-            color: #263238 !important;
-            letter-spacing: -0.3px;
-            transition: all 0.2s;
-        }
+.wrapper {
+    display: flex;
+    width: 100%;
+}
 
-        .navbar-brand-custom i {
-            color: #f57c00;
-            font-size: 1.8rem;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    background: #2f5d62;
+    border-right: 1px solid #23474b;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
 
-        .navbar-brand-custom:hover {
-            color: #f57c00 !important;
-            transform: scale(1.02);
-        }
+.sidebar.collapsed {
+    left: -260px;
+}
 
-        .nav-link-custom {
-            font-weight: 500;
-            color: #263238 !important;
-            margin: 0 4px;
-            padding: 8px 16px;
-            border-radius: 40px;
-            transition: all 0.25s ease;
-        }
+.sidebar-header {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.sidebar-header i {
+    color: #f4a261;
+    margin-right: 10px;
+    font-size: 1.8rem;
+}
 
-        .nav-link-custom i {
-            margin-right: 8px;
-            font-size: 1rem;
-            color: #5a626e;
-            transition: color 0.2s;
-        }
+.sidebar-menu {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 0;
+    list-style: none;
+    margin: 0;
+}
 
-        .nav-link-custom:hover {
-            background-color: rgba(245, 124, 0, 0.12);
-            color: #f57c00 !important;
-            transform: translateY(-2px);
-        }
+.sidebar-menu li {
+    padding: 0 15px;
+    margin-bottom: 8px;
+}
 
-        .nav-link-custom:hover i {
-            color: #f57c00;
-        }
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    padding: 12px 18px;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+}
 
-        .nav-link-custom.active {
-            background-color: #f57c00;
-            color: white !important;
-            box-shadow: 0 4px 8px rgba(245, 124, 0, 0.3);
-        }
+.sidebar-menu a:hover {
+    background: rgba(255,255,255,0.1);
+    color: #ffffff;
+}
+.sidebar-menu a:hover i {
+    color: #f4a261;
+}
 
-        .nav-link-custom.active i {
-            color: white;
-        }
+.sidebar-menu a.active {
+    background: #f4a261;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(244, 162, 97, 0.4);
+}
 
-        .admin-welcome {
-            font-weight: 500;
-            background: rgba(38, 50, 56, 0.05);
-            padding: 6px 14px;
-            border-radius: 40px;
-            color: #263238;
-        }
+.sidebar-menu i {
+    width: 24px;
+    font-size: 1.1rem;
+    text-align: center;
+    margin-right: 10px;
+    transition: color 0.2s;
+    color: #ffffff;
+}
+.sidebar-menu a.active i {
+    color: #ffffff;
+}
 
-        .admin-welcome i {
-            color: #f57c00;
-            margin-right: 6px;
-        }
+.main-content {
+    flex: 1;
+    margin-left: 260px;
+    min-height: 100vh;
+    transition: all 0.3s ease;
+    width: 100%;
+}
 
-        .btn-logout {
-            background-color: transparent;
-            border: 1.5px solid #f57c00;
-            color: #f57c00;
-            border-radius: 40px;
-            padding: 5px 16px;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
+.main-content.expanded {
+    margin-left: 0;
+}
 
-        .btn-logout:hover {
-            background-color: #f57c00;
-            color: white;
-            border-color: #f57c00;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 10px rgba(245, 124, 0, 0.3);
-        }
+.top-navbar {
+    height: 70px;
+    background: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
 
-        .navbar-toggler-custom {
-            border: none;
-            background: transparent;
-            font-size: 1.6rem;
-            color: #263238;
-            display: none;
-        }
+.menu-toggle {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    color: #263238;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.menu-toggle:hover {
+    color: #2f5d62;
+}
 
-        .navbar-toggler-custom:focus {
-            outline: none;
-            box-shadow: none;
-        }
+.top-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
 
-        @media (max-width: 992px) {
-            .navbar-brand-custom {
-                font-size: 1.3rem;
-            }
+.admin-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    color: #263238;
+    padding: 6px 12px;
+    background: #f5f6fa;
+    border-radius: 30px;
+}
+.admin-profile i {
+    font-size: 1.5rem;
+    color: #2f5d62;
+}
 
-            .nav-link-custom {
-                margin: 4px 0;
-            }
+.btn-logout {
+    border: 1px solid #2f5d62;
+    color: #2f5d62;
+    background: transparent;
+    border-radius: 30px;
+    padding: 6px 18px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+.btn-logout:hover {
+    background: #2f5d62;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(47, 93, 98, 0.2);
+}
 
-            .admin-welcome {
-                margin: 8px 0;
-                display: inline-block;
-            }
+.content-area-inner {
+    padding: 25px;
+}
 
-            .navbar-toggler-custom {
-                display: flex !important;
-            }
-        }
+@media (max-width: 992px) {
+    .sidebar {
+        left: -260px; 
+    }
+    .main-content {
+        margin-left: 0; 
+    }
+    .sidebar.mobile-open {
+        left: 0;
+    }
+    .main-content.mobile-open {
+        margin-left: 0; 
+    }
+    /* Overlay for mobile */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 998;
+    }
+    .sidebar-overlay.active {
+        display: block;
+    }
+}
     </style>
 </head>
 <body>
-<header class="admin-header">
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand navbar-brand-custom" href="<?= BASE_URL ?>dashboard.php">
+
+<div class="wrapper">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="<?= BASE_URL ?>dashboard.php" style="text-decoration:none; color:inherit;">
                 <i class="fas fa-leaf"></i> GreenRide Admin
             </a>
+        </div>
+        <ul class="sidebar-menu">
+            <li>
+                <a href="<?= BASE_URL ?>dashboard.php" class="<?= strpos($_SERVER['PHP_SELF'], 'dashboard.php') !== false ? 'active' : '' ?>">
+                    <i class="fas fa-chart-pie"></i> Tổng quan
+                </a>
+            </li>
+            <li>
+                <a href="<?= BASE_URL ?>products/index.php" class="<?= strpos($_SERVER['PHP_SELF'], 'products/') !== false ? 'active' : '' ?>">
+                    <i class="fas fa-bicycle"></i> Quản lý sản phẩm
+                </a>
+            </li>
+            <li>
+                <a href="<?= BASE_URL ?>users/index.php" class="<?= strpos($_SERVER['PHP_SELF'], 'users/') !== false ? 'active' : '' ?>">
+                    <i class="fas fa-users"></i> Quản lý người dùng
+                </a>
+            </li>
+            <li>
+                <a href="<?= BASE_URL ?>contacts/index.php" class="<?= strpos($_SERVER['PHP_SELF'], 'contacts/') !== false ? 'active' : '' ?>">
+                    <i class="fas fa-envelope"></i> Liên hệ khách hàng
+                </a>
+            </li>
+            <li>
+                <a href="<?= BASE_URL ?>reports/index.php" class="<?= strpos($_SERVER['PHP_SELF'], 'reports/') !== false ? 'active' : '' ?>">
+                    <i class="fas fa-flag"></i> Quản lý báo cáo
+                </a>
+            </li>
+            <li>
+                <a href="<?= BASE_URL ?>revenue/index.php" class="<?= strpos($_SERVER['PHP_SELF'], 'revenue/') !== false ? 'active' : '' ?>">
+                    <i class="fas fa-chart-line"></i> Doanh thu
+                </a>
+            </li>
+            <li>
+                <a href="<?= BASE_URL ?>orders/index.php" class="<?= strpos($_SERVER['PHP_SELF'], 'orders/') !== false ? 'active' : '' ?>">
+                    <i class="fas fa-shopping-cart"></i> Đơn hàng
+                </a>
+            </li>
+        </ul>
+    </aside>
 
-            <button class="navbar-toggler-custom" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav" aria-controls="adminNav" aria-expanded="false" aria-label="Toggle navigation">
+    <div class="main-content" id="mainContent">
+        <header class="top-navbar">
+            <button class="menu-toggle" id="menuToggle">
                 <i class="fas fa-bars"></i>
             </button>
-
-            <div class="collapse navbar-collapse" id="adminNav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom <?= strpos($_SERVER['PHP_SELF'], 'dashboard.php') !== false ? 'active' : '' ?>" href="<?= BASE_URL ?>dashboard.php">
-                            <i class="fas fa-house"></i> Tổng quan
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom <?= strpos($_SERVER['PHP_SELF'], 'products/index.php') !== false ? 'active' : '' ?>" href="<?= BASE_URL ?>products/index.php">
-                            <i class="fas fa-bicycle"></i> Quản lý sản phẩm
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom <?= strpos($_SERVER['PHP_SELF'], 'users/index.php') !== false ? 'active' : '' ?>" href="<?= BASE_URL ?>users/index.php">
-                            <i class="fas fa-users"></i> Quản lý người dùng
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom <?= strpos($_SERVER['PHP_SELF'], 'contacts/index.php') !== false ? 'active' : '' ?>" href="<?= BASE_URL ?>contacts/index.php">
-                            <i class="fas fa-envelope"></i> Liên hệ khách hàng
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom <?= strpos($_SERVER['PHP_SELF'], 'reports/index.php') !== false ? 'active' : '' ?>" href="<?= BASE_URL ?>reports/index.php">
-                            <i class="fas fa-flag"></i> Quản lý báo cáo
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom <?= strpos($_SERVER['PHP_SELF'], 'revenue/index.php') !== false ? 'active' : '' ?>" href="<?= BASE_URL ?>revenue/index.php">
-                            <i class="fas fa-chart-line"></i> Doanh thu
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom <?= strpos($_SERVER['PHP_SELF'], 'orders/index.php') !== false ? 'active' : '' ?>" href="<?= BASE_URL ?>orders/index.php">
-                            <i class="fas fa-shopping-cart"></i> Đơn hàng
-                        </a>
-                    </li>
-                </ul>
-
-                <div class="d-flex align-items-center gap-3">
-                    <span class="admin-welcome">
-                        <i class="fas fa-user-circle"></i> Xin chào, <?= htmlspecialchars($_SESSION['fullname'] ?? 'Admin') ?>
-                    </span>
-                    <a href="<?= BASE_URL ?>logout.php" class="btn btn-logout">
-                        <i class="fas fa-sign-out-alt me-1"></i> Đăng xuất
-                    </a>
+            
+            <div class="top-right">
+                <div class="admin-profile">
+                    <i class="fas fa-user-circle"></i>
+                    <span class="d-none d-sm-inline"><?= htmlspecialchars($_SESSION['fullname'] ?? 'Admin') ?></span>
                 </div>
+                <a href="<?= BASE_URL ?>logout.php" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> <span class="d-none d-sm-inline">Đăng xuất</span>
+                </a>
             </div>
-        </div>
-    </nav>
-</header>
-<div class="container mt-4">
+        </header>
+        
+        <div class="content-area-inner container-fluid mt-4">
 <?php endif; ?>
