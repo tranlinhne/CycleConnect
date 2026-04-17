@@ -1,12 +1,6 @@
 <?php include("../config.php"); ?>
 
-<h3>Add User</h3>
-
-<div>
-    <a href="all_users.php">All Users</a> |
-    <a href="add_user.php">Add New</a> |
-    <a href="profile.php">Profile</a>
-</div>
+<h2>Add Users</h2>
 
 <br>
 

@@ -2,12 +2,6 @@
 
 <h3>Profile</h3>
 
-<div>
-    <a href="all_users.php">All Users</a> |
-    <a href="add_user.php">Add New</a> |
-    <a href="profile.php">Profile</a>
-</div>
-
 <br>
 
 <?php
