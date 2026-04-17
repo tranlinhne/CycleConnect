@@ -5,7 +5,9 @@ require_once '../inc/header.php';
 $page = $_GET['page'] ?? 1;
 $limit = 10;
 $offset = ($page - 1) * $limit;
-$stmt = $pdo->prepare("SELECT b.*, c.name as cat_name, br.name as brand_name FROM bikes b 
+$stmt = $pdo->prepare("SELECT b.*, c.name as cat_name, br.name as brand_name, 
+                       (SELECT image_url FROM bike_images WHERE bike_id = b.id ORDER BY is_primary DESC, id ASC LIMIT 1) as main_image
+                       FROM bikes b 
                        LEFT JOIN categories c ON b.category_id = c.id 
                        LEFT JOIN brands br ON b.brand_id = br.id
                        ORDER BY b.id DESC LIMIT ? OFFSET ?");
@@ -231,13 +233,20 @@ $pages = ceil($total / $limit);
         <table class="product-table">
             <thead>
                 <tr>
-                    <th>ID</th><th>Tiêu đề</th><th>Danh mục</th><th>Thương hiệu</th><th>Giá</th><th>Trạng thái</th><th>Hành động</th>
+                    <th>ID</th><th>Hình ảnh</th><th>Tiêu đề</th><th>Danh mục</th><th>Thương hiệu</th><th>Giá</th><th>Trạng thái</th><th>Hành động</th>
                 </tr>
             </thead>
             <tbody>
             <?php foreach ($bikes as $b): ?>
                 <tr>
                     <td data-label="ID"><?= $b['id'] ?></td>
+                    <td data-label="Hình ảnh">
+                        <?php if (!empty($b['main_image'])): ?>
+                            <img src="../<?= htmlspecialchars($b['main_image']) ?>" alt="Img" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;">
+                        <?php else: ?>
+                            <div style="width: 50px; height: 50px; background: #eaeaea; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #888; font-size: 0.75rem;">Trống</div>
+                        <?php endif; ?>
+                    </td>
                     <td data-label="Tiêu đề"><?= htmlspecialchars($b['title']) ?></td>
                     <td data-label="Danh mục"><?= htmlspecialchars($b['cat_name']) ?></td>
                     <td data-label="Thương hiệu"><?= htmlspecialchars($b['brand_name']) ?></td>
