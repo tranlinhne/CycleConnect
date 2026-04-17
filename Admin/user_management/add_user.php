@@ -1,56 +1,254 @@
 <?php include("../config.php"); ?>
 
-<h2>Add Users</h2>
-
-<br>
-
 <?php
+$message = "";
+$messageType = "";
+
+$name = "";
+$email = "";
+$role = "user";
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $password_input = $_POST['password'] ?? '';
+    $confirm_password = $_POST['confirm_password'] ?? '';
+    $role = $_POST['role'] ?? 'user';
 
-    $name = trim($_POST['name']);
-    $email = trim($_POST['email']);
-    $password_input = $_POST['password'];
-    $role = $_POST['role'];
-
-    // ✅ validate
-    if (empty($name) || empty($email) || empty($password_input)) {
-        echo "<p style='color:red'>Vui lòng nhập đầy đủ thông tin!</p>";
+    // ===== VALIDATE =====
+    if (empty($name) || empty($email) || empty($password_input) || empty($confirm_password)) {
+        $message = "Vui lòng nhập đầy đủ thông tin!";
+        $messageType = "error";
     }
     elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo "<p style='color:red'>Email không hợp lệ!</p>";
+        $message = "Email không hợp lệ!";
+        $messageType = "error";
+    }
+    elseif ($password_input !== $confirm_password) {
+        $message = "Mật khẩu xác nhận không khớp!";
+        $messageType = "error";
+    }
+    elseif (!in_array($role, ['user', 'admin'])) {
+        $message = "Role không hợp lệ!";
+        $messageType = "error";
     }
     else {
+        // ===== CHECK EMAIL EXIST =====
+        $checkStmt = mysqli_prepare($conn, "SELECT id FROM users WHERE email = ?");
+        mysqli_stmt_bind_param($checkStmt, "s", $email);
+        mysqli_stmt_execute($checkStmt);
+        $checkResult = mysqli_stmt_get_result($checkStmt);
 
-        // ✅ kiểm tra email trùng
-        $check = mysqli_query($conn, "SELECT * FROM users WHERE email='$email'");
-        if (mysqli_num_rows($check) > 0) {
-            echo "<p style='color:red'>Email đã tồn tại!</p>";
+        if (mysqli_num_rows($checkResult) > 0) {
+            $message = "Email đã tồn tại!";
+            $messageType = "error";
         } else {
-
             $password = password_hash($password_input, PASSWORD_DEFAULT);
 
-            mysqli_query($conn, "
+            $insertStmt = mysqli_prepare($conn, "
                 INSERT INTO users (name, email, password, role, active)
-                VALUES ('$name', '$email', '$password', '$role', 1)
+                VALUES (?, ?, ?, ?, 1)
             ");
 
-            echo "<p style='color:green'>Thêm user thành công!</p>";
+            mysqli_stmt_bind_param($insertStmt, "ssss", $name, $email, $password, $role);
+
+            if (mysqli_stmt_execute($insertStmt)) {
+                $message = "Thêm user thành công!";
+                $messageType = "success";
+
+                // reset form
+                $name = "";
+                $email = "";
+                $role = "user";
+            } else {
+                $message = "Có lỗi xảy ra khi thêm user!";
+                $messageType = "error";
+            }
         }
     }
 }
 ?>
 
-<form method="POST">
-    <input type="text" name="name" placeholder="Name" required><br><br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Add User</title>
 
-    <input type="email" name="email" placeholder="Email" required><br><br>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f6fa;
+    margin: 0;
+    padding: 20px;
+}
 
-    <input type="password" name="password" placeholder="Password" required><br><br>
+/* ===== TITLE ===== */
+.page-title {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
 
-    <select name="role">
-        <option value="user">User</option>
-        <option value="admin">Admin</option>
-    </select><br><br>
+/* ===== BACK BUTTON ===== */
+.back-link {
+    display: block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #6c5ce7;
+    font-weight: 600;
+    text-align: center;
+}
 
-    <button>Thêm user</button>
-</form>
+/* ===== CARD ===== */ 
+.card-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.card {
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    padding: 24px;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0,0,0,.06);
+}
+
+.btn-center {
+    text-align: center;
+    margin-top: 10px;
+}
+.card {
+    max-width: 500px;
+    background: white;
+    padding: 24px;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0,0,0,.06);
+}
+
+/* ===== FORM ===== */
+.form-group {
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #333;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #f39c12;
+}
+
+/* ===== BUTTON ===== */
+.btn {
+    background: #f39c12;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.btn:hover {
+    background: #e67e22;
+}
+
+/* ===== MESSAGE ===== */
+.message {
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+.message.error {
+    background: #fdecea;
+    color: #c0392b;
+}
+
+.message.success {
+    background: #eafaf1;
+    color: #27ae60;
+}
+</style>
+
+</head>
+<body>
+
+<div class="page-title">Add New User</div>
+
+<a href="index.php?page=users" class="back-link">← Back to All Users</a>
+
+<div class="card-wrapper">
+    <div class="card">
+
+        <?php if (!empty($message)): ?>
+            <div class="message <?= $messageType ?>">
+                <?= htmlspecialchars($message) ?>
+            </div>
+        <?php endif; ?>
+
+        <form method="POST">
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="name"
+                    value="<?= htmlspecialchars($name) ?>"
+                    placeholder="Enter full name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email"
+                    value="<?= htmlspecialchars($email) ?>"
+                    placeholder="Enter email" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password"
+                    placeholder="Enter password" required>
+            </div>
+
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <input type="password" name="confirm_password"
+                    placeholder="Confirm password" required>
+            </div>
+
+            <div class="form-group">
+                <label>Role</label>
+                <select name="role">
+                    <option value="user" <?= ($role == 'user') ? 'selected' : '' ?>>User</option>
+                    <option value="admin" <?= ($role == 'admin') ? 'selected' : '' ?>>Admin</option>
+                </select>
+            </div>
+
+            <div class="btn-center">
+                <button type="submit" class="btn">Add User</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
