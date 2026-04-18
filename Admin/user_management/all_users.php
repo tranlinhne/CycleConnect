@@ -1,4 +1,4 @@
-<?php include("../config.php"); ?>
+<?php require_once __DIR__ . "/../config.php"; ?>
 
 <?php
 $keyword = trim($_GET['keyword'] ?? '');
@@ -65,6 +65,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($bulkAction) && !empty($sele
                 $messageType = "error";
             }
         }
+    } elseif (!empty($bulkAction) && empty($cleanIds)) {
+        $message = "Vui lòng chọn ít nhất một user!";
+        $messageType = "error";
     }
 }
 
@@ -73,7 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($bulkAction) && !empty($sele
 ========================= */
 $countAll = 0;
 $countAdmin = 0;
-$countUser = 0;
+$countBuyer = 0;
+$countSeller = 0;
 $countActive = 0;
 $countInactive = 0;
 
@@ -81,7 +85,8 @@ $countResult = mysqli_query($conn, "
     SELECT
         COUNT(*) AS total_all,
         SUM(CASE WHEN role = 'admin' THEN 1 ELSE 0 END) AS total_admin,
-        SUM(CASE WHEN role = 'user' THEN 1 ELSE 0 END) AS total_user,
+        SUM(CASE WHEN role = 'buyer' THEN 1 ELSE 0 END) AS total_buyer,
+        SUM(CASE WHEN role = 'seller' THEN 1 ELSE 0 END) AS total_seller,
         SUM(CASE WHEN active = 1 THEN 1 ELSE 0 END) AS total_active,
         SUM(CASE WHEN active = 0 THEN 1 ELSE 0 END) AS total_inactive
     FROM users
@@ -90,7 +95,8 @@ $countResult = mysqli_query($conn, "
 if ($countRow = mysqli_fetch_assoc($countResult)) {
     $countAll = (int)($countRow['total_all'] ?? 0);
     $countAdmin = (int)($countRow['total_admin'] ?? 0);
-    $countUser = (int)($countRow['total_user'] ?? 0);
+    $countBuyer = (int)($countRow['total_buyer'] ?? 0);
+    $countSeller = (int)($countRow['total_seller'] ?? 0);
     $countActive = (int)($countRow['total_active'] ?? 0);
     $countInactive = (int)($countRow['total_inactive'] ?? 0);
 }
@@ -110,7 +116,7 @@ if ($keyword !== '') {
     $types .= "ss";
 }
 
-if ($roleFilter !== '' && in_array($roleFilter, ['admin', 'user'])) {
+if ($roleFilter !== '' && in_array($roleFilter, ['admin', 'buyer', 'seller'])) {
     $where[] = "role = ?";
     $params[] = $roleFilter;
     $types .= "s";
@@ -138,7 +144,9 @@ mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 
 function buildUserUrl($extra = []) {
-    $params = ['page' => 'users'];
+    $params = [
+        'page' => 'all_users'
+    ];
 
     if (isset($_GET['keyword']) && $_GET['keyword'] !== '') {
         $params['keyword'] = $_GET['keyword'];
@@ -165,7 +173,7 @@ function buildUserUrl($extra = []) {
 ?>
 
 <style>
-        .users-wrap {
+    .users-wrap {
         background: #ffffff;
         border: 1px solid #e5e7eb;
         padding: 24px;
@@ -232,7 +240,7 @@ function buildUserUrl($extra = []) {
         justify-content: space-between;
         align-items: center;
         gap: 14px;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         margin-bottom: 18px;
         padding: 14px;
         background: #f9fafb;
@@ -240,16 +248,24 @@ function buildUserUrl($extra = []) {
         border-radius: 10px;
     }
 
-    .toolbar-left,
-    .toolbar-right {
+    .toolbar-left {
         display: flex;
         align-items: center;
         gap: 10px;
         flex-wrap: wrap;
+        flex: 1;
+    }
+
+    .toolbar-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
     }
 
     .toolbar select,
-    .toolbar input[type="text"] {
+    .toolbar input[type="text"],
+    .bottom-actions select {
         min-height: 38px;
         padding: 8px 12px;
         border: 1px solid #d1d5db;
@@ -261,7 +277,8 @@ function buildUserUrl($extra = []) {
     }
 
     .toolbar select:focus,
-    .toolbar input[type="text"]:focus {
+    .toolbar input[type="text"]:focus,
+    .bottom-actions select:focus {
         outline: none;
         border-color: #60a5fa;
         box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.18);
@@ -425,9 +442,19 @@ function buildUserUrl($extra = []) {
         color: #b91c1c;
     }
 
-    .role-user {
+    .role-buyer {
         background: #dbeafe;
         color: #1d4ed8;
+    }
+
+    .role-seller {
+        background: #fef3c7;
+        color: #b45309;
+    }
+
+    .role-user {
+        background: #e5e7eb;
+        color: #374151;
     }
 
     .status-active {
@@ -453,12 +480,6 @@ function buildUserUrl($extra = []) {
         align-items: center;
     }
 
-    .users-footer {
-        margin-top: 14px;
-        font-size: 13px;
-        color: #6b7280;
-    }
-
     @media (max-width: 768px) {
         .users-wrap {
             padding: 16px;
@@ -476,6 +497,7 @@ function buildUserUrl($extra = []) {
         .toolbar {
             flex-direction: column;
             align-items: stretch;
+            flex-wrap: wrap;
         }
 
         .toolbar-left,
@@ -495,23 +517,52 @@ function buildUserUrl($extra = []) {
 
 <div class="users-wrap">
     <div class="users-header">
-    <div class="header-left">
-        <h2>Users</h2>
-        <a href="index.php?page=add_user" class="btn btn-add btn-small">Add User</a>
+        <div class="header-left">
+            <h2>Users</h2>
+            <a href="index.php?page=add_user" class="btn btn-add btn-small">Add User</a>
+        </div>
+        <p>Quản lý danh sách tài khoản trong hệ thống CycleMarket</p>
     </div>
-    <p>Quản lý danh sách tài khoản trong hệ thống CycleMarket</p>
-</div>
 
     <div class="filter-links">
-        <a href="index.php?page=users" class="<?= ($roleFilter === '' && $statusFilter === '') ? 'active' : '' ?>">All (<?= $countAll ?>)</a>
+        <a href="all_users.php" class="<?= ($roleFilter === '' && $statusFilter === '') ? 'active' : '' ?>">
+            All (<?= $countAll ?>)
+        </a>
+
         <span class="sep">|</span>
-        <a href="index.php?page=users&role=admin<?= $keyword !== '' ? '&keyword=' . urlencode($keyword) : '' ?>" class="<?= $roleFilter === 'admin' ? 'active' : '' ?>">Administrator (<?= $countAdmin ?>)</a>
+
+        <a href="all_users.php?role=admin<?= $keyword !== '' ? '&keyword=' . urlencode($keyword) : '' ?>"
+           class="<?= $roleFilter === 'admin' ? 'active' : '' ?>">
+            Admin (<?= $countAdmin ?>)
+        </a>
+
         <span class="sep">|</span>
-        <a href="index.php?page=users&role=user<?= $keyword !== '' ? '&keyword=' . urlencode($keyword) : '' ?>" class="<?= $roleFilter === 'user' ? 'active' : '' ?>">User (<?= $countUser ?>)</a>
+
+        <a href="all_users.php?role=buyer<?= $keyword !== '' ? '&keyword=' . urlencode($keyword) : '' ?>"
+           class="<?= $roleFilter === 'buyer' ? 'active' : '' ?>">
+            Buyer (<?= $countBuyer ?>)
+        </a>
+
         <span class="sep">|</span>
-        <a href="index.php?page=users&status=1<?= $keyword !== '' ? '&keyword=' . urlencode($keyword) : '' ?>" class="<?= $statusFilter === '1' ? 'active' : '' ?>">Active (<?= $countActive ?>)</a>
+
+        <a href="all_users.php?role=seller<?= $keyword !== '' ? '&keyword=' . urlencode($keyword) : '' ?>"
+           class="<?= $roleFilter === 'seller' ? 'active' : '' ?>">
+            Seller (<?= $countSeller ?>)
+        </a>
+
         <span class="sep">|</span>
-        <a href="index.php?page=users&status=0<?= $keyword !== '' ? '&keyword=' . urlencode($keyword) : '' ?>" class="<?= $statusFilter === '0' ? 'active' : '' ?>">Inactive (<?= $countInactive ?>)</a>
+
+        <a href="all_users.php?status=1<?= $keyword !== '' ? '&keyword=' . urlencode($keyword) : '' ?>"
+           class="<?= $statusFilter === '1' ? 'active' : '' ?>">
+            Active (<?= $countActive ?>)
+        </a>
+
+        <span class="sep">|</span>
+
+        <a href="all_users.php?status=0<?= $keyword !== '' ? '&keyword=' . urlencode($keyword) : '' ?>"
+           class="<?= $statusFilter === '0' ? 'active' : '' ?>">
+            Inactive (<?= $countInactive ?>)
+        </a>
     </div>
 
     <?php if (!empty($message)): ?>
@@ -521,20 +572,21 @@ function buildUserUrl($extra = []) {
     <?php endif; ?>
 
     <div class="toolbar">
-        <form method="POST" action="<?= htmlspecialchars(buildUserUrl()) ?>" class="toolbar-left">
-            <select name="bulk_action">
+        <div class="toolbar-left">
+            <select form="bulkForm" name="bulk_action">
                 <option value="">Bulk actions</option>
                 <option value="activate">Activate</option>
                 <option value="deactivate">Deactivate</option>
                 <option value="delete">Delete</option>
             </select>
 
-            <button type="submit" class="btn btn-secondary">Apply</button>
+            <button type="submit" form="bulkForm" class="btn btn-secondary">Apply</button>
 
             <select onchange="window.location.href=this.value">
                 <option value="<?= htmlspecialchars(buildUserUrl(['role' => '', 'status' => $statusFilter])) ?>">All roles</option>
-                <option value="<?= htmlspecialchars(buildUserUrl(['role' => 'admin', 'status' => $statusFilter])) ?>" <?= $roleFilter === 'admin' ? 'selected' : '' ?>>Administrator</option>
-                <option value="<?= htmlspecialchars(buildUserUrl(['role' => 'user', 'status' => $statusFilter])) ?>" <?= $roleFilter === 'user' ? 'selected' : '' ?>>User</option>
+                <option value="<?= htmlspecialchars(buildUserUrl(['role' => 'admin', 'status' => $statusFilter])) ?>" <?= $roleFilter === 'admin' ? 'selected' : '' ?>>Admin</option>
+                <option value="<?= htmlspecialchars(buildUserUrl(['role' => 'buyer', 'status' => $statusFilter])) ?>" <?= $roleFilter === 'buyer' ? 'selected' : '' ?>>Buyer</option>
+                <option value="<?= htmlspecialchars(buildUserUrl(['role' => 'seller', 'status' => $statusFilter])) ?>" <?= $roleFilter === 'seller' ? 'selected' : '' ?>>Seller</option>
             </select>
 
             <select onchange="window.location.href=this.value">
@@ -542,10 +594,11 @@ function buildUserUrl($extra = []) {
                 <option value="<?= htmlspecialchars(buildUserUrl(['status' => '1', 'role' => $roleFilter])) ?>" <?= $statusFilter === '1' ? 'selected' : '' ?>>Active</option>
                 <option value="<?= htmlspecialchars(buildUserUrl(['status' => '0', 'role' => $roleFilter])) ?>" <?= $statusFilter === '0' ? 'selected' : '' ?>>Inactive</option>
             </select>
-        </form>
+        </div>
 
         <form method="GET" action="index.php" class="toolbar-right">
-            <input type="hidden" name="page" value="users">
+            <input type="hidden" name="page" value="all_users">
+
             <?php if ($roleFilter !== ''): ?>
                 <input type="hidden" name="role" value="<?= htmlspecialchars($roleFilter) ?>">
             <?php endif; ?>
@@ -557,7 +610,7 @@ function buildUserUrl($extra = []) {
         </form>
     </div>
 
-    <form method="POST" action="<?= htmlspecialchars(buildUserUrl()) ?>">
+    <form method="POST" action="<?= htmlspecialchars(buildUserUrl()) ?>" id="bulkForm">
         <div class="table-wrap">
             <table class="users-table">
                 <thead>
@@ -589,9 +642,13 @@ function buildUserUrl($extra = []) {
                                 <td><?= htmlspecialchars($u['email']) ?></td>
                                 <td>
                                     <?php if ($u['role'] === 'admin'): ?>
-                                        <span class="role-badge role-admin">Administrator</span>
+                                        <span class="role-badge role-admin">Admin</span>
+                                    <?php elseif ($u['role'] === 'buyer'): ?>
+                                        <span class="role-badge role-buyer">Buyer</span>
+                                    <?php elseif ($u['role'] === 'seller'): ?>
+                                        <span class="role-badge role-seller">Seller</span>
                                     <?php else: ?>
-                                        <span class="role-badge role-user">User</span>
+                                        <span class="role-badge role-user"><?= htmlspecialchars($u['role']) ?></span>
                                     <?php endif; ?>
                                 </td>
                                 <td>
@@ -611,19 +668,8 @@ function buildUserUrl($extra = []) {
                 </tbody>
             </table>
         </div>
-
-        <div style="margin-top:12px;">
-            <select name="bulk_action">
-                <option value="">Bulk actions</option>
-                <option value="activate">Activate</option>
-                <option value="deactivate">Deactivate</option>
-                <option value="delete">Delete</option>
-            </select>
-            <button type="submit" class="btn btn-secondary">Apply</button>
-        </div>
     </form>
 </div>
-
 
 <script>
     const checkAll = document.getElementById('checkAll');

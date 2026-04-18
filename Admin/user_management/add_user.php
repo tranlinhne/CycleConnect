@@ -1,4 +1,4 @@
-<?php include("../config.php"); ?>
+<?php require_once __DIR__ . "/../config.php"; ?>
 
 <?php
 $message = "";
@@ -188,6 +188,24 @@ input:focus, select:focus {
     background: #eafaf1;
     color: #27ae60;
 }
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mini-back {
+    font-size: 13px;
+    color: #6b7280;
+    text-decoration: none;
+}
+
+.mini-back:hover {
+    color: #2563eb;
+}
+
+
 </style>
 
 </head>
@@ -195,7 +213,9 @@ input:focus, select:focus {
 
 <div class="page-title">Add New User</div>
 
-<a href="index.php?page=users" class="back-link">← Back to All Users</a>
+<div class="header-top">
+    <a href="index.php?page=all_users" class="mini-back"></a>
+</div>
 
 <div class="card-wrapper">
     <div class="card">
