@@ -1,4 +1,8 @@
 ﻿    <?php
+    if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
     include 'config.php';
     include 'includes/header.php';
 
@@ -13,6 +17,18 @@
     }
     ?>
     <style>
+        .home-alert{
+    width:min(1280px, calc(100% - 8px));
+    margin:18px auto 0;
+    background:#e7f6ec;
+    color:#137333;
+    border:1px solid #badbcc;
+    padding:14px 18px;
+    border-radius:10px;
+    font-size:15px;
+    font-weight:600;
+    box-shadow:0 4px 10px rgba(0,0,0,0.06);
+}
 
 
     body {
@@ -1005,10 +1021,13 @@
     </style>
 
     <body>
-
-
-    <body>
-
+<?php if (!empty($_SESSION['login_success'])): ?>
+    <div class="home-alert">
+        <?= htmlspecialchars($_SESSION['login_success']) ?>
+    </div>
+    <?php unset($_SESSION['login_success']); ?>
+<?php endif; ?>
+>>>>>>> d1dfe2a (update)
 <section class="hero">
 <div class="hero-inner">
     <div class="hero-container">
