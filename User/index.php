@@ -515,7 +515,33 @@
 
     <body>
 
+
+    <body>
+
 <section class="hero">
+<div class="hero-inner">
+    <div class="hero-container">
+
+        <div class="hero-left">
+            <span class="badge">BEST</span>
+            <img src="assets/images/hero-bike.png" alt="Bike">
+        </div>
+
+        <div class="hero-right">
+            <h1>Mẫu<br>Xe<br>2026</h1>
+            <p>
+                Mang đến trải nghiệm đạp xe hoàn hảo với thiết kế hiện đại và hiệu suất vượt trội.
+            </p>
+            <a href="#" class="btn">Mua Ngay</a>
+        </div>
+
+        <div class="hero-nav">
+            <button class="prev"><i class="fas fa-chevron-left"></i></button>
+            <button class="next"><i class="fas fa-chevron-right"></i></button>
+        </div>
+
+    </div>
+</div>
 <div class="hero-inner">
     <div class="hero-container">
 
@@ -610,6 +636,29 @@
                 <img src="assets/images/<?php echo $row['image']; ?>" alt="">
                 <span class="number"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT); ?></span>
             </div>
+    <!-- OUR CYCLE -->
+    <section class="cycle">
+        <div class="cycle-container">
+        <h2>Our Cycle</h2>
+        <p class="sub">Sản phẩm nổi bật của chúng tôi</p>
+
+        <?php
+        if ($result && $result->num_rows > 0) {
+
+            // quay lại từ đầu
+            $result->data_seek(0);
+            $i = 1;
+
+            while ($row = $result->fetch_assoc()) {
+        ?>
+
+        <div class="cycle-item <?php echo ($i % 2 == 0) ? 'reverse' : ''; ?>">
+
+            <div class="cycle-img">
+                <div class="bg-box"></div>
+                <img src="assets/images/<?php echo $row['image']; ?>" alt="">
+                <span class="number"><?php echo str_pad($i, 2, '0', STR_PAD_LEFT); ?></span>
+            </div>
 
             <div class="cycle-info">
 
@@ -644,6 +693,23 @@
     <span class="amount"><?php echo number_format($row['price']); ?></span>
 </div>
     </div>
+</div>
+
+</div>
+
+        </div>
+
+        <?php 
+            $i++;
+            }
+        }
+        ?>
+
+        </div>
+
+    </section>
+<?php include "includes/footer.php"; ?>
+    </body>
 </div>
 
 </div>

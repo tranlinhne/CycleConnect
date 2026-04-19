@@ -1,25 +1,29 @@
-<?php 
+<?php
 require_once "config.php";
 
 $current_page = basename($_SERVER['PHP_SELF']);
+$page = $_GET['page'] ?? 'home';
 
+$isUserPage = in_array($page, ['all_users', 'add_user', 'profile', 'edit_user']);
+
+// Thống kê
 $total_users = mysqli_fetch_assoc(
-    mysqli_query($conn, "SELECT COUNT(*) total FROM users")
+    mysqli_query($conn, "SELECT COUNT(*) AS total FROM users")
 )['total'] ?? 0;
 
 $total_bikes = mysqli_fetch_assoc(
-    mysqli_query($conn, "SELECT COUNT(*) total FROM featured_bikes")
+    mysqli_query($conn, "SELECT COUNT(*) AS total FROM featured_bikes")
 )['total'] ?? 0;
 
 $total_transactions = mysqli_fetch_assoc(
-    mysqli_query($conn, "SELECT COUNT(*) total FROM transactions")
+    mysqli_query($conn, "SELECT COUNT(*) AS total FROM transactions")
 )['total'] ?? 0;
 ?>
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Dashboard</title>
 
 <link rel="stylesheet"
@@ -30,20 +34,23 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Segoe UI;
+    font-family: Segoe UI, Arial, sans-serif;
 }
 
 body {
     background: #f4f6fb;
     display: flex;
+    min-height: 100vh;
 }
 
 .sidebar {
     width: 250px;
     background: white;
-    height: 100vh;
+    min-height: 100vh;
     padding: 20px;
     box-shadow: 0 0 20px rgba(0,0,0,.05);
+    position: sticky;
+    top: 0;
 }
 
 .logo {
@@ -61,6 +68,7 @@ body {
     text-decoration: none;
     color: #555;
     font-size: 14px;
+    transition: 0.2s;
 }
 
 .menu a.active,
@@ -79,6 +87,7 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 25px;
+    gap: 20px;
 }
 
 .search {
@@ -93,6 +102,7 @@ body {
     border: none;
     outline: none;
     width: 100%;
+    font-size: 14px;
 }
 
 .profile {
@@ -107,6 +117,7 @@ body {
     border-radius: 50%;
     background: url('https://i.pravatar.cc/100');
     background-size: cover;
+    background-position: center;
 }
 
 .cards {
@@ -151,65 +162,131 @@ body {
     border-radius: 10px;
     margin-top: 15px;
 }
+
+.submenu {
+    display: none;
+    margin-left: 15px;
+    margin-top: 4px;
+}
+
+.submenu a {
+    display: block;
+    padding: 10px;
+    font-size: 13px;
+    color: #777;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-bottom: 4px;
+}
+
+.submenu a:hover,
+.submenu a.sub-active {
+    background: #f1f2ff;
+    color: #5b5ce2;
+}
+
+.content-box {
+    margin-top: 10px;
+}
+
+@media (max-width: 1100px) {
+    .cards {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        min-height: auto;
+        position: static;
+    }
+
+    .main {
+        padding: 16px;
+    }
+
+    .topbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search {
+        width: 100%;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+}
 </style>
 </head>
 
 <body>
 
 <div class="sidebar">
-
     <div class="logo">
         VENUS <br>
-        <small style="font-size:12px;color:#999">
-            DASHBOARD
-        </small>
+        <small style="font-size:12px;color:#999">DASHBOARD</small>
     </div>
 
     <div class="menu">
+        <a href="index.php"
+           class="<?= ($page === 'home') ? 'active' : '' ?>">
+            <i class="fa fa-chart-line"></i> Dashboard
+        </a>
 
-    <a href="dashboard.php"
-    class="<?= ($current_page == 'dashboard.php') ? 'active' : '' ?>">
-        <i class="fa fa-chart-line"></i> Dashboard
-    </a>
+        <div class="menu-item">
+            <a href="#" onclick="toggleMenu(event)">
+                <i class="fa fa-users"></i> Quản lý người dùng
+                <i class="fa fa-angle-down" style="float:right;"></i>
+            </a>
 
-    <a href="user_management.php"
-    class="<?= ($current_page == 'user_management.php') ? 'active' : '' ?>">
-        <i class="fa fa-users"></i> Quản lý người dùng
-    </a>
+            <div id="user-submenu" class="submenu"
+                 style="<?= $isUserPage ? 'display:block;' : '' ?>">
+                <a href="index.php?page=all_users" class="<?= $page === 'all_users' ? 'sub-active' : '' ?>">All Users</a>
+                <a href="index.php?page=add_user" class="<?= $page === 'add_user' ? 'sub-active' : '' ?>">Add New</a>
+                <a href="index.php?page=profile" class="<?= $page === 'profile' ? 'sub-active' : '' ?>">Profile</a>
+            </div>
+        </div>
 
-    <a href="bicycle_management.php"
-    class="<?= ($current_page == 'bicycle_management.php') ? 'active' : '' ?>">
-        <i class="fa fa-bicycle"></i> Quản lý xe đạp
-    </a>
+        <a href="bicycle_management.php"
+           class="<?= ($current_page == 'bicycle_management.php') ? 'active' : '' ?>">
+            <i class="fa fa-bicycle"></i> Quản lý xe đạp
+        </a>
 
-    <a href="inspection_management.php"
-    class="<?= ($current_page == 'inspection_management.php') ? 'active' : '' ?>">
-        <i class="fa fa-check-circle"></i> Kiểm định xe
-    </a>
+        <a href="inspection_management.php"
+           class="<?= ($current_page == 'inspection_management.php') ? 'active' : '' ?>">
+            <i class="fa fa-check-circle"></i> Kiểm định xe
+        </a>
 
-    <a href="transaction_management.php"
-    class="<?= ($current_page == 'transaction_management.php') ? 'active' : '' ?>">
-        <i class="fa fa-credit-card"></i> Quản lý giao dịch
-    </a>
+        <a href="transaction_management.php"
+           class="<?= ($current_page == 'transaction_management.php') ? 'active' : '' ?>">
+            <i class="fa fa-credit-card"></i> Quản lý giao dịch
+        </a>
 
-    <a href="message_management.php"
-    class="<?= ($current_page == 'message_management.php') ? 'active' : '' ?>">
-        <i class="fa fa-envelope"></i> Phản hồi tin nhắn
-    </a>
+        <a href="message_management.php"
+           class="<?= ($current_page == 'message_management.php') ? 'active' : '' ?>">
+            <i class="fa fa-envelope"></i> Phản hồi tin nhắn
+        </a>
 
-    <a href="system_statistics.php"
-    class="<?= ($current_page == 'system_statistics.php') ? 'active' : '' ?>">
-        <i class="fa fa-chart-bar"></i> Thống kê hệ thống
-    </a>
-
-</div>
-
+        <a href="system_statistics.php"
+           class="<?= ($current_page == 'system_statistics.php') ? 'active' : '' ?>">
+            <i class="fa fa-chart-bar"></i> Thống kê hệ thống
+        </a>
+    </div>
 </div>
 
 <div class="main">
-
     <div class="topbar">
-
         <div class="search">
             <input type="text" placeholder="Search">
         </div>
@@ -218,48 +295,79 @@ body {
             <i class="fa fa-bell"></i>
             <div class="avatar"></div>
         </div>
-
     </div>
 
-    <div class="cards">
+    <?php if ($page === 'home'): ?>
+        <div class="cards">
+            <div class="card">
+                <h4>Tổng người dùng</h4>
+                <h2><?= (int)$total_users ?></h2>
+            </div>
 
-        <div class="card">
-            <h4>Tổng người dùng</h4>
-            <h2><?= $total_users ?></h2>
+            <div class="card">
+                <h4>Xe đăng bán</h4>
+                <h2><?= (int)$total_bikes ?></h2>
+            </div>
+
+            <div class="card">
+                <h4>Giao dịch</h4>
+                <h2><?= (int)$total_transactions ?></h2>
+            </div>
+
+            <div class="card">
+                <h4>Doanh thu</h4>
+                <h2>$540.50</h2>
+            </div>
         </div>
 
-        <div class="card">
-            <h4>Xe đăng bán</h4>
-            <h2><?= $total_bikes ?></h2>
+        <div class="grid">
+            <div class="box">
+                <h3>Thống kê hệ thống</h3>
+                <div class="chart"></div>
+            </div>
+
+            <div class="box">
+                <h3>Hoạt động</h3>
+                <div class="chart"></div>
+            </div>
         </div>
 
-        <div class="card">
-            <h4>Giao dịch</h4>
-            <h2><?= $total_transactions ?></h2>
+    <?php else: ?>
+        <div class="content-box">
+            <?php
+            switch ($page) {
+                case 'all_users':
+                    include("user_management/all_users.php");
+                    break;
+
+                case 'add_user':
+                    include("user_management/add_user.php");
+                    break;
+
+                case 'profile':
+                    include("user_management/profile.php");
+                    break;
+
+                case 'edit_user':
+                    include("user_management/edit_user.php");
+                    break;
+
+                default:
+                    echo '<div class="box"><p>Trang không tồn tại.</p></div>';
+                    break;
+            }
+            ?>
         </div>
-
-        <div class="card">
-            <h4>Doanh thu</h4>
-            <h2>$540.50</h2>
-        </div>
-
-    </div>
-
-    <div class="grid">
-
-        <div class="box">
-            <h3>Thống kê hệ thống</h3>
-            <div class="chart"></div>
-        </div>
-
-        <div class="box">
-            <h3>Hoạt động</h3>
-            <div class="chart"></div>
-        </div>
-
-    </div>
-
+    <?php endif; ?>
 </div>
+
+<script>
+function toggleMenu(event) {
+    event.preventDefault();
+    const menu = document.getElementById("user-submenu");
+    menu.style.display = (menu.style.display === "block") ? "none" : "block";
+}
+</script>
 
 </body>
 </html>

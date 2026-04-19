@@ -11,7 +11,7 @@ $total = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
 $pages = ceil($total / $limit);
 
 // Lấy danh sách người dùng có phân trang
-$stmt = $pdo->prepare("SELECT id, first_name, last_name, email, username, phone, role, active, created_at 
+$stmt = $pdo->prepare("SELECT id, first_name, last_name, full_name, email, username, phone, role, active, created_at 
                        FROM users 
                        ORDER BY id DESC 
                        LIMIT ? OFFSET ?");
