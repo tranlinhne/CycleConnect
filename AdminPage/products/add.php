@@ -41,7 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $category_id = $pdo->lastInsertId();
         }
     }
-    
     // Xử lý thương hiệu
     $brand_id = 0;
     if (!empty($_POST['brand_id']) && is_numeric($_POST['brand_id'])) {
@@ -59,7 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $brand_id = $pdo->lastInsertId();
         }
     }
-    
     // Validate
     if ($title && $price > 0 && $category_id && $brand_id && $user_id) {
         // Insert vào bảng bikes
