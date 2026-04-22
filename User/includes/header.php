@@ -235,13 +235,25 @@ $current = basename($_SERVER['PHP_SELF']);
                     <i class="fas fa-user"></i>
                     <span><?= htmlspecialchars($displayName) ?></span>
                 </button>
-                <div class="dropdown-menu" id="dropdownMenu">
-                    <a class="dropdown-head-item" href="profile.php"><i class="fas fa-user-circle"></i><?= htmlspecialchars($displayName) ?></a>
-                    <a class="account-item" href="profile.php"><i class="fas fa-id-card" style="margin-right: 8px;"></i>Tài khoản</a>
+                                <div class="dropdown-menu" id="dropdownMenu">
+                    <a class="dropdown-head-item" href="profile.php">
+                        <i class="fas fa-user-circle"></i> <?= htmlspecialchars($displayName) ?>
+                    </a>
+
+                    <a class="account-item" href="profile.php">
+                        <i class="fas fa-id-card" style="margin-right: 8px;"></i> Tài khoản
+                    </a>
+
+                    <a class="account-item" href="statistics.php">
+                        <i class="fas fa-chart-line" style="margin-right: 8px;"></i> Thống kê
+                    </a>
+
                     <div class="dropdown-divider"></div>
-                    <a class="logout-item" href="logout.php"><i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i>Đăng xuất</a>
+
+                    <a class="logout-item" href="logout.php">
+                        <i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i> Đăng xuất
+                    </a>
                 </div>
-            </div>
         <?php else: ?>
             <!-- LOGIN -->
             <a href="login.php">Đăng nhập</a>
