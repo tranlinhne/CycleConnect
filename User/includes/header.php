@@ -1,8 +1,5 @@
 <link rel="stylesheet" href="assets/css/header.css">
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 <?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -225,7 +222,7 @@ $current = basename($_SERVER['PHP_SELF']);
     <nav class="nav">
         <a href="index.php" class="<?= ($current == 'index.php') ? 'active' : '' ?>">Trang chủ</a>
         <a href="about.php" class="<?= ($current == 'about.php') ? 'active' : '' ?>">Giới thiệu</a>
-        <a href="cycle.php" class="<?= ($current == 'cycle.php') ? 'active' : '' ?>">Sản phẩm</a>
+        <a href="products.php" class="<?= ($current == 'products.php') ? 'active' : '' ?>">Sản phẩm</a>
         <a href="news.php" class="<?= ($current == 'news.php') ? 'active' : '' ?>">Đăng tin</a>
         <a href="contact.php" class="<?= ($current == 'contact.php') ? 'active' : '' ?>">Liên hệ</a>
     </nav>
