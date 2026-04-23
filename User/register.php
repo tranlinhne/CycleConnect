@@ -9,7 +9,6 @@ if (isLoggedIn()) {
 }
 
 $error = '';
-$success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
@@ -20,9 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full_name = $_POST['full_name'] ?? '';
 
     $result = registerUser($username, $email, $password, $confirm_password, $phone, $full_name);
+
     if ($result['success']) {
-        $success = $result['message'];
-        $_POST = array();
+        header('Location: login.php?registered=1');
+        exit();
     } else {
         $error = $result['message'];
     }
@@ -34,82 +34,99 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng ký - GreenRide</title>
-    <style>
-        body { margin: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .auth-wrap { max-width: 520px; margin: 60px auto 0; padding: 0 16px 30px; }
-        .auth-box { background: #fff; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,.16); padding: 28px; }
-        .auth-box h1 { margin: 0 0 8px; color: #2f5d62; font-size: 30px; }
-        .auth-box p { margin: 0 0 18px; color: #666; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .form-group { margin-bottom: 14px; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 700; color: #1f3540; }
-        .form-group input { width: 100%; height: 44px; border: 1px solid #d7d7d7; border-radius: 8px; padding: 0 12px; font-size: 14px; }
-        .btn-submit { width: 100%; height: 44px; border: 0; border-radius: 8px; background: #2f5d62; color: #fff; font-weight: 700; cursor: pointer; }
-        .btn-submit:hover { background: #23444a; }
-        .alert { border-radius: 8px; padding: 10px 12px; margin-bottom: 14px; font-size: 14px; }
-        .alert-danger { background: #f8d7da; color: #721c24; }
-        .alert-success { background: #d4edda; color: #155724; }
-        .auth-links { margin-top: 14px; }
-        .auth-links a { color: #2f5d62; font-weight: 700; text-decoration: none; }
-        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
-    </style>
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body>
-<?php include __DIR__ . '/includes/header.php'; ?>
+<body class="auth-page">
 
-<div class="auth-wrap">
-    <div class="auth-box">
-        <h1>Đăng ký</h1>
-        <p>Tạo tài khoản để bắt đầu mua bán xe đạp</p>
+<div class="auth-wrapper">
+    <div class="auth-box auth-register">
+        <h1 class="auth-title">Đăng ký tài khoản</h1>
+        <p class="auth-subtitle">Điền thông tin để tạo tài khoản mới.</p>
 
         <?php if ($error): ?>
             <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
-        <?php if ($success): ?>
-            <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
-        <?php endif; ?>
-
         <form method="POST" action="">
-            <div class="grid">
+            <div class="auth-grid">
                 <div class="form-group">
-                    <label for="username">Tên đăng nhập</label>
-                    <input id="username" type="text" name="username" required value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
+                    <label for="username">Tên đăng nhập:</label>
+                    <input
+                        id="username"
+                        type="text"
+                        name="username"
+                        required
+                        placeholder="Nhập tên đăng nhập"
+                        value="<?= htmlspecialchars($_POST['username'] ?? '') ?>"
+                    >
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Email</label>
-                    <input id="email" type="email" name="email" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+                    <label for="email">Email:</label>
+                    <input
+                        id="email"
+                        type="email"
+                        name="email"
+                        required
+                        placeholder="Nhập email"
+                        value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
+                    >
                 </div>
 
                 <div class="form-group">
-                    <label for="full_name">Họ và tên</label>
-                    <input id="full_name" type="text" name="full_name" value="<?= htmlspecialchars($_POST['full_name'] ?? '') ?>">
+                    <label for="full_name">Họ và tên:</label>
+                    <input
+                        id="full_name"
+                        type="text"
+                        name="full_name"
+                        placeholder="Nhập họ và tên"
+                        value="<?= htmlspecialchars($_POST['full_name'] ?? '') ?>"
+                    >
                 </div>
 
                 <div class="form-group">
-                    <label for="phone">Số điện thoại</label>
-                    <input id="phone" type="text" name="phone" value="<?= htmlspecialchars($_POST['phone'] ?? '') ?>">
+                    <label for="phone">Số điện thoại:</label>
+                    <input
+                        id="phone"
+                        type="text"
+                        name="phone"
+                        placeholder="Nhập số điện thoại"
+                        value="<?= htmlspecialchars($_POST['phone'] ?? '') ?>"
+                    >
                 </div>
 
                 <div class="form-group">
-                    <label for="password">Mật khẩu</label>
-                    <input id="password" type="password" name="password" required>
+                    <label for="password">Mật khẩu:</label>
+                    <input
+                        id="password"
+                        type="password"
+                        name="password"
+                        required
+                        placeholder="Nhập mật khẩu"
+                    >
                 </div>
 
                 <div class="form-group">
-                    <label for="confirm_password">Xác nhận mật khẩu</label>
-                    <input id="confirm_password" type="password" name="confirm_password" required>
+                    <label for="confirm_password">Xác nhận mật khẩu:</label>
+                    <input
+                        id="confirm_password"
+                        type="password"
+                        name="confirm_password"
+                        required
+                        placeholder="Nhập lại mật khẩu"
+                    >
                 </div>
             </div>
 
-            <button type="submit" class="btn-submit">Đăng ký</button>
-        </form>
+            <div class="auth-text">
+                Đã có tài khoản?
+                <a href="login.php">Đăng nhập ngay.</a>
+            </div>
 
-        <div class="auth-links">
-            <a href="login.php">Đã có tài khoản? Đăng nhập</a>
-        </div>
+            <button type="submit" class="auth-btn">Đăng ký</button>
+        </form>
     </div>
 </div>
+
 </body>
 </html>

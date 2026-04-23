@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 session_start();
 include_once __DIR__ . '/config.php';
 
@@ -6,7 +6,6 @@ $error = '';
 $success = '';
 
 $email = $_SESSION['reset_email'] ?? '';
-$demoCode = $_SESSION['reset_code_demo'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
@@ -16,25 +15,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($email === '' || $code === '' || $new_password === '' || $confirm_password === '') {
         $error = 'Vui lòng nhập đầy đủ thông tin.';
-    } elseif ($code !== $demoCode) {
-        $error = 'Mã xác nhận không đúng.';
     } elseif ($new_password !== $confirm_password) {
         $error = 'Xác nhận mật khẩu không khớp.';
     } elseif (strlen($new_password) < 6) {
         $error = 'Mật khẩu mới phải có ít nhất 6 ký tự.';
     } else {
-        $hashedPassword = password_hash($new_password, PASSWORD_DEFAULT);
+        $stmt = $conn->prepare("
+            SELECT id, expires_at, is_used 
+            FROM password_resets 
+            WHERE email = ? AND reset_code = ?
+            ORDER BY id DESC
+            LIMIT 1
+        ");
+        $stmt->bind_param("ss", $email, $code);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-        $stmt = $conn->prepare("UPDATE users SET password = ? WHERE email = ?");
-        $stmt->bind_param("ss", $hashedPassword, $email);
-
-        if ($stmt->execute()) {
-            unset($_SESSION['reset_email']);
-            unset($_SESSION['reset_code_demo']);
-            header("Location: login.php?reset=1");
-            exit();
+        if ($result->num_rows <= 0) {
+            $error = 'Mã xác nhận không đúng.';
         } else {
-            $error = 'Không cập nhật được mật khẩu.';
+            $reset = $result->fetch_assoc();
+
+            if ((int)$reset['is_used'] === 1) {
+                $error = 'Mã này đã được sử dụng.';
+            } elseif (strtotime($reset['expires_at']) < time()) {
+                $error = 'Mã xác nhận đã hết hạn.';
+            } else {
+                $hashedPassword = password_hash($new_password, PASSWORD_DEFAULT);
+
+                $updateUser = $conn->prepare("UPDATE users SET password = ? WHERE email = ?");
+                $updateUser->bind_param("ss", $hashedPassword, $email);
+
+                if ($updateUser->execute()) {
+                    $markUsed = $conn->prepare("UPDATE password_resets SET is_used = 1 WHERE id = ?");
+                    $markUsed->bind_param("i", $reset['id']);
+                    $markUsed->execute();
+
+                    unset($_SESSION['reset_email']);
+                    header("Location: login.php?reset=1");
+                    exit();
+                } else {
+                    $error = 'Không cập nhật được mật khẩu.';
+                }
+            }
         }
     }
 }
@@ -52,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="auth-wrapper">
     <div class="auth-box auth-register">
         <h1 class="auth-title">Đặt lại mật khẩu</h1>
-        <p class="auth-subtitle">Nhập mã xác nhận và mật khẩu mới.</p>
+        <p class="auth-subtitle">Nhập email, mã xác nhận và mật khẩu mới.</p>
 
         <?php if ($error): ?>
             <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
@@ -61,11 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php if ($success): ?>
             <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
         <?php endif; ?>
-        <?php if (!empty($demoCode)): ?>
-            <div class="alert alert-success">Mã demo của bạn là: <?= htmlspecialchars($demoCode) ?></div>
-        <?php endif; ?>
 
-        <form method="POST">
+        <form method="POST" action="">
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input
@@ -85,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     type="text"
                     name="code"
                     required
-                    placeholder="Nhập mã xác nhận"
+                    placeholder="Nhập mã 6 số"
                 >
             </div>
 
