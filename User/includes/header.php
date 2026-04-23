@@ -1,4 +1,8 @@
 <link rel="stylesheet" href="assets/css/header.css">
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 <?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
