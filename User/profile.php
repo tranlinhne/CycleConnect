@@ -28,8 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $userId,
             trim($_POST['full_name'] ?? ''),
             trim($_POST['phone'] ?? ''),
-            trim($_POST['address'] ?? ''),
-            trim($_POST['bio'] ?? '')
+            trim($_POST['address'] ?? '')
         );
 
         if (!empty($result['success'])) {
@@ -47,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ) {
         $tmp = $_FILES['avatar']['tmp_name'];
         $name = $_FILES['avatar']['name'];
-        $size = (int)$_FILES['avatar']['size'];
+        $size = (int) $_FILES['avatar']['size'];
         $ext  = strtolower(pathinfo($name, PATHINFO_EXTENSION));
         $allow = ['jpg', 'jpeg', 'png', 'gif'];
 
@@ -81,8 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$displayName = !empty($user['full_name']) ? $user['full_name'] : ($user['username'] ?? 'Người dùng');
-
+$displayName = !empty($user['full_name']) ? $user['full_name'] : ($user['email'] ?? 'Người dùng');
 $joinedAt    = !empty($user['created_at']) ? date('d/m/Y', strtotime($user['created_at'])) : 'Chưa cập nhật';
 
 $avatarSrc = !empty($user['avatar'])
@@ -98,10 +96,17 @@ $openEdit = isset($_POST['update_profile']) || isset($_POST['update_avatar']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hồ sơ cá nhân - GreenRide</title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/footer.css">
 </head>
 <body class="ghp-page">
 
+<?php include __DIR__ . '/includes/header.php'; ?>
+
 <div class="ghp-shell">
+    <div class="ghp-page-top">
+        <a href="index.php" class="ghp-btn ghp-btn-light">Quay lại</a>
+    </div>
+
     <?php if ($error): ?>
         <div class="ghp-alert ghp-alert-danger"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
@@ -115,9 +120,6 @@ $openEdit = isset($_POST['update_profile']) || isset($_POST['update_avatar']);
             <img src="<?= $avatarSrc ?>" alt="Ảnh đại diện" class="ghp-avatar">
 
             <h2 class="ghp-name"><?= htmlspecialchars($displayName) ?></h2>
-            <div class="ghp-username">@<?= htmlspecialchars($user['username'] ?? '') ?></div>
-
-        
 
             <div class="ghp-badge">Người dùng GreenRide</div>
 
@@ -125,8 +127,6 @@ $openEdit = isset($_POST['update_profile']) || isset($_POST['update_avatar']);
                 <button type="button" class="ghp-btn ghp-btn-light" onclick="toggleProfileEdit()">Chỉnh sửa</button>
                 <a href="change-password.php" class="ghp-btn ghp-btn-dark">Đổi mật khẩu</a>
             </div>
-
-           
 
             <div id="ghpEditBox" class="ghp-edit-box <?= $openEdit ? 'show' : '' ?>">
                 <form method="POST" class="ghp-edit-form">
@@ -163,8 +163,6 @@ $openEdit = isset($_POST['update_profile']) || isset($_POST['update_avatar']);
                         >
                     </div>
 
-            
-
                     <div class="ghp-edit-actions">
                         <button type="submit" name="update_profile" class="ghp-btn ghp-btn-green">Lưu</button>
                         <button type="button" class="ghp-btn ghp-btn-light" onclick="toggleProfileEdit(false)">Hủy</button>
@@ -179,57 +177,47 @@ $openEdit = isset($_POST['update_profile']) || isset($_POST['update_avatar']);
             </div>
         </aside>
 
-        
-           <section class="ghp-right">
-    <div class="ghp-header">
-        <h1>Hồ sơ cá nhân</h1>
-        <p>Thông tin tài khoản và hồ sơ giao dịch xe đạp của bạn.</p>
-    </div>
-
-    <div class="ghp-section">
-        <h3>Thông tin cá nhân</h3>
-        <div class="ghp-table">
-            <div class="ghp-row">
-                <div class="ghp-label">Tên đăng nhập</div>
-                <div class="ghp-value"><?= htmlspecialchars($user['username'] ?? '') ?></div>
+        <section class="ghp-right">
+            <div class="ghp-header">
+                <h1>Hồ sơ cá nhân</h1>
+                <p>Thông tin tài khoản và hồ sơ giao dịch xe đạp của bạn.</p>
             </div>
 
-            <div class="ghp-row">
-                <div class="ghp-label">Email</div>
-                <div class="ghp-value"><?= htmlspecialchars($user['email'] ?? '') ?></div>
+            <div class="ghp-section">
+                <h3>Thông tin cá nhân</h3>
+                <div class="ghp-table">
+                    <div class="ghp-row">
+                        <div class="ghp-label">Email</div>
+                        <div class="ghp-value"><?= htmlspecialchars($user['email'] ?? '') ?></div>
+                    </div>
+
+                    <div class="ghp-row">
+                        <div class="ghp-label">Số điện thoại</div>
+                        <div class="ghp-value"><?= htmlspecialchars($user['phone'] ?? 'Chưa cập nhật') ?></div>
+                    </div>
+
+                    <div class="ghp-row">
+                        <div class="ghp-label">Khu vực</div>
+                        <div class="ghp-value"><?= htmlspecialchars($user['address'] ?? 'Chưa cập nhật') ?></div>
+                    </div>
+
+                    <div class="ghp-row">
+                        <div class="ghp-label">Ngày tham gia</div>
+                        <div class="ghp-value"><?= htmlspecialchars($joinedAt) ?></div>
+                    </div>
+                </div>
             </div>
 
-            <div class="ghp-row">
-                <div class="ghp-label">Số điện thoại</div>
-                <div class="ghp-value"><?= htmlspecialchars($user['phone'] ?? 'Chưa cập nhật') ?></div>
+            <div class="ghp-section">
+                <div class="ghp-right-actions">
+                    <a href="logout.php" class="ghp-btn ghp-btn-red">Đăng xuất</a>
+                </div>
             </div>
-
-            <div class="ghp-row">
-                <div class="ghp-label">Khu vực</div>
-                <div class="ghp-value"><?= htmlspecialchars($user['address'] ?? 'Chưa cập nhật') ?></div>
-            </div>
-
-            <div class="ghp-row">
-                <div class="ghp-label">Ngày tham gia</div>
-                <div class="ghp-value"><?= htmlspecialchars($joinedAt) ?></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="ghp-section">
-        
-    </div>
-
-    <div class="ghp-section">
-        
-        <div class="ghp-right-actions">
-           
-            <a href="logout.php" class="ghp-btn ghp-btn-red">Đăng xuất</a>
-        </div>
-    </div>
-</section>
+        </section>
     </div>
 </div>
+
+<?php include __DIR__ . '/includes/footer.php'; ?>
 
 <script>
 function toggleProfileEdit(forceState) {
@@ -244,6 +232,6 @@ function toggleProfileEdit(forceState) {
     box.classList.toggle('show');
 }
 </script>
-<?php include "includes/footer.php"; ?>
+
 </body>
 </html>

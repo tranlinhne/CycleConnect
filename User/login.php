@@ -14,20 +14,20 @@ if (isLoggedIn()) {
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $login = trim($_POST['login'] ?? '');
+    $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
 
-    if ($login === '' || $password === '') {
-        $error = 'Vui lòng nhập đầy đủ tài khoản và mật khẩu.';
+    if ($email === '' || $password === '') {
+        $error = 'Vui lòng nhập đầy đủ email và mật khẩu.';
     } else {
-        $result = loginUser($login, $password);
+        $result = loginUser($email, $password);
 
         if (is_array($result) && !empty($result['success'])) {
             $_SESSION['login_success'] = 'Đăng nhập thành công!';
             header('Location: index.php');
             exit();
         } else {
-            $error = $result['message'] ?? 'Tài khoản hoặc mật khẩu không đúng.';
+            $error = $result['message'] ?? 'Email hoặc mật khẩu không đúng.';
         }
     }
 }
@@ -47,20 +47,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h1 class="auth-title">Đăng nhập</h1>
         <p class="auth-subtitle">Nhập thông tin để tiếp tục.</p>
 
+        <?php if (!empty($_GET['registered'])): ?>
+            <div class="alert alert-success">Đăng ký thành công. Vui lòng đăng nhập.</div>
+        <?php endif; ?>
+
         <?php if (!empty($error)): ?>
             <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
         <form method="POST" action="">
             <div class="form-group">
-                <label for="login">Tài khoản:</label>
+                <label for="email">Email:</label>
                 <input
-                    id="login"
-                    type="text"
-                    name="login"
+                    id="email"
+                    type="email"
+                    name="email"
                     required
-                    value="<?= htmlspecialchars($_POST['login'] ?? '') ?>"
-                    placeholder="Nhập tên tài khoản hoặc email"
+                    value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
+                    placeholder="Nhập email"
                 >
             </div>
 
