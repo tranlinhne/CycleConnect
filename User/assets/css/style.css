@@ -1271,3 +1271,19 @@ body.ghp-page {
         font-size: 22px;
     }
 }
+.ghp-page-top{
+    margin-bottom: 12px ;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.ghp-page-top .ghp-btn{
+    min-width: unset;
+    width: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    top: -5px;
+    padding: 6px 12px;
+}
