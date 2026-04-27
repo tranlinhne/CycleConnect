@@ -11,7 +11,7 @@ if (!isLoggedIn()) {
 $user_id = $_SESSION['user_id'];
 
 // --- TRUY VẤN 1: Danh sách xe người dùng đã đăng bán ---
-$sql_my_bikes = "SELECT title, price, status, created_at 
+$sql_my_bikes = "SELECT id, title, price, status, created_at 
                  FROM bikes 
                  WHERE user_id = ? 
                  ORDER BY created_at DESC";
@@ -30,12 +30,15 @@ $stmt_fav->bind_param("i", $user_id);
 $stmt_fav->execute();
 $fav = $stmt_fav->get_result()->fetch_assoc();
 
-// --- TRUY VẤN 3: Top 5 xe bán chạy nhất (Dữ liệu toàn hệ thống) ---
+// --- TRUY VẤN 3: Top 5 xe bán chạy nhất CỦA TÔI ---
 $sql_top = "SELECT b.title, COUNT(o.id) as qty, SUM(o.total_price) as rev 
             FROM orders o JOIN bikes b ON o.bike_id = b.id 
-            WHERE o.payment_status = 'paid' 
-            GROUP BY o.bike_id ORDER BY qty DESC LIMIT 5";
-$res_top = $conn->query($sql_top);
+            WHERE o.payment_status = 'paid' AND b.user_id = ? 
+            GROUP BY b.id ORDER BY qty DESC LIMIT 5";
+$stmt_top = $conn->prepare($sql_top);
+$stmt_top->bind_param("i", $user_id);
+$stmt_top->execute();
+$res_top = $stmt_top->get_result();
 
 ?>
 
@@ -86,7 +89,11 @@ $res_top = $conn->query($sql_top);
                         </tr>
                         <?php while($bike = $res_my_bikes->fetch_assoc()): ?>
                         <tr>
-                            <td><strong><?= htmlspecialchars($bike['title']) ?></strong></td>
+                            <td>
+                                <a href="detail.php?id=<?= $bike['id'] ?>" style="color: #2f5d62; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#F57C00'" onmouseout="this.style.color='#2f5d62'">
+                                    <strong><?= htmlspecialchars($bike['title']) ?></strong>
+                                </a>
+                            </td>
                             <td style="color: #F57C00; font-weight: bold;"><?= number_format($bike['price']) ?>đ</td>
                             <td><?= date('d/m/Y', strtotime($bike['created_at'])) ?></td>
                             <td>
@@ -127,17 +134,21 @@ $res_top = $conn->query($sql_top);
         </div>
 
         <div class="s-card">
-            <div class="s-title"><i class="fas fa-trophy text-warning"></i> Top 5 Sản phẩm Hot nhất toàn Shop</div>
-            <table class="s-table">
-                <tr><th>Tên xe</th><th>Lượt bán</th><th>Tổng doanh thu</th></tr>
-                <?php while($r = $res_top->fetch_assoc()): ?>
-                <tr>
-                    <td><strong><?= htmlspecialchars($r['title']) ?></strong></td>
-                    <td><?= $r['qty'] ?> giao dịch</td>
-                    <td style="color: #2f5d62; font-weight: bold;"><?= number_format($r['rev']) ?>đ</td>
-                </tr>
-                <?php endwhile; ?>
-            </table>
+            <div class="s-title"><i class="fas fa-trophy text-warning"></i> Top 5 Sản phẩm Bán chạy nhất của tôi</div>
+            <?php if ($res_top->num_rows > 0): ?>
+                <table class="s-table">
+                    <tr><th>Tên xe</th><th>Lượt bán</th><th>Tổng doanh thu</th></tr>
+                    <?php while($r = $res_top->fetch_assoc()): ?>
+                    <tr>
+                        <td><strong><?= htmlspecialchars($r['title']) ?></strong></td>
+                        <td><?= $r['qty'] ?> giao dịch</td>
+                        <td style="color: #2f5d62; font-weight: bold;"><?= number_format($r['rev']) ?>đ</td>
+                    </tr>
+                    <?php endwhile; ?>
+                </table>
+            <?php else: ?>
+                <p style="text-align: center; color: #94a3b8; padding: 20px 0;">Bạn chưa có giao dịch bán hàng nào thành công.</p>
+            <?php endif; ?>
         </div>
 
     </div>

@@ -299,7 +299,7 @@ $initialChar = strtoupper($initialChar);
         <a href="index.php" class="<?= ($current == 'index.php') ? 'active' : '' ?>">Trang chủ</a>
         <a href="about.php" class="<?= ($current == 'about.php') ? 'active' : '' ?>">Giới thiệu</a>
         <a href="products.php" class="<?= ($current == 'products.php') ? 'active' : '' ?>">Sản phẩm</a>
-        <a href="news.php" class="<?= ($current == 'news.php') ? 'active' : '' ?>">Đăng tin</a>
+        <a href="sell.php" class="<?= ($current == 'sell.php') ? 'active' : '' ?>">Đăng tin</a>
         <a href="contact.php" class="<?= ($current == 'contact.php') ? 'active' : '' ?>">Liên hệ</a>
     </nav>
 

@@ -13,6 +13,10 @@ if (isLoggedIn()) {
 
 $error = '';
 
+if (isset($_GET['error'])) {
+    $error = htmlspecialchars($_GET['error']);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -24,8 +28,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (is_array($result) && !empty($result['success'])) {
             $_SESSION['login_success'] = 'Đăng nhập thành công!';
-            header('Location: index.php');
+            
+            // --- ĐOẠN LOGIC THÔNG MINH BẠN THÊM VÀO ---
+            if (isset($_SESSION['redirect_after_login'])) {
+                $url = $_SESSION['redirect_after_login'];
+                unset($_SESSION['redirect_after_login']); // Xóa bộ nhớ tạm để không bị kẹt
+                header("Location: " . $url);
+            } else {
+                // Nếu không có yêu cầu đặc biệt, vẫn về trang chủ như cũ
+                header('Location: index.php');
+            }
             exit();
+            // ------------------------------------------
+            
         } else {
             $error = $result['message'] ?? 'Email hoặc mật khẩu không đúng.';
         }
