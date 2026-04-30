@@ -32,10 +32,39 @@ $avgOrderValue = $totalPaidOrders > 0 ? $totalRevenue / $totalPaidOrders : 0;
 $currentMonthRevenue = $pdo->prepare("SELECT COALESCE(SUM(total_price), 0) FROM orders WHERE payment_status = 'paid' AND MONTH(created_at) = MONTH(CURDATE()) AND YEAR(created_at) = YEAR(CURDATE())");
 $currentMonthRevenue->execute();
 $currentRevenue = $currentMonthRevenue->fetchColumn();
+
+// Xử lý gửi báo cáo (chỉ dành cho Manager)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'submit_report') {
+    if ($_SESSION['role'] === 'manager') {
+        $report_period = date('Y-m');
+        $notes = $_POST['notes'] ?? '';
+        $fee = $currentRevenue * 0.05;
+        
+        // Kiểm tra xem tháng này đã gửi chưa (chỉ chặn nếu đang Pending hoặc đã Approved)
+        $check = $pdo->prepare("SELECT id, status FROM revenue_reports WHERE report_period = ? ORDER BY id DESC LIMIT 1");
+        $check->execute([$report_period]);
+        $last_report = $check->fetch();
+        
+        if ($last_report && in_array($last_report['status'], ['pending', 'approved'])) {
+            if ($last_report['status'] == 'pending') {
+                $_SESSION['flash_error'] = "Báo cáo tháng $report_period đang chờ duyệt. Vui lòng đợi Admin xử lý trước khi thao tác tiếp.";
+            } else {
+                $_SESSION['flash_error'] = "Báo cáo tháng $report_period đã được duyệt và chốt sổ, không thể gửi thêm.";
+            }
+        } else {
+            // Nếu chưa có, hoặc báo cáo cũ nhất đã bị 'rejected', thì cho phép tạo bản báo cáo mới
+            $stmt = $pdo->prepare("INSERT INTO revenue_reports (manager_id, report_period, total_revenue, platform_fee, notes, status) VALUES (?, ?, ?, ?, ?, 'pending')");
+            $stmt->execute([$_SESSION['user_id'], $report_period, $currentRevenue, $fee, $notes]);
+            $_SESSION['flash_success'] = "Đã gửi báo cáo doanh thu tháng $report_period thành công!";
+        }
+        header("Location: index.php");
+        exit;
+    }
+}
 ?>
 
 <style>
-    /* ---------- MÀU SẮC CHỦ ĐẠO ---------- */
+    
     :root {
         --primary-orange: #F57C00;
         --bg-gray: #F5F5F5;
@@ -203,6 +232,31 @@ $currentRevenue = $currentMonthRevenue->fetchColumn();
     <div class="page-header">
         <h2><i class="fas fa-chart-line me-2" style="color: #F57C00;"></i> Báo cáo doanh thu</h2>
     </div>
+
+    <?php if (isset($_SESSION['flash_success'])): ?>
+        <div class="alert alert-success" style="border-radius: 1rem;"><i class="fas fa-check-circle"></i> <?= $_SESSION['flash_success']; unset($_SESSION['flash_success']); ?></div>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['flash_error'])): ?>
+        <div class="alert alert-danger" style="border-radius: 1rem;"><i class="fas fa-exclamation-triangle"></i> <?= $_SESSION['flash_error']; unset($_SESSION['flash_error']); ?></div>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'manager'): ?>
+        <div class="card p-3 mb-4" style="border-radius: 1.2rem; border: none; box-shadow: var(--card-shadow); border-left: 5px solid var(--primary-orange);">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="m-0" style="font-weight: 700; color: var(--text-dark);"><i class="fas fa-paper-plane" style="color: var(--primary-orange);"></i> Chốt số & Gửi Báo Cáo Tháng <?= date('m/Y') ?></h5>
+            </div>
+            <form method="post" action="">
+                <input type="hidden" name="action" value="submit_report">
+                <div class="mb-3">
+                    <label class="form-label" style="font-weight: 600;">Ghi chú đính kèm (Nội bộ):</label>
+                    <textarea name="notes" class="form-control" rows="2" placeholder="Ví dụ: Đã rà soát doanh thu khớp với ngân hàng..." style="border-radius: 0.8rem;"></textarea>
+                </div>
+                <button type="submit" class="btn btn-orange" onclick="return confirm('Bạn có chắc chắn muốn chốt doanh thu <?= number_format($currentRevenue, 0, ',', '.') ?>đ và gửi báo cáo cho Admin cấp cao soát duyệt không?')">
+                    <i class="fas fa-share-square"></i> Gửi Báo Cáo
+                </button>
+            </form>
+        </div>
+    <?php endif; ?>
 
     <!-- Thẻ thống kê tổng quan -->
     <div class="stat-grid">
