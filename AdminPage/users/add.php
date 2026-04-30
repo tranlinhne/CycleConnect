@@ -1,5 +1,6 @@
 <?php
 require_once '../inc/auth.php';
+redirectIfNotSuperAdmin(); // Chỉ admin mới được thêm user
 require_once '../inc/header.php';
 
 $error = '';
@@ -30,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($check->fetch()) {
             $error = "Email hoặc Username đã được sử dụng.";
         } else {
-            // Xử lý upload avatar (nếu có)
+            // Xử lý upload avatar 
             $avatarPath = null;
             if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
                 $uploadDir = '../uploads/avatars/';
@@ -225,7 +226,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label class="form-label">Vai trò</label>
                         <select name="role" class="form-select">
                             <option value="user">Khách hàng</option>
-                            <option value="admin">Quản trị viên</option>
+                            <option value="manager">Quản lý (Manager)</option>
+                            <option value="admin">Quản trị viên (Super Admin)</option>
                         </select>
                     </div>
                     <div class="col-md-6">
@@ -253,7 +255,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <script>
-    // Xem trước avatar
+    
     const avatarInput = document.getElementById('avatarInput');
     const avatarPreview = document.getElementById('avatarPreview');
     avatarInput.addEventListener('change', function(e) {
