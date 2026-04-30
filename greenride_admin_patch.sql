@@ -165,3 +165,21 @@ INSERT INTO brands (name)
 SELECT 'Trek' WHERE NOT EXISTS (SELECT 1 FROM brands WHERE name = 'Trek');
 INSERT INTO brands (name)
 SELECT 'Asama' WHERE NOT EXISTS (SELECT 1 FROM brands WHERE name = 'Asama');
+
+-- 6) Multi-level admin reporting for Revenue
+ALTER TABLE users MODIFY COLUMN role ENUM('user', 'manager', 'admin') NOT NULL DEFAULT 'user';
+
+CREATE TABLE IF NOT EXISTS revenue_reports (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  manager_id INT NOT NULL,
+  report_period VARCHAR(7) NOT NULL, -- e.g., '2026-04'
+  total_revenue DECIMAL(15,2) NOT NULL,
+  platform_fee DECIMAL(15,2) NOT NULL,
+  notes TEXT,
+  status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+  reviewed_by INT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_revenue_manager FOREIGN KEY (manager_id) REFERENCES users(id) ON DELETE CASCADE,
+  CONSTRAINT fk_revenue_reviewer FOREIGN KEY (reviewed_by) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
