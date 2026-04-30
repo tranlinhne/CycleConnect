@@ -4,9 +4,17 @@ require_once '../inc/header.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if (!$id) {
-    header('Location: index.php');
+    echo "<script>window.location.href='index.php';</script>";
     exit;
 }
+
+
+if (!isSuperAdmin() && $id != $_SESSION['user_id']) {
+    echo "<div class='container-fluid px-4 mt-4'><div class='alert alert-danger'><i class='fas fa-lock'></i> Bạn không có quyền sửa thông tin của người khác.</div></div>";
+    require_once '../inc/footer.php';
+    exit;
+}
+
 
 // Lấy thông tin người dùng hiện tại
 $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
@@ -26,8 +34,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $username = trim($_POST['username'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
-    $role = $_POST['role'] ?? 'user';
-    $active = isset($_POST['active']) ? 1 : 0;
+    
+    // Bảo mật: Nếu không phải Admin cấp cao, giữ nguyên role và trạng thái cũ
+    if (!isSuperAdmin()) {
+        $role = $user['role'];
+        $active = $user['active'];
+    } else {
+        $role = $_POST['role'] ?? 'user';
+        $active = isset($_POST['active']) ? 1 : 0;
+    }
     $new_password = $_POST['password'] ?? '';
     $remove_avatar = isset($_POST['remove_avatar']) ? true : false;
     
@@ -44,9 +59,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = "Email hoặc Username đã được sử dụng bởi người dùng khác.";
         } else {
             // Xử lý ảnh đại diện
-            $avatarPath = $user['avatar']; // giữ ảnh cũ
+            $avatarPath = $user['avatar']; 
             if ($remove_avatar) {
-                // Xoá file avatar cũ nếu tồn tại
+                
                 if ($avatarPath && file_exists('../' . $avatarPath)) {
                     unlink('../' . $avatarPath);
                 }
@@ -77,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             
             if (empty($error)) {
-                // Chuẩn bị câu lệnh UPDATE
+                
                 if (!empty($new_password)) {
                     if (strlen($new_password) < 6) {
                         $error = "Mật khẩu mới phải có ít nhất 6 ký tự.";
@@ -108,6 +123,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
                     $stmt->execute([$id]);
                     $user = $stmt->fetch();
+                    
+                    // Cập nhật lại session nếu tự sửa tài khoản của mình
+                    if ($id == $_SESSION['user_id']) {
+                        $_SESSION['fullname'] = $user['first_name'] . ' ' . $user['last_name'];
+                        $_SESSION['avatar'] = $user['avatar'];
+                    }
                 }
             }
         }
@@ -275,11 +296,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label class="form-label">Số điện thoại</label>
                         <input type="text" name="phone" class="form-control" value="<?= htmlspecialchars($user['phone']) ?>">
                     </div>
+                    <?php if (isSuperAdmin()): ?>
                     <div class="col-md-6">
                         <label class="form-label">Vai trò</label>
                         <select name="role" class="form-select">
                             <option value="user" <?= $user['role'] == 'user' ? 'selected' : '' ?>>Khách hàng</option>
-                            <option value="admin" <?= $user['role'] == 'admin' ? 'selected' : '' ?>>Quản trị viên</option>
+                            <option value="manager" <?= $user['role'] == 'manager' ? 'selected' : '' ?>>Quản lý (Manager)</option>
+                            <option value="admin" <?= $user['role'] == 'admin' ? 'selected' : '' ?>>Quản trị viên (Super Admin)</option>
                         </select>
                     </div>
                     <div class="col-md-6">
@@ -291,6 +314,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </label>
                         </div>
                     </div>
+                    <?php endif; ?>
                     <div class="col-12">
                         <label class="form-label">Ảnh đại diện</label>
                         <div class="current-avatar">
@@ -320,7 +344,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <script>
-    // Xem trước avatar mới khi chọn file
+    
     const avatarInput = document.getElementById('avatarInput');
     const avatarPreview = document.getElementById('avatarPreview');
     const removeAvatarCheckbox = document.getElementById('removeAvatar');
@@ -334,7 +358,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 avatarPreview.style.display = 'block';
             };
             reader.readAsDataURL(file);
-            // Nếu chọn ảnh mới, tự động bỏ chọn xóa ảnh cũ
+            
             if (removeAvatarCheckbox) removeAvatarCheckbox.checked = false;
         } else {
             avatarPreview.style.display = 'none';
