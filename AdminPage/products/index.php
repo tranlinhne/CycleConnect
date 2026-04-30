@@ -1,5 +1,6 @@
 <?php
 require_once '../inc/auth.php';
+redirectIfNotSuperAdmin(); // Chỉ admin mới được vào
 require_once '../inc/header.php';
 
 $page = $_GET['page'] ?? 1;
