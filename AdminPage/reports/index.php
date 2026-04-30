@@ -1,7 +1,5 @@
     <?php
-/**
- * Admin: Quản lý báo cáo từ người dùng
- */
+
 
 require_once '../inc/auth.php';
 redirectIfNotSuperAdmin();
@@ -55,8 +53,8 @@ if ($report_id && $action && $_SERVER['REQUEST_METHOD'] === 'POST') {
 // Lọc theo trạng thái
 $status_filter = $_GET['status_filter'] ?? 'all';
 $where_clause = "";
-$params = []; // mảng dùng cho execute (indexed, theo thứ tự placeholder ?)
-$use_named = false; // quyết định dùng placeholder ? cho đơn giản
+$params = []; 
+$use_named = false; 
 
 if ($status_filter !== 'all') {
     $where_clause = "WHERE r.status = ?";
@@ -75,7 +73,7 @@ $stmt->execute($params);
 $total = $stmt->fetchColumn();
 $pages = ceil($total / $limit);
 
-// Lấy danh sách báo cáo (dùng ? cho WHERE, LIMIT và OFFSET không dùng placeholder)
+
 $sql = "SELECT r.*, 
                u.email as reporter_email, u.username as reporter_name,
                b.title as bike_title, b.user_id as seller_id,
@@ -111,7 +109,7 @@ require_once '../inc/header.php';
 ?>
 
 <style>
-    /* (CSS giữ nguyên như bạn đã có, tôi không thay đổi để tiết kiệm dung lượng) */
+   
     :root {
         --primary-orange: #F57C00;
         --bg-gray: #F5F5F5;
