@@ -1,18 +1,12 @@
-<?php
+    <?php
 /**
  * Admin: Quản lý báo cáo từ người dùng
  */
 
 require_once '../inc/auth.php';
+redirectIfNotSuperAdmin();
 
 ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-// Chỉ admin mới được truy cập
-if ($_SESSION['role'] !== 'admin') {
-    die('<div class="container mt-5"><div class="alert alert-danger">Bạn không có quyền truy cập trang này.</div></div>');
-}
 
 // Xử lý các action từ form
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
