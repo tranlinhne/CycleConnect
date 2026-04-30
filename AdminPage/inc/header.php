@@ -16,10 +16,12 @@ body {
     overflow-x: hidden;
 }
 
+
 .wrapper {
     display: flex;
     width: 100%;
 }
+
 
 .sidebar {
     width: 260px;
@@ -107,6 +109,7 @@ body {
     color: #ffffff;
 }
 
+/* Main Content */
 .main-content {
     flex: 1;
     margin-left: 260px;
@@ -119,6 +122,7 @@ body {
     margin-left: 0;
 }
 
+/* Top Navbar */
 .top-navbar {
     height: 70px;
     background: #ffffff;
@@ -160,6 +164,12 @@ body {
     padding: 6px 12px;
     background: #f5f6fa;
     border-radius: 30px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+.admin-profile:hover {
+    background: #e0e0e0;
+    color: #2f5d62;
 }
 .admin-profile i {
     font-size: 1.5rem;
@@ -186,12 +196,13 @@ body {
     padding: 25px;
 }
 
+/* Mobile Responsive */
 @media (max-width: 992px) {
     .sidebar {
         left: -260px; 
     }
     .main-content {
-        margin-left: 0; 
+        margin-left: 0; /* Full width */
     }
     .sidebar.mobile-open {
         left: 0;
@@ -199,7 +210,7 @@ body {
     .main-content.mobile-open {
         margin-left: 0; 
     }
-    /* Overlay for mobile */
+    
     .sidebar-overlay {
         display: none;
         position: fixed;
@@ -219,8 +230,10 @@ body {
 <body>
 
 <div class="wrapper">
+    <!-- Overlay for mobile toggle -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
+    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <a href="<?= BASE_URL ?>dashboard.php" style="text-decoration:none; color:inherit;">
@@ -233,6 +246,7 @@ body {
                     <i class="fas fa-chart-pie"></i> Tổng quan
                 </a>
             </li>
+            <?php if (isSuperAdmin()): ?>
             <li>
                 <a href="<?= BASE_URL ?>products/index.php" class="<?= strpos($_SERVER['PHP_SELF'], 'products/') !== false ? 'active' : '' ?>">
                     <i class="fas fa-bicycle"></i> Quản lý sản phẩm
@@ -243,16 +257,24 @@ body {
                     <i class="fas fa-users"></i> Quản lý người dùng
                 </a>
             </li>
+            <?php endif; ?>
             <li>
                 <a href="<?= BASE_URL ?>contacts/index.php" class="<?= strpos($_SERVER['PHP_SELF'], 'contacts/') !== false ? 'active' : '' ?>">
                     <i class="fas fa-envelope"></i> Liên hệ khách hàng
                 </a>
             </li>
+            <?php if (isSuperAdmin()): ?>
             <li>
                 <a href="<?= BASE_URL ?>reports/index.php" class="<?= strpos($_SERVER['PHP_SELF'], 'reports/') !== false ? 'active' : '' ?>">
                     <i class="fas fa-flag"></i> Quản lý báo cáo
                 </a>
             </li>
+            <li>
+                <a href="<?= BASE_URL ?>revenue_reports/index.php" class="<?= strpos($_SERVER['PHP_SELF'], 'revenue_reports/') !== false ? 'active' : '' ?>">
+                    <i class="fas fa-file-invoice-dollar"></i> Duyệt báo cáo doanh thu
+                </a>
+            </li>
+            <?php endif; ?>
             <li>
                 <a href="<?= BASE_URL ?>revenue/index.php" class="<?= strpos($_SERVER['PHP_SELF'], 'revenue/') !== false ? 'active' : '' ?>">
                     <i class="fas fa-chart-line"></i> Doanh thu
@@ -266,22 +288,29 @@ body {
         </ul>
     </aside>
 
+    <!-- Main Content -->
     <div class="main-content" id="mainContent">
+        <!-- Top Navbar -->
         <header class="top-navbar">
             <button class="menu-toggle" id="menuToggle">
                 <i class="fas fa-bars"></i>
             </button>
             
             <div class="top-right">
-                <div class="admin-profile">
-                    <i class="fas fa-user-circle"></i>
+                <a href="<?= BASE_URL ?>users/edit.php?id=<?= $_SESSION['user_id'] ?? 0 ?>" class="admin-profile">
+                    <?php if (!empty($_SESSION['avatar']) && file_exists(__DIR__ . '/../' . $_SESSION['avatar'])): ?>
+                        <img src="<?= BASE_URL . $_SESSION['avatar'] ?>" alt="Avatar" style="width:32px; height:32px; border-radius:50%; object-fit:cover; border: 1px solid #2f5d62;">
+                    <?php else: ?>
+                        <i class="fas fa-user-circle"></i>
+                    <?php endif; ?>
                     <span class="d-none d-sm-inline"><?= htmlspecialchars($_SESSION['fullname'] ?? 'Admin') ?></span>
-                </div>
+                </a>
                 <a href="<?= BASE_URL ?>logout.php" class="btn-logout">
                     <i class="fas fa-sign-out-alt"></i> <span class="d-none d-sm-inline">Đăng xuất</span>
                 </a>
             </div>
         </header>
+        
         
         <div class="content-area-inner container-fluid mt-4">
 <?php endif; ?>
