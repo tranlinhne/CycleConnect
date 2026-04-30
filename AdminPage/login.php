@@ -37,22 +37,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
 
-    if (!empty($username) && !empty($password)) {
-        $stmt = $pdo->prepare("SELECT id, username, password, role, first_name, last_name FROM users WHERE (username = ? OR email = ?) AND role = 'admin' AND active = 1");
-        $stmt->execute([$username, $username]);
-        $admin = $stmt->fetch();
-        
-        if ($admin && password_verify($password, $admin['password'])) {
-            $_SESSION['admin_logged_in'] = true;
-            $_SESSION['user_id'] = $admin['id'];
-            $_SESSION['role'] = 'admin';
-            $_SESSION['fullname'] = $admin['first_name'] . ' ' . $admin['last_name'];
-            header('Location: dashboard.php');
-            exit();
+        if (!empty($username) && !empty($password)) {
+            $stmt = $pdo->prepare("SELECT id, username, password, role, first_name, last_name, avatar FROM users WHERE (username = ? OR email = ?) AND role IN ('admin', 'manager') AND active = 1");
+            $stmt->execute([$username, $username]);
+            $admin = $stmt->fetch();
+            
+            if ($admin && password_verify($password, $admin['password'])) {
+                $_SESSION['admin_logged_in'] = true;
+                $_SESSION['user_id'] = $admin['id'];
+                $_SESSION['role'] = $admin['role']; // Lưu đúng quyền của tài khoản (admin hoặc manager)
+                $_SESSION['fullname'] = $admin['first_name'] . ' ' . $admin['last_name'];
+                $_SESSION['avatar'] = $admin['avatar'];
+                header('Location: dashboard.php');
+                exit();
+            } else {
+                $error = 'Tên đăng nhập hoặc mật khẩu không đúng, hoặc tài khoản không được cấp quyền truy cập.';
+            }
         } else {
-            $error = 'Tên đăng nhập hoặc mật khẩu không đúng, hoặc tài khoản không phải admin.';
-        }
-    } else {
         $error = 'Vui lòng nhập đầy đủ thông tin.';
     }
 }
