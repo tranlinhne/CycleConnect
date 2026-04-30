@@ -1,5 +1,6 @@
 <?php
 require_once '../inc/auth.php';
+redirectIfNotSuperAdmin(); // Chỉ admin mới được vào trang này
 require_once '../inc/header.php';
 // Phân trang
 $page = $_GET['page'] ?? 1;
@@ -251,7 +252,7 @@ $users = $stmt->fetchAll();
             <?php foreach ($users as $u): ?>
                 <tr>
                     <td data-label="ID"><?= $u['id'] ?></td>
-                    <td data-label="Họ tên"><?= htmlspecialchars($u['first_name'].' '.$u['last_name']) ?></td>
+                    <td data-label="Họ tên"><?= htmlspecialchars($u['full_name'] ?: trim($u['first_name'].' '.$u['last_name'])) ?></td>
                     <td data-label="Email"><?= htmlspecialchars($u['email']) ?></td>
                     <td data-label="Username"><?= htmlspecialchars($u['username']) ?></td>
                     <td data-label="Vai trò">
