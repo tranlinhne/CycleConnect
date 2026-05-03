@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th5 03, 2026 lúc 03:35 PM
+-- Thời gian đã tạo: Th5 03, 2026 lúc 04:31 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -212,6 +212,13 @@ CREATE TABLE `messages` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Đang đổ dữ liệu cho bảng `messages`
+--
+
+INSERT INTO `messages` (`id`, `sender_id`, `receiver_id`, `bike_id`, `content`, `is_read`, `created_at`) VALUES
+(1, 3, 1, 1, 'Hi', 0, '2026-05-03 14:13:50');
+
 -- --------------------------------------------------------
 
 --
@@ -319,7 +326,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `username`, `email`, `phone`, `password`, `full_name`, `avatar`, `role`, `warning_count`, `active`, `address`, `bio`, `status`, `created_at`, `updated_at`, `last_login`, `reset_token`, `reset_token_expire`) VALUES
-(1, 'Người Dùng Test', '', 'testuser', 'test@example.com', '0901234567', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Người Dùng Test', NULL, 'user', 0, 1, NULL, NULL, 'active', '2026-04-27 08:53:34', '2026-05-03 13:24:08', '2026-05-03 13:24:08', NULL, NULL);
+(1, 'Người Dùng Test', '', 'testuser', 'test@example.com', '0901234567', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Người Dùng Test', NULL, 'user', 0, 1, NULL, NULL, 'active', '2026-04-27 08:53:34', '2026-05-03 14:14:41', '2026-05-03 14:14:41', NULL, NULL),
+(3, 'Người Dùng', '2', 'user2', 'user2@example.com', '0922222222', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Người Dùng 2', NULL, 'user', 0, 1, NULL, NULL, 'active', '2026-05-03 14:13:24', '2026-05-03 14:13:34', '2026-05-03 14:13:34', NULL, NULL);
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -490,7 +498,7 @@ ALTER TABLE `featured_bikes`
 -- AUTO_INCREMENT cho bảng `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT cho bảng `orders`
@@ -520,7 +528,7 @@ ALTER TABLE `reviews`
 -- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Các ràng buộc cho các bảng đã đổ
