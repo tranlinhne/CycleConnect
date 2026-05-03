@@ -19,8 +19,8 @@
         font-family: 'Segoe UI', Arial, sans-serif;
         background: #ffffff;
         color: #333;
+        margin: 0;
     }
-   
 
     /* KHỐI NỀN XANH */
     .hero-inner{
@@ -43,7 +43,7 @@
         width:100%;
         height:220px;
         background:#ffffff;
-        clip-path: polygon(0 100%, 100% 0, 100% 100%, 0% 100%);
+        clip-path: polygon(0 100%, 100% -1px, 101% 101%, -1% 101%);
     }
 
 

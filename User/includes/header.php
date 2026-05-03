@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="assets/css/header.css">
-
 <?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -52,7 +50,7 @@ $initialChar = strtoupper($initialChar);
         display: flex;
         align-items: center;
         justify-content: space-between;
-        background: #2f5d62;
+        background: linear-gradient(to right, #ffffff 21.65%, #2f5d62 21.65%);
         padding: 12px 24px;
     }
 
@@ -60,18 +58,17 @@ $initialChar = strtoupper($initialChar);
         display: flex;
         align-items: center;
         gap: 6px;
-        background: #f1f1f1;
         padding: 6px 14px;
         text-decoration: none;
     }
 
     .logo-icon {
-        font-size: 16px;
+        font-size: 20px;
     }
 
     .logo-text {
         font-weight: 700;
-        font-size: 16px;
+        font-size: 20px;
         color: #2f5d62;
     }
 
@@ -89,7 +86,7 @@ $initialChar = strtoupper($initialChar);
         color: #fff;
         text-decoration: none;
         margin: 0 14px;
-        font-size: 13px;
+        font-size: 20px;
         font-weight: 600;
     }
 
@@ -110,6 +107,7 @@ $initialChar = strtoupper($initialChar);
         color: #fff;
         text-decoration: none;
         cursor: pointer;
+        font-size: 20px;
     }
 
     .header-right a:hover,
@@ -290,8 +288,8 @@ $initialChar = strtoupper($initialChar);
 <header class="header">
     <div class="logo">
         <a href="index.php">
-            <span class="logo-icon">🚲</span>
-            <span class="logo-text">CYCLE</span>
+            <span class="logo-icon">🍃</span>
+            <span class="logo-text">GREENRIDE</span>
         </a>
     </div>
 
