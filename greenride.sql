@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th5 03, 2026 lúc 01:29 PM
+-- Thời gian đã tạo: Th5 03, 2026 lúc 03:35 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -49,7 +49,7 @@ CREATE TABLE `bikes` (
 --
 
 INSERT INTO `bikes` (`id`, `user_id`, `category_id`, `brand_id`, `title`, `price`, `description`, `location`, `condition_bike`, `color`, `warranty`, `material`, `status`, `created_at`) VALUES
-(1, 1, 2, 2, 'Trek Domane SL 6', 1500000.00, '', 'Quận Bình Thạnh, TP.HCM', '', 'Đen chuyển Đồng', NULL, '500 Series OCLV Carbon', 'available', '2026-04-27 09:01:54');
+(1, 1, 2, 2, 'Trek Domane SL 6', 1500000.00, 'Test mô tả cho đăng tin', 'Quận Bình Thạnh, TP.HCM', 'Mới 98%', 'Đen chuyển Đồng', NULL, '500 Series OCLV Carbon', 'available', '2026-04-27 09:01:54');
 
 -- --------------------------------------------------------
 
@@ -319,7 +319,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `username`, `email`, `phone`, `password`, `full_name`, `avatar`, `role`, `warning_count`, `active`, `address`, `bio`, `status`, `created_at`, `updated_at`, `last_login`, `reset_token`, `reset_token_expire`) VALUES
-(1, 'Người Dùng Test', '', 'testuser', 'test@example.com', '0901234567', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Người Dùng Test', NULL, 'user', 0, 1, NULL, NULL, 'active', '2026-04-27 08:53:34', '2026-05-03 10:13:13', '2026-05-03 10:13:13', NULL, NULL);
+(1, 'Người Dùng Test', '', 'testuser', 'test@example.com', '0901234567', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Người Dùng Test', NULL, 'user', 0, 1, NULL, NULL, 'active', '2026-04-27 08:53:34', '2026-05-03 13:24:08', '2026-05-03 13:24:08', NULL, NULL);
 
 --
 -- Chỉ mục cho các bảng đã đổ

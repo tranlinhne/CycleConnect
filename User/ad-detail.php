@@ -138,13 +138,25 @@ $images = $stmt_img->get_result()->fetch_all(MYSQLI_ASSOC);
 
             <?php else: ?>
                 <!-- GIAO DIỆN DÀNH CHO KHÁCH TÌM MUA XE -->
-                <button class="btn-contact btn-phone" onclick="revealPhone(this, '<?= htmlspecialchars($bike['phone']) ?>')">
-                    <i class="fas fa-phone-alt"></i> Bấm để hiện số
-                </button>
-                
-                <a href="chat.php?receiver_id=<?= $bike['user_id'] ?>&bike_id=<?= $bike['id'] ?>" class="btn-contact btn-chat">
-                    <i class="fas fa-comment-dots"></i> Chat với người bán
-                </a>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    
+                    <!-- Nút Mua Ngay nổi bật để chốt đơn -->
+                    <a href="checkout.php?bike_id=<?= $bike['id'] ?>" class="btn-contact" style="background: #d93025; color: white; font-size: 18px; padding: 15px; box-shadow: 0 4px 10px rgba(217, 48, 37, 0.3);">
+                        <i class="fas fa-shopping-cart"></i> MUA NGAY
+                    </a>
+
+                    <div style="display: flex; gap: 10px;">
+                        <!-- Nút hiện số điện thoại -->
+                        <button class="btn-contact btn-phone" style="flex: 1; margin-bottom: 0;" onclick="revealPhone(this, '<?= htmlspecialchars($bike['phone']) ?>')">
+                            <i class="fas fa-phone-alt"></i> Gọi điện
+                        </button>
+                        
+                        <!-- Nút Chat -->
+                        <a href="chat.php?receiver_id=<?= $bike['user_id'] ?>&bike_id=<?= $bike['id'] ?>" class="btn-contact btn-chat" style="flex: 1; margin-bottom: 0;">
+                            <i class="fas fa-comment-dots"></i> Nhắn tin
+                        </a>
+                    </div>
+                </div>
             <?php endif; ?>
 
         </div> 
