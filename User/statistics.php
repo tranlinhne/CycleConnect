@@ -10,11 +10,12 @@ if (!isLoggedIn()) {
 
 $user_id = $_SESSION['user_id'];
 
-// --- TRUY VẤN 1: Danh sách xe người dùng đã đăng bán ---
-$sql_my_bikes = "SELECT id, title, price, status, created_at 
-                 FROM bikes 
-                 WHERE user_id = ? 
-                 ORDER BY created_at DESC";
+// --- TRUY VẤN 1: Danh sách xe người dùng đã đăng bán (Có kèm ID) ---
+$sql_my_bikes = "SELECT b.id, b.title, b.price, b.status, b.created_at,
+                        (SELECT image_url FROM bike_images WHERE bike_id = b.id ORDER BY is_primary DESC LIMIT 1) as main_image
+                 FROM bikes b 
+                 WHERE b.user_id = ? 
+                 ORDER BY b.created_at DESC";
 $stmt_bikes = $conn->prepare($sql_my_bikes);
 $stmt_bikes->bind_param("i", $user_id);
 $stmt_bikes->execute();
@@ -65,6 +66,16 @@ $res_top = $stmt_top->get_result();
         .status-available { background-color: #e6f4ea; color: #1e8e3e; }
         .status-sold { background-color: #fce8e6; color: #d93025; }
         .status-pending { background-color: #fef7e0; color: #f29900; }
+
+        /* Nút quay lại (Giống bên Profile) */
+        .back-btn { 
+            display: inline-flex; align-items: center; gap: 8px; 
+            padding: 10px 20px; background-color: #f8fafc; color: #475569; 
+            text-decoration: none; border-radius: 8px; font-weight: 600; 
+            font-size: 0.95rem; border: 1px solid #e2e8f0; 
+            transition: all 0.3s ease; margin-bottom: 20px; 
+        }
+        .back-btn:hover { background-color: #e2e8f0; color: #0f172a; }
     </style>
 </head>
 <body>
@@ -72,6 +83,9 @@ $res_top = $stmt_top->get_result();
 <?php include 'includes/header.php'; ?>
 
 <div class="s-container">
+
+    <a href="index.php" class="back-btn"><i class="fas fa-arrow-left"></i> Quay lại</a>
+
     <h1 style="color: #2f5d62; margin-bottom: 30px; text-align: center;">Bảng Điều Khiển Của Tôi</h1>
 
     <div class="s-grid">
@@ -90,7 +104,7 @@ $res_top = $stmt_top->get_result();
                         <?php while($bike = $res_my_bikes->fetch_assoc()): ?>
                         <tr>
                             <td>
-                                <a href="detail.php?id=<?= $bike['id'] ?>" style="color: #2f5d62; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#F57C00'" onmouseout="this.style.color='#2f5d62'">
+                                <a href="ad-detail.php?id=<?= $bike['id'] ?>" style="color: #2f5d62; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#F57C00'" onmouseout="this.style.color='#2f5d62'">
                                     <strong><?= htmlspecialchars($bike['title']) ?></strong>
                                 </a>
                             </td>
@@ -98,7 +112,6 @@ $res_top = $stmt_top->get_result();
                             <td><?= date('d/m/Y', strtotime($bike['created_at'])) ?></td>
                             <td>
                                 <?php 
-                                    // Đổi màu và chữ theo trạng thái
                                     if ($bike['status'] === 'available') {
                                         echo '<span class="status-badge status-available"><i class="fas fa-check-circle"></i> Đang bán</span>';
                                     } elseif ($bike['status'] === 'sold') {

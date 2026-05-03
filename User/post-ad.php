@@ -11,7 +11,6 @@ if (!isLoggedIn()) {
 }
 
 $error = '';
-$success = '';
 
 // Lấy danh sách danh mục và thương hiệu từ Database
 $categories = $conn->query("SELECT id, name FROM categories ORDER BY name");
@@ -41,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $bike_id = $stmt->insert_id;
             $stmt->close();
 
-            // 2. Xử lý upload nhiều ảnh vào thư mục uploads/bikes/
+            // 2. Xử lý upload ảnh
             if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
                 $uploadDir = __DIR__ . '/uploads/bikes/';
                 if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
@@ -63,7 +62,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 }
             }
-            $success = 'Chúc mừng! Xe của bạn đã được đăng bán thành công.';
+            // 3. Thông báo và chuyển hướng sang trang Chợ xe cũ (classifieds.php)
+            echo "<script>
+                alert('Chúc mừng! Xe của bạn đã được đăng bán thành công.');
+                window.location.href = 'classifieds.php';
+            </script>";
+            exit();
         } else {
             $error = 'Lỗi hệ thống: ' . $conn->error;
         }
@@ -82,38 +86,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .step-panel { display: none; }
         .step-panel.active { display: block; animation: slideIn 0.4s ease-out; }
         .form-label { display: block; font-weight: 600; margin-bottom: 8px; color: #333; }
-        .form-input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; margin-bottom: 20px; font-size: 16px; }
+        .form-input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; margin-bottom: 20px; font-size: 16px; transition: border-color 0.3s; }
+        .form-input:focus { border-color: #2f5d62; outline: none; }
         .btn-nav-group { display: flex; justify-content: space-between; margin-top: 30px; }
         .btn-step { padding: 12px 30px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .btn-next { background: #F57C00; color: #fff; }
         .btn-prev { background: #e0e0e0; color: #555; }
-        .stepper { 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; /* Căn giữa theo chiều dọc */
-            margin-bottom: 40px; 
-        }
-        .step-circle { 
-            width: 40px; height: 40px; border-radius: 50%; background: #eee; 
-            display: flex; align-items: center; justify-content: center; 
-            font-weight: bold; color: #999; 
-            z-index: 2; /* Nổi lên trên thanh ngang */
-            transition: all 0.3s ease; 
-        }
+        .stepper { display: flex; justify-content: center; align-items: center; margin-bottom: 40px; }
+        .step-circle { width: 40px; height: 40px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #999; z-index: 2; transition: all 0.3s ease; }
         .step-circle.active { background: #2f5d62; color: #fff; }
-        
-        /* THÊM MỚI CSS CHO THANH NGANG */
-        .step-line {
-            width: 80px; /* Độ dài của thanh kết nối */
-            height: 4px; /* Độ dày của thanh */
-            background: #eee;
-            z-index: 1; /* Nằm dưới vòng tròn */
-            transition: all 0.3s ease;
-            margin: 0 -2px; /* Kéo xích lại để không bị hở kẽ với hình tròn */
-        }
+        .step-line { width: 80px; height: 4px; background: #eee; z-index: 1; transition: all 0.3s ease; margin: 0 -2px; }
         .step-line.active { background: #2f5d62; }
-        .step-circle { width: 40px; height: 40px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #999; }
-        .step-circle.active { background: #2f5d62; color: #fff; }
+        .in-page-error {
+            color: #d93025;
+            background-color: #fce8e6;
+            border: 1px solid #fad2cf;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            display: none; /* Ẩn theo mặc định */
+        }
         @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
     </style>
 </head>
@@ -129,7 +122,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <?php if ($error): ?><div class="alert alert-danger"><?= $error ?></div><?php endif; ?>
-    <?php if ($success): ?><div class="alert alert-success"><?= $success ?></div><?php endif; ?>
+
+    <!-- Hộp chứa thông báo lỗi thay cho alert -->
+    <div id="jsErrorBox" class="in-page-error"></div>
 
     <form method="POST" enctype="multipart/form-data" id="adForm">
         
@@ -158,7 +153,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="btn-nav-group">
                 <span></span>
-                <button type="button" class="btn-step btn-next" onclick="goTo(2)">Tiếp theo <i class="fas fa-arrow-right"></i></button>
+                <!-- Truyền thêm tham số 1 để báo cho hàm biết đang ở bước 1 -->
+                <button type="button" class="btn-step btn-next" onclick="goTo(2, 1)">Tiếp theo <i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
 
@@ -183,8 +179,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="text" name="material" class="form-input" placeholder="VD: Carbon Fiber">
 
             <div class="btn-nav-group">
+                <!-- Khi lùi lại không cần validate, chỉ cần truyền bước đích -->
                 <button type="button" class="btn-step btn-prev" onclick="goTo(1)"><i class="fas fa-arrow-left"></i> Quay lại</button>
-                <button type="button" class="btn-step btn-next" onclick="goTo(3)">Tiếp theo <i class="fas fa-arrow-right"></i></button>
+                <button type="button" class="btn-step btn-next" onclick="goTo(3, 2)">Tiếp theo <i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
 
@@ -210,17 +207,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <script>
-function goTo(step) {
-    // Ẩn tất cả panel và gỡ active ở circle
+function goTo(nextStep, currentStep = null) {
+    const errorBox = document.getElementById('jsErrorBox');
+    
+    // Luôn ẩn hộp thông báo lỗi mỗi khi bắt đầu chuyển bước
+    errorBox.style.display = 'none';
+    errorBox.innerHTML = '';
+
+    // 1. Kiểm tra dữ liệu bị bỏ trống nếu người dùng đang tiến lên bước tiếp theo
+    if (currentStep !== null) {
+        const currentPanel = document.getElementById('step' + currentStep);
+        const requiredInputs = currentPanel.querySelectorAll('input[required], select[required], textarea[required]');
+        let isValid = true;
+
+        requiredInputs.forEach(input => {
+            if (!input.value.trim()) {
+                isValid = false;
+                input.style.borderColor = '#d93025'; // Bôi đỏ ô bị thiếu
+            } else {
+                input.style.borderColor = '#ccc'; // Trả lại màu bình thường
+            }
+        });
+
+        if (!isValid) {
+            // Hiển thị lỗi ngay trên trang thay vì dùng alert()
+            errorBox.innerHTML = '<i class="fas fa-exclamation-circle"></i> Vui lòng điền đầy đủ các thông tin bắt buộc (*) được viền đỏ trước khi tiếp tục.';
+            errorBox.style.display = 'block';
+            
+            // Tự động cuộn trang lên chỗ thông báo lỗi để người dùng dễ thấy
+            errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return; // Dừng hàm, không cho chuyển giao diện
+        }
+    }
+
+    // 2. Nếu dữ liệu hợp lệ, tiến hành ẩn hiện các bảng panel
     document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.step-circle').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.step-line').forEach(l => l.classList.remove('active'));
     
-    // Hiện panel được chọn
-    document.getElementById('step' + step).classList.add('active');
-    document.getElementById('c' + step).classList.add('active');
+    // Hiện panel đích
+    document.getElementById('step' + nextStep).classList.add('active');
+    
+    // Tô màu thanh tiến trình cho đến bước hiện tại
+    for(let i = 1; i <= nextStep; i++) {
+        document.getElementById('c' + i).classList.add('active');
+        if(i < nextStep) {
+            document.getElementById('l' + i).classList.add('active');
+        }
+    }
 }
 </script>
-
-<?php include 'includes/footer.php'; ?>
-</body>
-</html>
