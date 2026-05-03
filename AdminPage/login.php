@@ -17,8 +17,8 @@ if ($adminCount == 0) {
     $defaultPassword = password_hash('123456', PASSWORD_DEFAULT);
 
     $stmtInsert = $pdo->prepare("
-        INSERT INTO users (username, email, password, role, first_name, last_name, active)
-        VALUES (?, ?, ?, 'admin', 'Super', 'Admin', 1)
+        INSERT INTO users (username, email, password, role, first_name, last_name)
+        VALUES (?, ?, ?, 'admin', 'Super', 'Admin')
     ");
     $stmtInsert->execute([
         $defaultUsername,
@@ -38,7 +38,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
 
         if (!empty($username) && !empty($password)) {
-            $stmt = $pdo->prepare("SELECT id, username, password, role, first_name, last_name, avatar FROM users WHERE (username = ? OR email = ?) AND role IN ('admin', 'manager') AND active = 1");
+            $stmt = $pdo->prepare("
+    SELECT id, username, password, role, first_name, last_name, avatar 
+    FROM users 
+    WHERE (username = ? OR email = ?) 
+    AND role IN ('admin', 'manager')
+");
             $stmt->execute([$username, $username]);
             $admin = $stmt->fetch();
             

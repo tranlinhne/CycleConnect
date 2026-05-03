@@ -1,6 +1,6 @@
-<?php require_once __DIR__ . "/../config.php"; ?>
-
 <?php
+require_once '../inc/auth.php';
+
 $user = null;
 $message = "";
 $messageType = "error";
@@ -14,20 +14,16 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
 // Nếu không có id thì lấy admin đầu tiên làm profile mặc định
 if ($id === null) {
-    $defaultStmt = mysqli_prepare($conn, "SELECT * FROM users WHERE role = 'admin' ORDER BY id ASC LIMIT 1");
-    mysqli_stmt_execute($defaultStmt);
-    $defaultResult = mysqli_stmt_get_result($defaultStmt);
-    $user = mysqli_fetch_assoc($defaultResult);
-
+    $defaultStmt = $pdo->prepare("SELECT * FROM users WHERE role = 'admin' ORDER BY id ASC LIMIT 1");
+    $defaultStmt->execute();
+    $user = $defaultStmt->fetch();
     if (!$user) {
         $message = "Không có tài khoản admin để hiển thị profile.";
     }
 } else {
-    $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE id = ?");
-    mysqli_stmt_bind_param($stmt, "i", $id);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    $user = mysqli_fetch_assoc($result);
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+    $stmt->execute([$id]);
+    $user = $stmt->fetch();
 
     if (!$user) {
         $message = "User không tồn tại!";
@@ -370,12 +366,12 @@ function getRoleLabel($role) {
                 <div class="profile-top">
                     <div class="avatar-area">
                         <div class="avatar-circle">
-                            <?= strtoupper(mb_substr($user['name'], 0, 1, 'UTF-8')) ?>
+                            <?= strtoupper(mb_substr($user['full_name'], 0, 1, 'UTF-8')) ?>
                         </div>
                     </div>
 
                     <div class="main-info">
-                        <h3><?= htmlspecialchars($user['name']) ?></h3>
+                        <h3><?= htmlspecialchars($user['full_name']) ?></h3>
                         <div class="main-sub">CycleMarket User Profile</div>
 
                         <div class="info-list">
@@ -435,7 +431,7 @@ function getRoleLabel($role) {
                     <table class="detail-table">
                         <tr>
                             <th>Full Name</th>
-                            <td><?= htmlspecialchars($user['name']) ?></td>
+                            <td><?= htmlspecialchars($user['full_name']) ?></td>
                         </tr>
                         <tr>
                             <th>Email Address</th>

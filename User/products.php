@@ -1,5 +1,5 @@
 <?php 
-require_once "config.php";
+include 'config.php';
 include "includes/header.php";
 ?>
 
@@ -25,40 +25,7 @@ include "includes/header.php";
     background: rgba(0,0,0,0.4);
 }
 
-/* 🔥 phần cong nhọn */
-.banner::after {
-    content: "";
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    width: 100%;
-    height: 120px;
-    background: #f3f3f3;
 
-    clip-path: polygon(0 40%, 50% 100%, 100% 40%, 100% 100%, 0% 100%);
-}
-
-/* nội dung */
-.banner-content {
-    position: relative;
-    z-index: 2;
-    padding-left: 100px;
-}
-
-.banner-content h1 {
-    font-size: 50px;
-    font-weight: bold;
-}
-
-.banner-content p {
-    font-size: 18px;
-    margin: 10px 0;
-}
-
-.banner-content .price {
-    font-size: 28px;
-    color: #ff3c3c;
-}
 
 /* ===== SHOWCASE ===== */
 .showcase {
@@ -182,7 +149,7 @@ include "includes/header.php";
 
 /* card */
 .bike-card {
-    width: 300px;
+    width: 100%;
     background: #fff;
     border-radius: 10px;
     overflow: hidden;
@@ -270,14 +237,135 @@ include "includes/header.php";
     animation-fill-mode: both;
 }
 
+/* ===== FILTER ===== */
+.filter-box {
+    max-width: 1200px;
+    margin: 0 auto 40px;
+    text-align: left;
+}
+
+.filter-group {
+    margin-bottom: 15px;
+}
+
+.filter-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.filter-group button {
+    margin: 5px;
+    padding: 8px 14px;
+    border: none;
+    background: #eee;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.filter-group button:hover {
+    background: red;
+    color: white;
+}
+
+.clear-filter {
+    display: inline-block;
+    margin-top: 10px;
+    color: red;
+    text-decoration: none;
+}
+
+/* ===== FILTER DROPDOWN ===== */
+.filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown button {
+    padding: 10px 18px;
+    border-radius: 25px;
+    border: none;
+    background: #eee;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.dropdown button:hover {
+    background: red;
+    color: white;
+}
+
+/* dropdown content */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    min-width: 220px;
+    background: white;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    border-radius: 12px;
+    padding: 10px;
+    z-index: 100;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.dropdown-content label {
+    display: block;
+    padding: 6px 10px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.dropdown-content label:hover {
+    background: #f5f5f5;
+}
+
+.dropdown-content input {
+    margin-right: 8px;
+}
+
+.apply-btn {
+    padding: 10px 25px;
+    border: none;
+    background: red;
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.apply-btn:hover {
+    background: darkred;
+}
+
+/* ===== GRID 4 CỘT ===== */
+.bike-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    max-width: 1400px;
+    margin: auto;
+}
+
 </style>
 
 <!-- ===== BANNER ===== -->
 <div class="banner">
     <div class="banner-content">
-        <h1>FIND YOUR PERFECT BIKE</h1>
-        <p>Xe đạp thể thao chất lượng – an toàn – minh bạch</p>
-        <div class="price">Từ 2.000.000 VNĐ</div>
+        
+        
     </div>
 </div>
 
@@ -289,12 +377,12 @@ include "includes/header.php";
         <div class="side">
             <div class="pair">
                 <div class="item left"
-                    style="background-image:url('assets/images/bike1.jpg')">
+                    style="background-image:url('assets/images/bike1.png')">
                     <span>ROAD</span>
                 </div>
 
                 <div class="item right"
-                    style="background-image:url('assets/images/bike1.jpg')">
+                    style="background-image:url('assets/images/bike1.png')">
                     <span>BIKE</span>
                 </div>
             </div>
@@ -312,13 +400,13 @@ include "includes/header.php";
             <div class="pair">
 
                 <!-- đúng thứ tự -->
-                <div class="item right"
-                    style="background-image:url('assets/images/bike1.jpg')">
+                <div class="item left"
+                    style="background-image:url('assets/images/bike2.jpg')">
                     <span>ROAD</span>
                 </div>
 
-                <div class="item left"
-                    style="background-image:url('assets/images/bike1.jpg')">
+                <div class="item right"
+                    style="background-image:url('assets/images/bike2.jpg')">
                     <span>BIKE</span>
                 </div>
 
@@ -328,42 +416,185 @@ include "includes/header.php";
     </div>
 </div>
 
-<!-- ===== FEATURED BIKES ===== -->
+<!-- ===== FILTER + LIST ===== -->
 <div class="featured">
-    <h2>FEATURED BIKES</h2>
+    <h2>DANH SÁCH XE ĐẠP</h2>
 
-    <div class="bike-list">
-        <?php
-        $sql = "SELECT * FROM bicycles WHERE bicycle_id LIMIT 3";
-        $result = mysqli_query($conn, $sql);
+<?php
+// ===== LẤY FILTER =====
+$brand = $_GET['brand'] ?? [];
+$category = $_GET['category'] ?? [];
+$condition = $_GET['condition'] ?? [];
+$size = $_GET['size'] ?? [];
+$location = $_GET['location'] ?? [];
 
-        while($row = mysqli_fetch_assoc($result)) {
-        ?>
-            <div class="bike-card">
-                <img src="<?php echo $row['main_image']; ?>" alt="">
+$where = [];
 
-                <div class="price">
-                    <?php echo number_format($row['price']); ?> VNĐ
-                </div>
+// helper
+function buildIn($field, $arr, $conn) {
+    if (empty($arr)) return null;
 
-                <h3><?php echo $row['name']; ?></h3>
+    $safe = array_map(function($v) use ($conn) {
+        return "'".mysqli_real_escape_string($conn,$v)."'";
+    }, $arr);
 
-                <p class="desc">
-                    <?php echo $row['description']; ?>
-                </p>
+    return "$field IN (".implode(",", $safe).")";
+}
 
-                <div class="meta">
-                    <span><?php echo $row['location']; ?></span>
-                    <span><?php echo $row['condition_status']; ?></span>
-                </div>
+// build query
+if ($brand) $where[] = "b.brand_id IN (".implode(",", array_map('intval',$brand)).")";
+if ($category) $where[] = "b.category_id IN (".implode(",", array_map('intval',$category)).")";
+if ($condition) $where[] = buildIn("b.condition_status",$condition,$conn);
+if ($size) $where[] = buildIn("b.frame_size",$size,$conn);
+if ($location) $where[] = buildIn("b.location",$location,$conn);
 
-                <a href="detail.php?id=<?php echo $row['bicycle_id']; ?>" class="rent-btn">
-    XEM CHI TIẾT
-</a>
-                
-            </div>
-        <?php } ?>
+$where_sql = $where ? "WHERE ".implode(" AND ", $where) : "";
+
+// ===== LẤY DATA =====
+$sql = "
+SELECT b.*, c.name as category_name, br.name as brand_name
+FROM bicycles b
+LEFT JOIN categories c ON b.category_id = c.id
+LEFT JOIN brands br ON b.brand_id = br.id
+$where_sql
+ORDER BY b.bicycle_id DESC
+";
+
+$result = mysqli_query($conn, $sql);
+
+// ===== LẤY DATA FILTER =====
+$brands = mysqli_query($conn,"SELECT * FROM brands");
+$categories = mysqli_query($conn,"SELECT * FROM categories");
+$conditions = mysqli_query($conn,"SELECT DISTINCT condition_status FROM bicycles");
+$sizes = mysqli_query($conn,"SELECT DISTINCT frame_size FROM bicycles");
+$locations = mysqli_query($conn,"SELECT DISTINCT location FROM bicycles");
+?>
+
+<!-- ===== FILTER UI ===== -->
+<form method="GET" class="filter-box">
+
+<div class="filter-row">
+
+    <!-- BRAND -->
+    <div class="dropdown">
+        <button type="button" onclick="toggleDropdown(this)">Brand ▼</button>
+        <div class="dropdown-content">
+            <?php while($b = mysqli_fetch_assoc($brands)) { ?>
+                <label>
+                    <input type="checkbox" name="brand[]" value="<?php echo $b['id']; ?>">
+                    <?php echo $b['name']; ?>
+                </label>
+            <?php } ?>
+        </div>
     </div>
+
+    <!-- CATEGORY -->
+    <div class="dropdown">
+        <button type="button" onclick="toggleDropdown(this)">Category ▼</button>
+        <div class="dropdown-content">
+            <?php while($c = mysqli_fetch_assoc($categories)) { ?>
+                <label>
+                    <input type="checkbox" name="category[]" value="<?php echo $c['id']; ?>">
+                    <?php echo $c['name']; ?>
+                </label>
+            <?php } ?>
+        </div>
+    </div>
+
+    <!-- CONDITION -->
+    <div class="dropdown">
+        <button type="button" onclick="toggleDropdown(this)">Condition ▼</button>
+        <div class="dropdown-content">
+            <?php while($c = mysqli_fetch_assoc($conditions)) { ?>
+                <label>
+                    <input type="checkbox" name="condition[]" value="<?php echo $c['condition_status']; ?>">
+                    <?php echo $c['condition_status']; ?>
+                </label>
+            <?php } ?>
+        </div>
+    </div>
+
+    <!-- SIZE -->
+    <div class="dropdown">
+        <button type="button" onclick="toggleDropdown(this)">Size ▼</button>
+        <div class="dropdown-content">
+            <?php while($s = mysqli_fetch_assoc($sizes)) { ?>
+                <label>
+                    <input type="checkbox" name="size[]" value="<?php echo $s['frame_size']; ?>">
+                    <?php echo $s['frame_size']; ?>
+                </label>
+            <?php } ?>
+        </div>
+    </div>
+
+    <!-- LOCATION -->
+    <div class="dropdown">
+        <button type="button" onclick="toggleDropdown(this)">Location ▼</button>
+        <div class="dropdown-content">
+            <?php while($l = mysqli_fetch_assoc($locations)) { ?>
+                <label>
+                    <input type="checkbox" name="location[]" value="<?php echo $l['location']; ?>">
+                    <?php echo $l['location']; ?>
+                </label>
+            <?php } ?>
+        </div>
+    </div>
+
+</div>
+
+<div style="text-align:center; margin-top:20px;">
+    <button type="submit" class="apply-btn">Áp dụng lọc</button>
+    <a href="bikes.php" class="clear-filter">Xóa lọc</a>
+</div>
+
+</form>
+
+<!-- ===== LIST ===== -->
+<div class="bike-list">
+<?php while($row = mysqli_fetch_assoc($result)) { ?>
+    <div class="bike-card">
+        <img src="<?php echo $row['main_image']; ?>">
+
+        <div class="price">
+            <?php echo number_format($row['price']); ?> VNĐ
+        </div>
+
+        <h3><?php echo $row['name']; ?></h3>
+
+        <p class="desc"><?php echo $row['description']; ?></p>
+
+        <div class="meta">
+            <span><?php echo $row['frame_size']; ?></span>
+            <span><?php echo $row['location']; ?></span>
+            <span><?php echo $row['condition_status']; ?></span>
+        </div>
+
+        <a href="detail.php?id=<?php echo $row['bicycle_id']; ?>" class="rent-btn">
+            XEM CHI TIẾT
+        </a>
+    </div>
+<?php } ?>
+</div>
+<script>
+function toggleDropdown(btn) {
+    const dropdown = btn.nextElementSibling;
+
+    document.querySelectorAll(".dropdown-content").forEach(d => {
+        if (d !== dropdown) d.style.display = "none";
+    });
+
+    dropdown.style.display =
+        dropdown.style.display === "block" ? "none" : "block";
+}
+
+document.addEventListener("click", function(e) {
+    if (!e.target.closest(".dropdown")) {
+        document.querySelectorAll(".dropdown-content").forEach(d => {
+            d.style.display = "none";
+        });
+    }
+});
+</script>
 </div>
 
 <?php include "includes/footer.php"; ?>

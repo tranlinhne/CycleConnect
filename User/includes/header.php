@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="assets/css/header.css">
+
 
 <?php
 if (session_status() === PHP_SESSION_NONE) {
@@ -89,7 +89,7 @@ $initialChar = strtoupper($initialChar);
         color: #fff;
         text-decoration: none;
         margin: 0 14px;
-        font-size: 13px;
+        font-size: 15px;
         font-weight: 600;
     }
 

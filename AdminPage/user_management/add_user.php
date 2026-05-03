@@ -4,19 +4,19 @@
 $message = "";
 $messageType = "";
 
-$name = "";
+$full_name = "";
 $email = "";
 $role = "user";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $name = trim($_POST['name'] ?? '');
+    $full_name = trim($_POST['full_name'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $password_input = $_POST['password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
     $role = $_POST['role'] ?? 'user';
 
     // ===== VALIDATE =====
-    if (empty($name) || empty($email) || empty($password_input) || empty($confirm_password)) {
+    if (empty($full_name) || empty($email) || empty($password_input) || empty($confirm_password)) {
         $message = "Vui lòng nhập đầy đủ thông tin!";
         $messageType = "error";
     }

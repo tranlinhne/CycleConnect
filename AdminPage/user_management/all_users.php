@@ -1,6 +1,7 @@
-<?php require_once __DIR__ . "/../config.php"; ?>
-
 <?php
+require_once __DIR__ . "/../inc/auth.php";
+require_once '../inc/header.php';
+
 $keyword = trim($_GET['keyword'] ?? '');
 $roleFilter = trim($_GET['role'] ?? '');
 $statusFilter = trim($_GET['status'] ?? '');
@@ -16,16 +17,14 @@ $messageType = "";
 if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     $deleteId = (int) $_GET['delete'];
 
-    $deleteStmt = mysqli_prepare($conn, "DELETE FROM users WHERE id = ?");
-    mysqli_stmt_bind_param($deleteStmt, "i", $deleteId);
-
-    if (mysqli_stmt_execute($deleteStmt)) {
-        $message = "Xóa user thành công!";
-        $messageType = "success";
-    } else {
-        $message = "Xóa user thất bại!";
-        $messageType = "error";
-    }
+    $deleteStmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
+if ($deleteStmt->execute([$deleteId])) {
+    $message = "Xóa user thành công!";
+    $messageType = "success";
+} else {
+    $message = "Xóa user thất bại!";
+    $messageType = "error";
+}
 }
 
 /* =========================
@@ -45,26 +44,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($bulkAction) && !empty($sele
         $types = str_repeat('i', count($cleanIds));
 
         if ($bulkAction === 'delete') {
-            $stmt = mysqli_prepare($conn, "DELETE FROM users WHERE id IN ($placeholders)");
-        } elseif ($bulkAction === 'activate') {
-            $stmt = mysqli_prepare($conn, "UPDATE users SET active = 1 WHERE id IN ($placeholders)");
-        } elseif ($bulkAction === 'deactivate') {
-            $stmt = mysqli_prepare($conn, "UPDATE users SET active = 0 WHERE id IN ($placeholders)");
-        } else {
-            $stmt = null;
-        }
+    $stmt = $pdo->prepare("DELETE FROM users WHERE id IN ($placeholders)");
+} elseif ($bulkAction === 'activate') {
+    $stmt = $pdo->prepare("UPDATE users SET active = 1 WHERE id IN ($placeholders)");
+} elseif ($bulkAction === 'deactivate') {
+    $stmt = $pdo->prepare("UPDATE users SET active = 0 WHERE id IN ($placeholders)");
+} else {
+    $stmt = null;
+}
 
-        if ($stmt) {
-            mysqli_stmt_bind_param($stmt, $types, ...$cleanIds);
-
-            if (mysqli_stmt_execute($stmt)) {
-                $message = "Thực hiện bulk action thành công!";
-                $messageType = "success";
-            } else {
-                $message = "Bulk action thất bại!";
-                $messageType = "error";
-            }
-        }
+if ($stmt) {
+    if ($stmt->execute($cleanIds)) {
+        $message = "Thực hiện bulk action thành công!";
+        $messageType = "success";
+    } else {
+        $message = "Bulk action thất bại!";
+        $messageType = "error";
+    }
+}
     } elseif (!empty($bulkAction) && empty($cleanIds)) {
         $message = "Vui lòng chọn ít nhất một user!";
         $messageType = "error";
@@ -81,7 +78,7 @@ $countSeller = 0;
 $countActive = 0;
 $countInactive = 0;
 
-$countResult = mysqli_query($conn, "
+$countStmt = $pdo->query("
     SELECT
         COUNT(*) AS total_all,
         SUM(CASE WHEN role = 'admin' THEN 1 ELSE 0 END) AS total_admin,
@@ -92,7 +89,7 @@ $countResult = mysqli_query($conn, "
     FROM users
 ");
 
-if ($countRow = mysqli_fetch_assoc($countResult)) {
+if ($countRow = $countStmt->fetch()) {
     $countAll = (int)($countRow['total_all'] ?? 0);
     $countAdmin = (int)($countRow['total_admin'] ?? 0);
     $countBuyer = (int)($countRow['total_buyer'] ?? 0);
@@ -134,14 +131,9 @@ if (!empty($where)) {
 }
 $sql .= " ORDER BY id DESC";
 
-$stmt = mysqli_prepare($conn, $sql);
-
-if (!empty($params)) {
-    mysqli_stmt_bind_param($stmt, $types, ...$params);
-}
-
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
+$result = $stmt->fetchAll();
 
 function buildUserUrl($extra = []) {
     $params = [
@@ -624,8 +616,8 @@ function buildUserUrl($extra = []) {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($result && mysqli_num_rows($result) > 0): ?>
-                        <?php while ($u = mysqli_fetch_assoc($result)): ?>
+                    <?php if (!empty($result)): ?>
+                        <?php foreach ($result as $u): ?>
                             <tr>
                                 <td>
                                     <input type="checkbox" name="selected_ids[]" value="<?= (int)$u['id'] ?>">
@@ -659,7 +651,7 @@ function buildUserUrl($extra = []) {
                                     <?php endif; ?>
                                 </td>
                             </tr>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
                             <td colspan="6" class="empty-row">Không có dữ liệu người dùng</td>

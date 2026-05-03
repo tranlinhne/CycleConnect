@@ -2,7 +2,7 @@
 $host = "localhost";
 $user = "root";
 $pass = "";
-$db   = "greenride"; // đổi đúng tên database của bạn
+$db   = "greenride"; 
 
 $conn = mysqli_connect($host, $user, $pass, $db);
 
