@@ -256,7 +256,7 @@ input:focus, select:focus {
 
             <div class="form-group">
                 <label>Role</label>
-                <select name="role">
+                <select full_name="role">
                     <option value="user" <?= ($role == 'user') ? 'selected' : '' ?>>User</option>
                     <option value="admin" <?= ($role == 'admin') ? 'selected' : '' ?>>Admin</option>
                 </select>

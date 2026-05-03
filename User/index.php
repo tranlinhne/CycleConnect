@@ -19,19 +19,19 @@
         font-family: 'Segoe UI', Arial, sans-serif;
         background: #ffffff;
         color: #333;
+        margin: 0;
     }
-   
 
     /* KHỐI NỀN XANH */
     .hero-inner{
-        width:70%;              /* 👈 QUAN TRỌNG: tạo khoảng trắng bên trái */
+        width:70%;              /* tạo khoảng trắng bên trái */
         margin-left:auto;       /* đẩy khối sang phải */
         background:#2f5d62;
         position:relative;
         color:white;
         padding:100px 80px 0px;
         overflow:visible;
-        margin-top:-1px; 
+        margin-top: 0;   
     }
 
     /* CẮT HÌNH THANG */
@@ -43,7 +43,7 @@
         width:100%;
         height:220px;
         background:#ffffff;
-        clip-path: polygon(0 100%, 100% 0, 100% 100%, 0% 100%);
+        clip-path: polygon(0 100%, 100% -1px, 101% 101%, -1% 101%);
     }
 
 
@@ -369,42 +369,7 @@
         
     }
 
-    .search-box {
-        display: none;
-        align-items: center;
-        background: white;
-        padding: 5px;
-        border-radius: 5px;
-        margin-right: 10px;
-    }
-
-    .search-box input {
-        border: none;
-        outline: none;
-        padding: 8px;
-        width: 200px;
-    }
-
-    .search-box select {
-        border: none;
-        padding: 8px;
-        margin-left: 5px;
-        background: #f1f1f1;
-    }
-
-    .search-box button {
-        border: none;
-        background: #f4a261;
-        color: white;
-        padding: 8px 12px;
-        margin-left: 5px;
-        cursor: pointer;
-    }
-
-    .search-box.active {
-        display: flex;
-    }
-
+    
     html, body{
         max-width:100%;
         overflow-x:hidden;

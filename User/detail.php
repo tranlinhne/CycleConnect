@@ -286,6 +286,56 @@ if ($result && mysqli_num_rows($result) > 0) {
     margin-bottom: 25px;
     white-space: pre-line;
 }
+
+.cart-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.popup-content {
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    text-align: center;
+    width: 320px;
+}
+
+.popup-content h3 {
+    margin-bottom: 20px;
+}
+
+.popup-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.popup-actions button,
+.popup-actions a {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+}
+
+.popup-actions button {
+    background: #ccc;
+}
+
+.popup-actions a {
+    background: #e53935;
+    color: #fff;
+}
 </style>
 
 <!-- ===== MAIN ===== -->
@@ -338,7 +388,7 @@ if ($result && mysqli_num_rows($result) > 0) {
 </div>
 
             <div class="action-buttons">
-                <button class="cart-btn">
+                <button class="cart-btn" onclick="addToCart(<?php echo $row['bicycle_id']; ?>)">
                     <span class="cart-icon">🛒</span>
                     Thêm Giỏ Hàng
                 </button>
@@ -403,6 +453,16 @@ if ($result && mysqli_num_rows($result) > 0) {
 
 </div>
 
+<div id="cartPopup" class="cart-popup">
+    <div class="popup-content">
+        <h3>✔ Đã thêm vào giỏ hàng</h3>
+        <div class="popup-actions">
+            <button onclick="closePopup()">Tiếp tục mua sắm</button>
+            <a href="cart.php">Xem giỏ hàng</a>
+        </div>
+    </div>
+</div>
+
 <script>
 function changeImage(img) {
     const main = document.getElementById("mainImage");
@@ -432,6 +492,26 @@ function openTab(index) {
 
     document.querySelectorAll(".tab-btn")[index].classList.add("active");
     document.querySelectorAll(".tab-content")[index].classList.add("active");
+}
+
+function addToCart(id) {
+    fetch("add_to_cart.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "id=" + id
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "success") {
+            document.getElementById("cartPopup").style.display = "flex";
+        }
+    });
+}
+
+function closePopup() {
+    document.getElementById("cartPopup").style.display = "none";
 }
 </script>
 
