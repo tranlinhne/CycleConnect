@@ -125,7 +125,9 @@ function getPageUrl($pageNum, $cat, $brand, $sort) {
         while($row = mysqli_fetch_assoc($result)) {
     ?>
         <div class="bike-card">
-            <img src="<?php echo !empty($row['main_image']) ? $row['main_image'] : 'assets/images/no-image.png'; ?>" alt="">
+            <img src="<?php echo !empty($row['main_image']) 
+    ? 'uploads/' . $row['main_image'] 
+    : 'assets/images/no-image.png'; ?>">
             <div class="price"><?php echo number_format($row['price']); ?> VNĐ</div>
             <h3><?php echo htmlspecialchars($row['title']); ?></h3>
             <div class="meta">

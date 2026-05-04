@@ -274,30 +274,118 @@ $initialChar = strtoupper($initialChar);
         color: #000;
     }
 
-    .search-box {
-    position: relative; /* 👈 thêm dòng này */
-    display: flex;
-    align-items: center;
+    /* ===== SEARCH ===== */
+.search-box {
+    position: relative;
+    margin-right: 15px;
+    z-index: 9999;
+    width: 200px;
 }
 
 .search-box input {
-    padding: 6px 35px 6px 12px; /* 👈 chừa chỗ icon */
+    width: 100%;
+    padding: 6px 35px 6px 12px;
     border-radius: 20px;
     border: none;
     outline: none;
-    font-size: 14px;
-    background: #f1f3f5;
-    height: 34px;
 }
 
-.search-box i {
+.search-box input:focus {
+    width: 200px;
+}
+.search-box input:focus {
+    width: 220px;
+}
+
+.search-box button {
     position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #555;
+    right: 8px;
+    top: 4px;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+/* ===== SEARCH DROPDOWN ===== */
+#searchDropdown {
+    position: absolute;
+    top: 100%;        /* luôn nằm dưới input */
+    left: 0;
+
+    width: 100%;      /* ⭐ QUAN TRỌNG: bằng input */
+    
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+
+    display: none;
+    z-index: 9999;
+
+    max-height: 260px;
+    overflow-y: auto;
+
+    margin-top: 5px;  /* cách input 1 chút */
+}
+
+/* bật bằng JS */
+#searchDropdown.show {
+    display: block;
+}
+
+/* item */
+.search-suggestion {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: 0.2s;
+
+    overflow: hidden; /* ⭐ chặn tràn */
+}
+
+/* FIX ẢNH */
+.search-suggestion img {
+    width: 40px;
+    height: 40px;
+
+    min-width: 40px;     /* ⭐ quan trọng */
+    max-width: 40px;
+
+    object-fit: cover;   /* ⭐ đổi contain → cover */
+    border-radius: 6px;
+
+    flex-shrink: 0;      /* ⭐ CHỐT LỖI */
+}
+
+/* FIX TEXT KHÔNG TRÀN */
+.search-suggestion-info {
+    flex: 1;
+    overflow: hidden;
+}
+
+.search-suggestion-info h6 {
     font-size: 13px;
-    pointer-events: none; /* 👈 tránh click lỗi */
+    margin: 0;
+    color: #000; 
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+.search-suggestion-info p {
+    font-size: 12px;
+    margin: 2px 0 0;
+    color: #e60000;   
+}
+
+/* no result */
+.search-no-results {
+    padding: 12px;
+    text-align: center;
+    font-size: 13px;
+    color: #777;
 }
 
 .cart-icon {
@@ -352,10 +440,11 @@ $initialChar = strtoupper($initialChar);
     <div class="header-right">
 
     <!-- SEARCH -->
-    <form class="search-box" action="products.php" method="GET">
-        <input type="text" name="keyword" placeholder="Tìm sản phẩm...">
-        <i class="fas fa-search"></i>
-    </form>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Tìm kiếm">
+        <button><i class="fa fa-search"></i></button>
+        <div id="searchDropdown"></div>
+    </div>
 
     <?php if (!empty($_SESSION['logged_in'])): ?>
 
@@ -429,4 +518,86 @@ $initialChar = strtoupper($initialChar);
             e.stopPropagation();
         });
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+    const searchInput = document.getElementById('searchInput');
+    const searchDropdown = document.getElementById('searchDropdown');
+
+    if (!searchInput || !searchDropdown) return;
+
+    let timeout;
+
+    searchInput.addEventListener('input', function () {
+        const query = this.value.trim();
+        clearTimeout(timeout);
+
+        if (query.length < 1) {
+            searchDropdown.classList.remove('show');
+            searchDropdown.innerHTML = '';
+            return;
+        }
+
+        timeout = setTimeout(() => {
+
+            fetch(`search_suggest.php?q=${encodeURIComponent(query)}`)
+                .then(res => res.json())
+                .then(data => {
+
+                    if (!data || data.length === 0) {
+                        searchDropdown.innerHTML =
+                            '<div class="search-no-results">Không tìm thấy</div>';
+                        searchDropdown.classList.add('show');
+                        return;
+                    }
+
+                    searchDropdown.innerHTML = data.map(item => `
+                        <div class="search-suggestion" onclick="selectSuggestion(${item.bicycle_id})">
+                            <img src="${item.main_image}" 
+                                 onerror="this.src='assets/images/default-bike.png'">
+                            <div class="search-suggestion-info">
+                                <h6>${item.name}</h6>
+                                <p>${formatPrice(item.price)}₫</p>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    searchDropdown.classList.add('show');
+
+                })
+                .catch(err => {
+                    console.error(err);
+                    searchDropdown.innerHTML =
+                        '<div class="search-no-results">Lỗi tải</div>';
+                    searchDropdown.classList.add('show');
+                });
+
+        }, 300);
+    });
+
+    // click ngoài
+    document.addEventListener('click', function (e) {
+        if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+            searchDropdown.classList.remove('show');
+        }
+    });
+
+    // chuyển trang
+    window.selectSuggestion = function (id) {
+        window.location.href = `detail.php?id=${id}`;
+    }
+
+    function formatPrice(price) {
+        return new Intl.NumberFormat('vi-VN').format(price);
+    }
+
+    // Enter search
+    searchInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            window.location.href = `bikes.php?search=${searchInput.value}`;
+        }
+    });
+
+});
 </script>

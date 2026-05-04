@@ -253,7 +253,7 @@ body {
                 </a>
             </li>
             <li>
-                <a href="<?= BASE_URL ?>user_management/all_users.php" class="<?= strpos($_SERVER['PHP_SELF'], 'users/') !== false ? 'active' : '' ?>">
+                <a href="<?= BASE_URL ?>users/index.php" class="<?= strpos($_SERVER['PHP_SELF'], 'users/') !== false ? 'active' : '' ?>">
                     <i class="fas fa-users"></i> Quản lý người dùng
                 </a>
             </li>
