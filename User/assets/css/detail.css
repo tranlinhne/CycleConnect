@@ -20,11 +20,16 @@
     }
 
     /* nền xanh */
+<<<<<<< Updated upstream
+=======
+    /* nền  */
+>>>>>>> Stashed changes
     .detail-banner::after {
         content: "";
         position: absolute;
         right: 0;
         top: 0;
+<<<<<<< Updated upstream
         height: 100%;
         width: 50%;
 
@@ -47,6 +52,21 @@
         clip-path: polygon(5% 0, 86% 0, 80% 100%, 0% 100%);
         z-index: 2;
     }
+=======
+        bottom: -188px;
+        width: 50%;
+
+        background: url('../under_background.png') no-repeat;
+
+        background-size: 80%;
+        /* ↓ nhỏ lại (tăng/giảm tùy ý) */
+        background-position: bottom center;
+        /* ↓ đẩy xuống dưới */
+
+        z-index: 0;
+    }
+
+>>>>>>> Stashed changes
 
     /* ===== LEFT ===== */
     .detail-left {

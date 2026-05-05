@@ -24,7 +24,7 @@
 
     /* KHỐI NỀN XANH */
     .hero-inner{
-        width:70%;              /* tạo khoảng trắng bên trái */
+        width:70%;          /* tạo khoảng trắng bên trái */
         margin-left:auto;       /* đẩy khối sang phải */
         background:#2f5d62;
         position:relative;
