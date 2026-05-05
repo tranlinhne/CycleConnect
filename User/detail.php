@@ -1,27 +1,11 @@
 <?php
-session_start();
 require_once "config.php";
 include "includes/header.php";
-?>
 
-<link rel="stylesheet" href="assets/css/detail.css">
-
-<?php
-$success_message = $_SESSION['success_message'] ?? '';
-unset($_SESSION['success_message']);
-
-/* ===== CART COUNT ===== */
-$cart_count = 0;
-if (isset($_SESSION['cart'])) {
-    foreach ($_SESSION['cart'] as $item) {
-        $cart_count += $item['quantity'] ?? 0;
-    }
-}
-
-/* ===== ID ===== */
+/* ===== LẤY ID AN TOÀN ===== */
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-/* ===== PRODUCT ===== */
+/* ===== LẤY FULL THÔNG TIN XE ===== */
 $sql = "
 SELECT b.*, 
        c.name AS category_name,
@@ -30,31 +14,18 @@ SELECT b.*,
 FROM bicycles b
 LEFT JOIN categories c ON b.category_id = c.id
 LEFT JOIN brands br ON b.brand_id = br.id
-LEFT JOIN orders o ON b.bicycle_id = o.bike_id 
-    AND o.status IN ('accepted','deposit_paid','completed')
+LEFT JOIN orders o ON b.bicycle_id = o.bike_id AND o.status IN ('accepted','deposit_paid','completed')
 WHERE b.bicycle_id = $id
 GROUP BY b.bicycle_id
 LIMIT 1
 ";
+
 $result = mysqli_query($conn, $sql);
 
-/* ===== SECTION ===== */
+/* ===== LẤY NỘI DUNG TAB CHI TIẾT ===== */
 $section_sql = "SELECT * FROM product_sections WHERE bicycle_id = $id LIMIT 1";
-$product_section = mysqli_fetch_assoc(mysqli_query($conn, $section_sql));
-
-/* ===== REVIEW ===== */
-$review_sql = "
-SELECT r.*, u.name 
-FROM reviews r
-JOIN users u ON r.user_id = u.id
-WHERE r.bicycle_id = $id
-ORDER BY r.created_at DESC
-";
-$review_result = mysqli_query($conn, $review_sql);
-
-/* ===== AVG ===== */
-$avg_sql = "SELECT AVG(rating) as avg_rating, COUNT(*) as total FROM reviews WHERE bicycle_id = $id";
-$avg_result = mysqli_fetch_assoc(mysqli_query($conn, $avg_sql));
+$section_result = mysqli_query($conn, $section_sql);
+$product_section = mysqli_fetch_assoc($section_result);
 
 if ($result && mysqli_num_rows($result) > 0) {
     $row = mysqli_fetch_assoc($result);
@@ -64,148 +35,440 @@ if ($result && mysqli_num_rows($result) > 0) {
 }
 ?>
 
+<style>
+
+/* ===== HERO ===== */
+.detail-banner {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    min-height: 500px;
+    background: transparent;
+    margin-top: 30px;
+}
+
+
+
+/* nền  */
+.detail-banner::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: -188px;
+    width: 50%;
+    
+    background: url('assets/images/under_background.png') no-repeat;
+    
+    background-size: 80%;          /* ↓ nhỏ lại (tăng/giảm tùy ý) */
+    background-position: bottom center; /* ↓ đẩy xuống dưới */
+
+    z-index: 0;
+}
+
+/* ===== LEFT ===== */
+.detail-left {
+    width: 45%;
+    padding: 80px 80px 80px 120px;
+    z-index: 2;
+}
+
+.detail-left h1 { font-size: 38px; }
+.detail-left h2 { color: red; }
+
+/* ===== INFO ===== */
+.info-table { margin-top: 25px; }
+
+.info-row {
+    display: flex;
+    gap: 20px;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.label { width: 130px; color: #888; }
+.value { flex: 1; font-weight: normal; }
+
+/* ===== RIGHT ===== */
+.detail-right {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+/* ===== MAIN IMAGE ===== */
+#mainImage {
+    max-width: 100%;
+    margin-bottom: 30px;
+    margin-right: -30px;
+    filter: drop-shadow(0 20px 30px rgba(0,0,0,0.5));
+    transition: 0.3s;
+}
+
+/* ===== THUMB ===== */
+.thumbs-outside {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+    padding: 12px;
+    background: #fff;
+    border-radius: 14px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: 40px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.thumbs-outside img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    cursor: pointer;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    opacity: 0.85;
+    transition: 0.25s;
+}
+
+.thumbs-outside img:hover {
+    opacity: 1;
+    transform: scale(1.08);
+}
+
+.thumbs-outside img.active {
+    border-color: #ee4d2d;
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* ===== BUTTON GROUP ===== */
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.action-buttons button {
+    padding: 15px 26px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 144px;
+}
+
+/* nút giỏ */
+.cart-btn {
+    background: #fff;
+    color: #e53935;
+    border: 2px solid #e53935;
+}
+
+.cart-btn:hover {
+    background: #ffe5e5;
+}
+
+/* nút đặt hàng */
+.order-btn {
+    background: linear-gradient(90deg, #ff3b30, #c62828);
+    color: #fff;
+    border: none;
+}
+
+.order-btn:hover {
+    transform: scale(1.05);
+}
+
+/* icon */
+.cart-icon {
+    font-size: 22px;
+    margin-right: 8px;
+}
+
+/* ===== TAB AREA FULL WIDTH ===== */
+.product-tabs {
+    width: 100%;
+    margin-top: 80px;
+}
+
+/* thanh tab full ngang */
+.tab-buttons {
+    width: 100%;
+    padding-left: 120px;   /* canh thẳng với khối trái phía trên */
+    border-bottom: 3px solid #eee;
+    display: flex;
+    gap: 40px;
+    background: #fff;
+}
+
+/* nút tab */
+.tab-btn {
+    padding: 18px 0;
+    font-size: 20px;
+    cursor: pointer;
+    color: #888;
+    border-bottom: 3px solid transparent;
+    transition: 0.3s;
+}
+
+.tab-btn.active {
+    color: #e53935;
+    border-color: #e53935;
+    font-weight: bold;
+}
+
+/* nội dung tab full ngang */
+.tab-content {
+    display: none;
+    width: 100%;
+    padding: 50px 120px;  /* canh lề giống tab */
+    line-height: 1.8;
+    font-size: 16px;
+    color: #444;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* khối nội dung lớn */
+.big-content {
+    background: #fafafa;
+    border-radius: 16px;
+    padding: 45px 60px;   /* bỏ padding trái dư */
+    white-space: pre-line;
+    max-width: 1500px;    /* giúp đọc dễ hơn */
+}
+.tab-buttons {
+    display: flex;
+    border-bottom: 3px solid #eee;
+    gap: 30px;
+}
+
+.tab-btn {
+    padding: 15px 5px;
+    font-size: 18px;
+    cursor: pointer;
+    color: #888;
+    border-bottom: 3px solid transparent;
+    transition: 0.3s;
+}
+
+.tab-btn.active {
+    color: #e53935;
+    border-color: #e53935;
+    font-weight: bold;
+}
+
+.tab-content {
+    display: none;
+    width: 100%;
+    padding: 50px 120px 80px 120px; /* container giữ padding */
+    background: #f5f5f5;            /* nền xám full ngang */
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* box nội dung */
+.spec-box {
+    background: #fafafa;
+    padding: 30px;
+    border-radius: 14px;
+    margin-bottom: 25px;
+    white-space: pre-line;
+}
+
+.cart-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.popup-content {
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    text-align: center;
+    width: 320px;
+}
+
+.popup-content h3 {
+    margin-bottom: 20px;
+}
+
+.popup-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.popup-actions button,
+.popup-actions a {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+}
+
+.popup-actions button {
+    background: #ccc;
+}
+
+.popup-actions a {
+    background: #e53935;
+    color: #fff;
+}
+</style>
+
 <!-- ===== MAIN ===== -->
 <div class="detail-banner">
+
+    <!-- KHỐI ĐỎ -->
     <div class="red-shape"></div>
 
+    <!-- LEFT -->
     <div class="detail-left">
-        <h1><?= htmlspecialchars($row['name']); ?></h1>
-        <h2><?= number_format($row['price'], 0, ',', '.'); ?> VNĐ</h2>
+        <h1><?php echo htmlspecialchars($row['name']); ?></h1>
+        <h2><?php echo number_format($row['price'], 0, ',', '.'); ?> VNĐ</h2>
 
         <div class="info-table">
-            <div class="info-row"><span class="label">Nơi sản xuất</span><span class="value"><?= $row['location']; ?></span></div>
-            <div class="info-row"><span class="label">Tình trạng</span><span class="value"><?= $row['condition_status']; ?></span></div>
-            <div class="info-row"><span class="label">Kích thước</span><span class="value"><?= $row['frame_size']; ?></span></div>
-            <div class="info-row"><span class="label">Mô tả</span><span class="value"><?= $row['description']; ?></span></div>
-            <div class="info-row"><span class="label">Thể loại</span><span class="value"><?= $row['category_name']; ?></span></div>
-            <div class="info-row"><span class="label">Thương hiệu</span><span class="value"><?= $row['brand_name']; ?></span></div>
-            <div class="info-row"><span class="label">Lượt mua</span><span class="value"><?= $row['total_orders']; ?> đã bán</span></div>
+            <div class="info-row">
+                <span class="label">Nơi sản xuất</span>
+                <span class="value"><?php echo htmlspecialchars($row['location']); ?></span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Tình trạng</span>
+                <span class="value"><?php echo htmlspecialchars($row['condition_status']); ?></span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Kích thước</span>
+                <span class="value"><?php echo htmlspecialchars($row['frame_size']); ?></span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Mô tả</span>
+                <span class="value" style="font-weight: normal; color:#555;">
+                    <?php echo htmlspecialchars($row['description']); ?>
+                </span>
+            </div>
+
+            <div class="info-row">
+    <span class="label">Thể loại</span>
+    <span class="value"><?php echo $row['category_name']; ?></span>
+</div>
+
+<div class="info-row">
+    <span class="label">Thương hiệu</span>
+    <span class="value"><?php echo $row['brand_name']; ?></span>
+</div>
+
+<div class="info-row">
+    <span class="label">Lượt mua</span>
+    <span class="value"><?php echo $row['total_orders']; ?> đã bán</span>
+</div>
 
             <div class="action-buttons">
-                <a href="cart.php?action=add&id=<?= $row['bicycle_id']; ?>" class="cart-btn">🛒 Thêm Giỏ Hàng</a>
-                <a href="checkout.php?id=<?= $row['bicycle_id']; ?>" class="order-btn">Đặt Hàng</a>
+                <button class="cart-btn" onclick="addToCart(<?php echo $row['bicycle_id']; ?>)">
+                    <span class="cart-icon">🛒</span>
+                    Thêm Giỏ Hàng
+                </button>
+                <button class="order-btn">Đặt Hàng</button>
             </div>
         </div>
     </div>
 
+    <!-- RIGHT -->
     <div class="detail-right">
-        <img id="mainImage" src="<?= $row['main_image']; ?>" 
+        <img id="mainImage"
+             src="<?php echo $row['main_image']; ?>"
              onerror="this.src='assets/images/default-bike.png'">
     </div>
+
 </div>
 
-<!-- ===== THUMB ===== -->
-<div class="thumbs-wrapper">
-    <div class="thumbs-outside">
-        <?php foreach (['main_image','sub_image1','sub_image2','sub_image3'] as $img): ?>
-            <?php if (!empty($row[$img])): ?>
-                <div class="thumb-item">
-                    <img src="<?= $row[$img]; ?>" onclick="changeImage(this)">
-                </div>
-            <?php endif; ?>
-        <?php endforeach; ?>
-    </div>
+<!-- ===== THUMBNAILS ===== -->
+<div class="thumbs-outside">
+    <?php foreach (['main_image','sub_image1','sub_image2','sub_image3'] as $img): ?>
+        <?php if (!empty($row[$img])): ?>
+            <img src="<?php echo $row[$img]; ?>" onclick="changeImage(this)">
+        <?php endif; ?>
+    <?php endforeach; ?>
 </div>
 
-<!-- ===== TAB ===== -->
+<!-- ================= TAB ================= -->
 <div class="product-tabs">
 
-<div class="tab-buttons">
-    <div class="tab-btn active" onclick="openTab(0)">Chi tiết sản phẩm</div>
-    <div class="tab-btn" onclick="openTab(1)">Đánh giá</div>
-</div>
+    <div class="tab-buttons">
+        <div class="tab-btn active" onclick="openTab(0)">Chi tiết sản phẩm</div>
+        <div class="tab-btn" onclick="openTab(1)">Đánh giá</div>
+    </div>
 
 <!-- TAB 1 -->
 <div class="tab-content active">
-<?php if($product_section): ?>
-<div class="big-content">
-<?= $product_section['thong_so'] ?>
-<?= $product_section['qua_tang'] ?>
-<?= $product_section['huong_dan'] ?>
-<?= $product_section['dong_kiem'] ?>
-<?= $product_section['doi_tra'] ?>
-</div>
-<?php else: ?>
-<p>Chưa có thông tin chi tiết.</p>
-<?php endif; ?>
-</div>
 
-<!-- TAB 2: REVIEW -->
-<div class="tab-content">
+    <?php if($product_section): ?>
 
-<h3>Đánh giá sản phẩm</h3>
+        <div class="big-content">
+            <?php
+                echo $product_section['thong_so'] . "\n\n";
+                echo $product_section['qua_tang'] . "\n\n";
+                echo $product_section['huong_dan'] . "\n\n";
+                echo $product_section['dong_kiem'] . "\n\n";
+                echo $product_section['doi_tra'];
+            ?>
+        </div>
 
-<!-- SUMMARY -->
-<div class="review-summary">
-    <h2><?= round($avg_result['avg_rating'],1) ?: 0 ?> ⭐</h2>
-    <p><?= $avg_result['total'] ?: 0 ?> đánh giá</p>
+    <?php else: ?>
+        <p style="padding-left:120px">Chưa có thông tin chi tiết.</p>
+    <?php endif; ?>
+
 </div>
 
-<!-- FORM -->
-<?php if(isset($_SESSION['khach_hang'])): ?>
-<form method="POST" action="submit_review.php" class="review-form" onsubmit="return validateReview()">
-    <input type="hidden" name="bicycle_id" value="<?= $id ?>">
-
-    <div class="stars">
-        <?php for($i=1;$i<=5;$i++): ?>
-            <span onclick="setRating(<?= $i ?>)">★</span>
-        <?php endfor; ?>
+    <!-- TAB 2 -->
+    <div class="tab-content">
+        <h3>Đánh giá sản phẩm</h3>
+        <p>⭐ Chức năng đánh giá sẽ được cập nhật sau.</p>
+        <p>Hiện chưa có đánh giá nào.</p>
     </div>
 
-    <input type="hidden" name="rating" id="rating" required>
+</div>
 
-    <textarea name="comment" placeholder="Nhập đánh giá..." required></textarea>
-    <button type="submit">Gửi đánh giá</button>
-</form>
-<?php else: ?>
-<p>👉 Vui lòng đăng nhập để đánh giá</p>
-<?php endif; ?>
-
-<hr>
-
-<!-- LIST -->
-<?php if(mysqli_num_rows($review_result) > 0): ?>
-    <?php while($rv = mysqli_fetch_assoc($review_result)): ?>
-        <div class="review-item">
-
-    <div class="review-user">
-        <img src="assets/images/avatar.png" class="avatar">
-        <div>
-            <div class="name"><?= htmlspecialchars($rv['name']) ?></div>
-            <div class="stars-display">
-                <?= str_repeat("★", (int)$rv['rating']); ?>
-            </div>
+<div id="cartPopup" class="cart-popup">
+    <div class="popup-content">
+        <h3>✔ Đã thêm vào giỏ hàng</h3>
+        <div class="popup-actions">
+            <button onclick="closePopup()">Tiếp tục mua sắm</button>
+            <a href="cart.php">Xem giỏ hàng</a>
         </div>
     </div>
-
-    <p class="review-content"><?= htmlspecialchars($rv['comment']); ?></p>
-
-    <small><?= $rv['created_at']; ?></small>
-
-</div>
-    <?php endwhile; ?>
-<?php else: ?>
-    <p>Chưa có đánh giá nào</p>
-<?php endif; ?>
-
-</div>
-
 </div>
 
 <script>
-function setRating(val) {
-    document.getElementById("rating").value = val;
-
-    const stars = document.querySelectorAll(".stars span");
-
-    stars.forEach((s, i) => {
-        s.style.color = (i < val) ? "#ffc107" : "#ccc";
-    });
-}
-
 function changeImage(img) {
     const main = document.getElementById("mainImage");
+
     main.style.opacity = 0;
+
     setTimeout(() => {
         main.src = img.src;
         main.style.opacity = 1;
@@ -214,24 +477,41 @@ function changeImage(img) {
     document.querySelectorAll(".thumbs-outside img").forEach(el => {
         el.classList.remove("active");
     });
+
     img.classList.add("active");
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const first = document.querySelector(".thumbs-outside img");
+    if (first) first.classList.add("active");
+});
 
 function openTab(index) {
     document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
     document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
+
     document.querySelectorAll(".tab-btn")[index].classList.add("active");
     document.querySelectorAll(".tab-content")[index].classList.add("active");
 }
 
-function validateReview() {
-    const rating = document.getElementById("rating").value;
+function addToCart(id) {
+    fetch("add_to_cart.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "id=" + id
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "success") {
+            document.getElementById("cartPopup").style.display = "flex";
+        }
+    });
+}
 
-    if (!rating || rating == 0) {
-        alert("Vui lòng chọn số sao!");
-        return false;
-    }
-    return true;
+function closePopup() {
+    document.getElementById("cartPopup").style.display = "none";
 }
 </script>
 

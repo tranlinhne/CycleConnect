@@ -16,7 +16,7 @@ $total_price = 0;
 
 if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
     foreach ($_SESSION['cart'] as $id => $item) {
-        $id_sp = $item['id'];
+        $id_sp = $item['id'] ?? $id;
         $qty = $item['qty'] ?? $item['quantity'] ?? 1;
         $sql = "SELECT bicycle_id, name, price, main_image FROM bicycles WHERE bicycle_id = ?";
         $stmt = $conn->prepare($sql);
