@@ -1,17 +1,14 @@
 <?php
-$servername = "localhost";
-$username = "root";  
-$password = "";
-$dbname = "greenride";
+$host = "localhost";
+$user = "root";
+$pass = "";
+$db   = "greenride"; 
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = mysqli_connect($host, $user, $pass, $db);
 
-if ($conn->connect_error) {
-    die("Kết nối thất bại: " . $conn->connect_error);
+if (!$conn) {
+    die("Lỗi kết nối DB: " . mysqli_connect_error());
 }
 
-// Chỉ chạy session_start nếu session chưa được kích hoạt
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+mysqli_set_charset($conn, 'utf8mb4');
 ?>

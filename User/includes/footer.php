@@ -47,4 +47,17 @@
         <p>Ride Your Passion - Chinh phục mọi cung đường</p>
     </div>
 
+    <!-- BOTTOM -->
+    <div class="footer-bottom">
+        <div>
+            <span>© 2026 Bike Store</span>
+            <span>All Rights Reserved</span>
+        </div>
+        <div>
+            <span>Follow us</span>
+            <span>Facebook</span>
+            <span>Instagram</span>
+            <span>TikTok</span>
+        </div>
+    </div>
 </footer>

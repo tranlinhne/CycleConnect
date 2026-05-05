@@ -49,32 +49,29 @@ $initialChar = strtoupper($initialChar);
 <style>
     .header {
         position: relative;
-        z-index: 9999;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        background: linear-gradient(to right, #ffffff 21.65%, #2f5d62 21.65%);
+        background: #2f5d62;
         padding: 12px 24px;
-    }
-    .logo {
-        flex: 0 0 auto;
     }
 
     .logo a {
         display: flex;
         align-items: center;
         gap: 6px;
+        background: #f1f1f1;
         padding: 6px 14px;
         text-decoration: none;
     }
 
     .logo-icon {
-        font-size: 20px;
+        font-size: 16px;
     }
 
     .logo-text {
         font-weight: 700;
-        font-size: 20px;
+        font-size: 16px;
         color: #2f5d62;
     }
 
@@ -92,7 +89,7 @@ $initialChar = strtoupper($initialChar);
         color: #fff;
         text-decoration: none;
         margin: 0 14px;
-        font-size: 17px;
+        font-size: 15px;
         font-weight: 600;
     }
 
@@ -105,8 +102,7 @@ $initialChar = strtoupper($initialChar);
         margin-left: auto;
         display: flex;
         align-items: center;
-        gap: 12px;
-        z-index: 10; 
+        gap: 14px;
     }
 
     .header-right a,
@@ -114,7 +110,6 @@ $initialChar = strtoupper($initialChar);
         color: #fff;
         text-decoration: none;
         cursor: pointer;
-        font-size: 20px;
     }
 
     .header-right a:hover,
@@ -274,47 +269,6 @@ $initialChar = strtoupper($initialChar);
         color: #000;
     }
 
-    .search-box {
-    position: relative; /* 👈 thêm dòng này */
-    display: flex;
-    align-items: center;
-}
-
-.search-box input {
-    padding: 6px 35px 6px 12px; /* 👈 chừa chỗ icon */
-    border-radius: 20px;
-    border: none;
-    outline: none;
-    font-size: 14px;
-    background: #f1f3f5;
-    height: 34px;
-}
-
-.search-box i {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #555;
-    font-size: 13px;
-    pointer-events: none; /* 👈 tránh click lỗi */
-}
-
-.cart-icon {
-    position: relative;
-    font-size: 20px;
-}
-
-.cart-count {
-    position: absolute;
-    top: -6px;
-    right: -8px;
-    background: red;
-    color: #fff;
-    font-size: 11px;
-    padding: 2px 5px;
-    border-radius: 50%;
-}
     @media (max-width: 900px) {
         .header {
             flex-wrap: wrap;
@@ -336,8 +290,8 @@ $initialChar = strtoupper($initialChar);
 <header class="header">
     <div class="logo">
         <a href="index.php">
-            <span class="logo-icon">🍃</span>
-            <span class="logo-text">GREENRIDE</span>
+            <span class="logo-icon">🚲</span>
+            <span class="logo-text">CYCLE</span>
         </a>
     </div>
 
@@ -350,65 +304,48 @@ $initialChar = strtoupper($initialChar);
     </nav>
 
     <div class="header-right">
-
-    <!-- SEARCH -->
-    <form class="search-box" action="products.php" method="GET">
-        <input type="text" name="keyword" placeholder="Tìm sản phẩm...">
-        <i class="fas fa-search"></i>
-    </form>
-
-    <?php if (!empty($_SESSION['logged_in'])): ?>
-
-        <!-- USER -->
-        <div class="user-dropdown">
-            <button class="user-btn" id="userBtn" type="button">
-                <?php if ($avatarPath !== ''): ?>
-                    <img src="<?= htmlspecialchars($avatarPath) ?>" class="header-avatar">
-                <?php else: ?>
-                    <span class="header-avatar-text"><?= htmlspecialchars($initialChar) ?></span>
-                <?php endif; ?>
-
-                <span><?= htmlspecialchars($displayName) ?></span>
-            </button>
-
-            <div class="dropdown-menu" id="dropdownMenu">
-                <a class="dropdown-head-item" href="profile.php">
+        <?php if (!empty($_SESSION['logged_in'])): ?>
+            <div class="user-dropdown">
+                <button class="user-btn" id="userBtn" type="button">
                     <?php if ($avatarPath !== ''): ?>
-                        <img src="<?= htmlspecialchars($avatarPath) ?>" class="dropdown-avatar">
+                        <img src="<?= htmlspecialchars($avatarPath) ?>" alt="Avatar" class="header-avatar">
                     <?php else: ?>
-                        <span class="dropdown-avatar-text"><?= htmlspecialchars($initialChar) ?></span>
+                        <span class="header-avatar-text"><?= htmlspecialchars($initialChar) ?></span>
                     <?php endif; ?>
 
                     <span><?= htmlspecialchars($displayName) ?></span>
-                </a>
+                </button>
 
-                <a class="account-item" href="profile.php">
-                    <i class="fas fa-id-card"></i> Tài khoản
-                </a>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a class="dropdown-head-item" href="profile.php">
+                        <?php if ($avatarPath !== ''): ?>
+                            <img src="<?= htmlspecialchars($avatarPath) ?>" alt="Avatar" class="dropdown-avatar">
+                        <?php else: ?>
+                            <span class="dropdown-avatar-text"><?= htmlspecialchars($initialChar) ?></span>
+                        <?php endif; ?>
 
-                <a class="account-item" href="statistics.php">
-                    <i class="fas fa-chart-line"></i> Thống kê
-                </a>
+                        <span><?= htmlspecialchars($displayName) ?></span>
+                    </a>
 
-                <div class="dropdown-divider"></div>
+                    <a class="account-item" href="profile.php">
+                        <i class="fas fa-id-card" style="margin-right: 8px;"></i> Tài khoản
+                    </a>
 
-                <a class="logout-item" href="logout.php">
-                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
-                </a>
+                    <a class="account-item" href="statistics.php">
+                        <i class="fas fa-chart-line" style="margin-right: 8px;"></i> Thống kê
+                    </a>
+
+                    <div class="dropdown-divider"></div>
+
+                    <a class="logout-item" href="logout.php">
+                        <i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i> Đăng xuất
+                    </a>
+                </div>
             </div>
-        </div>
-
-        <!-- CART -->
-        <a href="cart.php" class="cart-icon">
-            <i class="fas fa-shopping-cart"></i>
-            <span class="cart-count">2</span>
-        </a>
-
-    <?php else: ?>
-        <a href="login.php">Đăng nhập</a>
-    <?php endif; ?>
-
-</div>
+        <?php else: ?>
+            <a href="login.php">Đăng nhập</a>
+        <?php endif; ?>
+    </div>
 </header>
 
 <script>
