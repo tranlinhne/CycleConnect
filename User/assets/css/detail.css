@@ -1,12 +1,11 @@
     /* ===== HERO ===== */
     .detail-banner {
-        display: flex;
-        position: relative;
-        overflow: hidden;
-        min-height: 500px;
-        background: transparent;
-        margin-top: 30px;
-    }
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    min-height: 500px;
+    margin-top: 30px;
+}
 
     /* nền trắng */
     .detail-banner::before {
@@ -20,19 +19,17 @@
     }
 
     /* nền xanh */
-    /* nền  */
 .detail-banner::after {
     content: "";
     position: absolute;
     right: 0;
     top: 0;
-    bottom: -188px;
+    height: 100%;     
     width: 50%;
-    
-    background: url('assets/images/under_background.png') no-repeat;
-    
-    background-size: 80%;          /* ↓ nhỏ lại (tăng/giảm tùy ý) */
-    background-position: bottom center; /* ↓ đẩy xuống dưới */
+
+    background: url('../images/under_background.png') no-repeat;
+    background-size: contain;   /* hoặc cover */
+    background-position: bottom right;
 
     z-index: 0;
 }
