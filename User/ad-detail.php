@@ -140,9 +140,9 @@ $images = $stmt_img->get_result()->fetch_all(MYSQLI_ASSOC);
                 <!-- GIAO DIỆN DÀNH CHO KHÁCH TÌM MUA XE -->
                 <div style="display: flex; flex-direction: column; gap: 12px;">
                     
-                    <!-- Nút Mua Ngay nổi bật để chốt đơn -->
+                    <!-- Nút Thêm vào giỏ hàng nổi bật để chốt đơn -->
                     <a href="checkout.php?bike_id=<?= $bike['id'] ?>" class="btn-contact" style="background: #d93025; color: white; font-size: 18px; padding: 15px; box-shadow: 0 4px 10px rgba(217, 48, 37, 0.3);">
-                        <i class="fas fa-shopping-cart"></i> MUA NGAY
+                        <i class="fas fa-shopping-cart"></i> Thêm vào giỏ hàng
                     </a>
 
                     <div style="display: flex; gap: 10px;">

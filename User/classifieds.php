@@ -19,7 +19,7 @@ if ($page < 1) $page = 1;
 $offset = ($page - 1) * $limit; // Điểm bắt đầu cắt dữ liệu
 
 // 3. Xây dựng điều kiện lọc chung (Dùng cho cả việc đếm tổng và lấy dữ liệu)
-$where_clause = "WHERE b.user_id > 0 AND b.status = 'available'";
+$where_clause = "WHERE b.status = 'available' AND b.user_id IN (SELECT id FROM users WHERE role = 'user')";
 
 if ($cat_filter > 0) {
     $where_clause .= " AND b.category_id = $cat_filter";
@@ -125,9 +125,7 @@ function getPageUrl($pageNum, $cat, $brand, $sort) {
         while($row = mysqli_fetch_assoc($result)) {
     ?>
         <div class="bike-card">
-            <img src="<?php echo !empty($row['main_image']) 
-    ? 'uploads/' . $row['main_image'] 
-    : 'assets/images/no-image.png'; ?>">
+            <img src="<?php echo !empty($row['main_image']) ? $row['main_image'] : 'assets/images/no-image.png'; ?>" alt="">
             <div class="price"><?php echo number_format($row['price']); ?> VNĐ</div>
             <h3><?php echo htmlspecialchars($row['title']); ?></h3>
             <div class="meta">
